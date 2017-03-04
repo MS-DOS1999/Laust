@@ -87,9 +87,13 @@ int i;
 
 int xMove = 0;
 int yMove = 0;
-unsigned int WalkCounter = 0;
-unsigned int TabCollide[30];
-int TabDirection[30];
+
+long xCounter = 0;
+long yCounter = 0;
+
+long WalkCounter = 0;
+long TabCollide[40];
+int TabDirection[40];
 int arrayLength = 0;
 int sizeOfTab;
 int OffRight;
@@ -119,7 +123,7 @@ void main(){
     //INTRO//
 
 
-    /*wait_vbl_done();
+      wait_vbl_done();
       DISPLAY_OFF;
       set_bkg_data(0, 219, TitleScreenTiles);
       set_bkg_tiles(0,0,20,18,TitleScreenMap);
@@ -268,10 +272,10 @@ messageIntroPart3(nomPlayer);
 SHOW_SPRITES;
 textNext();
 clearScreenLetter();
-HIDE_BKG; */
+HIDE_BKG;
 
 
-getchar(); //ligne pour changer de Palette
+//getchar(); //ligne pour changer de Palette
 wait_vbl_done();
 set_bkg_data(0,19, HomeTile);
 set_bkg_tiles(0,0,20,18,Home);
@@ -287,6 +291,8 @@ for(tileInc = 0; tileInc <= 9; tileInc++){
 }
 xMove = 72;
 yMove = 84;
+xCounter = 168;
+yCounter = 10;
 move_sprite(0, xMove, yMove);
 SHOW_SPRITES;
 
@@ -296,99 +302,88 @@ SHOW_SPRITES;
 //BOUCLE PRINCIPALE//
 while(1){
 
-    TabCollide[0] = -19;
-    TabCollide[1] = -31;
-    TabCollide[2] = -43;
-    TabCollide[3] = -55;
-    TabCollide[4] = -67;
-
-    TabCollide[5] = -7;
-    TabCollide[6] = 5;
-    TabCollide[7] = 17;
-    TabCollide[8] = 29;
-    TabCollide[9] = 41;
-    TabCollide[10] = 53;
-
-    TabCollide[11] = 72;
-    TabCollide[12] = 91;
-    TabCollide[13] = 105;
-    TabCollide[14] = 119;
-    TabCollide[15] = 133;
-    TabCollide[16] = 147;
-
-    TabCollide[17] = 135;
-    TabCollide[18] = 123;
-    TabCollide[19] = 111;
-    TabCollide[20] = 99;
-    TabCollide[21] = 63;
-    TabCollide[22] = 51;
-    TabCollide[23] = 39;
-    TabCollide[11] = 41;
-    TabCollide[12] = 34;
-    TabCollide[13] = 22;
-    TabCollide[14] = 10;
-    TabCollide[15] = 128;
-    TabCollide[16] = 142;
-
-    TabCollide[11] = 72;
-    TabCollide[12] = 86;
-    TabCollide[13] = 100;
-    TabCollide[14] = 114;
-    TabCollide[15] = 128;
-    TabCollide[16] = 142;
+    TabCollide[0] = 73;
+    TabCollide[1] = 94;
+    TabCollide[2] = 115;
+    TabCollide[3] = 136;
+    TabCollide[4] = 157;
+    TabCollide[5] = 178; //SPAWN Home
+    TabCollide[6] = 199;
+    TabCollide[7] = 220;
+    TabCollide[8] = 241;
+    TabCollide[9] = 262;
+    TabCollide[10] = 283;
+    TabCollide[11] = 304;
+    TabCollide[12] = 325;
+    TabCollide[13] = 324;
+    TabCollide[14] = 323;
+    TabCollide[15] = 322;
+    TabCollide[16] = 321;
+    TabCollide[17] = 320;
+    TabCollide[18] = 299;
+    TabCollide[19] = 278;
+    TabCollide[20] = 257;
+    TabCollide[21] = 236;
+    TabCollide[22] = 216;
+    TabCollide[23] = 195;
+    TabCollide[24] = 174;
+    TabCollide[25] = 152;
+    TabCollide[26] = 131;
+    TabCollide[27] = 110;
+    TabCollide[28] = 89;
+    TabCollide[29] = 68;
+    TabCollide[30] = 69;
+    TabCollide[31] = 70;
+    TabCollide[32] = 92;
+    TabCollide[33] = 93;
 
 
 
 
 
-    TabDirection[0] = 2;
+    TabDirection[0] = 12;
     TabDirection[1] = 2;
     TabDirection[2] = 2;
     TabDirection[3] = 2;
-    TabDirection[4] = 7;
-
+    TabDirection[4] = 2;
     TabDirection[5] = 2;
     TabDirection[6] = 2;
     TabDirection[7] = 2;
     TabDirection[8] = 2;
     TabDirection[9] = 2;
-    TabDirection[10] = 6;
-
-    TabDirection[11] = 4;
-    TabDirection[12] = 4;
+    TabDirection[10] = 2;
+    TabDirection[11] = 2;
+    TabDirection[12] = 8;
     TabDirection[13] = 4;
     TabDirection[14] = 4;
     TabDirection[15] = 4;
-    TabDirection[16] = 2;
-
-    TabDirection[11] = 4;
-    TabDirection[12] = 4;
-    TabDirection[13] = 4;
-    TabDirection[14] = 4;
-    TabDirection[15] = 4;
-    TabDirection[16] = 2;
-
-    TabDirection[11] = 4;
-    TabDirection[12] = 4;
-    TabDirection[13] = 4;
-    TabDirection[14] = 4;
-    TabDirection[15] = 4;
-    TabDirection[16] = 2;
-
-    TabDirection[11] = 4;
-    TabDirection[12] = 4;
-    TabDirection[13] = 4;
-    TabDirection[14] = 4;
-    TabDirection[15] = 4;
-    TabDirection[16] = 2;
+    TabDirection[16] = 4;
+    TabDirection[17] = 6;
+    TabDirection[18] = 1;
+    TabDirection[19] = 1;
+    TabDirection[20] = 1;
+    TabDirection[21] = 5;
+    TabDirection[22] = 1;
+    TabDirection[23] = 1;
+    TabDirection[24] = 1;
+    TabDirection[25] = 6;
+    TabDirection[26] = 1;
+    TabDirection[27] = 1;
+    TabDirection[28] = 1;
+    TabDirection[29] = 5;
+    TabDirection[30] = 3;
+    TabDirection[31] = 7;
+    TabDirection[32] = 3;
+    TabDirection[33] = 3;
 
 
 
 
-    arrayLength = 5;
-
+    arrayLength = 34;
 
     //COLLISION ET MOUVEMENT//
+
+    WalkCounter = xCounter + yCounter;
 
     for(i = 0; i < arrayLength; i++ ){
         if(TabCollide[i] == WalkCounter){
@@ -422,7 +417,7 @@ while(1){
                     OffUp = 1;
                     OffLeft = 1;
                     OffRight = 0;
-                    OffUp = 0;
+                    OffDown = 0;
                     break;
                 case 6:
                     OffUp = 1;
@@ -503,7 +498,7 @@ while(1){
             }
         }
         if(OffDown != 1){
-            WalkCounter = WalkCounter - 14;
+            yCounter = yCounter + 1;
         }
     }
 
@@ -535,7 +530,7 @@ while(1){
             }
         }
         if(OffRight != 1){
-            WalkCounter = WalkCounter + 12;
+            xCounter = xCounter + 21;
         }
     }
 
@@ -567,7 +562,7 @@ while(1){
             }
         }
         if(OffLeft != 1){
-            WalkCounter = WalkCounter - 12;
+            xCounter = xCounter - 21;
         }
     }
 
@@ -599,7 +594,7 @@ while(1){
             }
         }
         if(OffUp != 1){
-            WalkCounter = WalkCounter + 14;
+            yCounter = yCounter - 1;
         }
     }
     OffUp = 0;
