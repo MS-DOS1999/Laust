@@ -122,7 +122,7 @@ void main(){
 
     //INTRO//
 
-
+/*
       wait_vbl_done();
       DISPLAY_OFF;
       set_bkg_data(0, 219, TitleScreenTiles);
@@ -274,8 +274,8 @@ textNext();
 clearScreenLetter();
 HIDE_BKG;
 
-
-//getchar(); //ligne pour changer de Palette
+*/
+getchar(); //ligne pour changer de Palette
 wait_vbl_done();
 set_bkg_data(0,19, HomeTile);
 set_bkg_tiles(0,0,20,18,Home);
@@ -334,7 +334,7 @@ while(1){
     TabCollide[29] = 68;
     TabCollide[30] = 69;
     TabCollide[31] = 70;
-    TabCollide[32] = 92;
+    TabCollide[32] = 71;
     TabCollide[33] = 93;
 
 
@@ -372,8 +372,8 @@ while(1){
     TabDirection[28] = 1;
     TabDirection[29] = 5;
     TabDirection[30] = 3;
-    TabDirection[31] = 7;
-    TabDirection[32] = 3;
+    TabDirection[31] = 3;
+    TabDirection[32] = 7;
     TabDirection[33] = 3;
 
 
