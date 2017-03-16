@@ -17,6 +17,55 @@
 
 #define S_PALETTE    0x10U
 
+
+
+
+// VARIABLE MAIN//
+
+
+int IDMap = 0;
+
+int i;
+
+int xMove = 0;
+int yMove = 0;
+
+long xCounter = 0;
+long yCounter = 0;
+
+long xCounterForSpawn = 0;
+long yCounterForSpawn = 0;
+
+long WalkCounter = 0;
+long TabCollide[40];
+int TabDirection[40];
+int arrayLength = 0;
+int sizeOfTab;
+int OffRight;
+int OffLeft;
+int OffUp;
+int OffDown;
+
+
+
+
+
+int incMove = 0;
+
+int switchMove = 0;
+
+char nomPlayer[6];
+int tileInc = 0;
+int tileNumber = 0;
+int StartPressed = 0;
+int A_Pressed = 0;
+int delayVerif = 0;
+//VARIABLE MAIN//
+
+
+
+
+
 //PROTOTYPE//
 void clearScreenLetter(){
 
@@ -79,121 +128,83 @@ void textNext(){
     }
 
 }
-//PROTOTYPE//
 
-// VARIABLE MAIN//
-
-int i;
-
-int xMove = 0;
-int yMove = 0;
-
-long xCounter = 0;
-long yCounter = 0;
-
-long WalkCounter = 0;
-long TabCollide[40];
-int TabDirection[40];
-int arrayLength = 0;
-int sizeOfTab;
-int OffRight;
-int OffLeft;
-int OffUp;
-int OffDown;
-
-
-
-
-int incMove = 0;
-
-int switchMove = 0;
-
-char nomPlayer[6];
-int tileInc = 0;
-int tileNumber = 0;
-int StartPressed = 0;
-int A_Pressed = 0;
-int delayVerif = 0;
-//VARIABLE MAIN//
-
-
-// MAIN //
-void main(){
+void Intro(){
 
     //INTRO//
 
-/*
-      wait_vbl_done();
-      DISPLAY_OFF;
-      set_bkg_data(0, 219, TitleScreenTiles);
-      set_bkg_tiles(0,0,20,18,TitleScreenMap);
-      SHOW_BKG;
+    /*
+       wait_vbl_done();
+       DISPLAY_OFF;
+       set_bkg_data(0, 219, TitleScreenTiles);
+       set_bkg_tiles(0,0,20,18,TitleScreenMap);
+       SHOW_BKG;
 
-      SPRITES_8x8;
-      set_sprite_data(0, 10, PressStart);
+       SPRITES_8x8;
+       set_sprite_data(0, 10, PressStart);
 
-      for(tileInc = 0; tileInc <= 9; tileInc++){
-      set_sprite_tile(tileInc, tileInc);
-      }
+       for(tileInc = 0; tileInc <= 9; tileInc++){
+       set_sprite_tile(tileInc, tileInc);
+       }
 
-      move_sprite(0, 45, 110);
-      move_sprite(1, 45 + 8, 110);
-      move_sprite(2, 45 + 16, 110);
-      move_sprite(3, 45 + 24, 110);
-      move_sprite(4, 45 + 32, 110);
-      move_sprite(5, 45 + 48, 110);
-      move_sprite(6, 45 + 56, 110);
-      move_sprite(7, 45 + 64, 110);
-      move_sprite(8, 45 + 72, 110);
-      move_sprite(9, 45 + 80, 110);
+       move_sprite(0, 45, 110);
+       move_sprite(1, 45 + 8, 110);
+       move_sprite(2, 45 + 16, 110);
+       move_sprite(3, 45 + 24, 110);
+       move_sprite(4, 45 + 32, 110);
+       move_sprite(5, 45 + 48, 110);
+       move_sprite(6, 45 + 56, 110);
+       move_sprite(7, 45 + 64, 110);
+       move_sprite(8, 45 + 72, 110);
+       move_sprite(9, 45 + 80, 110);
 
-      set_sprite_data(10, 16, By);
+       set_sprite_data(10, 16, By);
 
-      for(tileInc = 10; tileInc <= 25; tileInc++){
-      set_sprite_tile(tileInc, tileInc);
-      }
+       for(tileInc = 10; tileInc <= 25; tileInc++){
+       set_sprite_tile(tileInc, tileInc);
+       }
 
-      move_sprite(10, 8, 144);
-      move_sprite(11, 8 + 8, 144);
-      move_sprite(12, 8 + 16, 144);
-      move_sprite(13, 8 + 24, 144);
-      move_sprite(20, 168 - 48, 144);
-      move_sprite(21, 168 - 40, 144);
-      move_sprite(22, 168 - 32, 144);
-      move_sprite(23, 168 - 24, 144);
-      move_sprite(24, 168 - 16, 144);
-      move_sprite(25, 168 - 8, 144);
+       move_sprite(10, 8, 144);
+       move_sprite(11, 8 + 8, 144);
+       move_sprite(12, 8 + 16, 144);
+       move_sprite(13, 8 + 24, 144);
+       move_sprite(20, 168 - 48, 144);
+       move_sprite(21, 168 - 40, 144);
+       move_sprite(22, 168 - 32, 144);
+       move_sprite(23, 168 - 24, 144);
+       move_sprite(24, 168 - 16, 144);
+       move_sprite(25, 168 - 8, 144);
 
-      SHOW_SPRITES;
-      wait_vbl_done();
-      DISPLAY_ON;
+       SHOW_SPRITES;
+       wait_vbl_done();
+       DISPLAY_ON;
 
-      while(StartPressed == 0){
+       while(StartPressed == 0){
 
-      move_sprite(0, 45, 220);
-      move_sprite(1, 45 + 8, 220);
-      move_sprite(2, 45 + 16, 220);
-      move_sprite(3, 45 + 24, 220);
-      move_sprite(4, 45 + 32, 220);
-      move_sprite(5, 45 + 48, 220);
-      move_sprite(6, 45 + 56, 220);
-      move_sprite(7, 45 + 64, 220);
-      move_sprite(8, 45 + 72, 220);
-      move_sprite(9, 45 + 80, 220);
-      while(delayVerif != 4000){
-      delayVerif++;
-      if(joypad() == J_START){
-      StartPressed = 1;
-      delayVerif = 4000;
+       move_sprite(0, 45, 220);
+       move_sprite(1, 45 + 8, 220);
+       move_sprite(2, 45 + 16, 220);
+       move_sprite(3, 45 + 24, 220);
+       move_sprite(4, 45 + 32, 220);
+       move_sprite(5, 45 + 48, 220);
+       move_sprite(6, 45 + 56, 220);
+       move_sprite(7, 45 + 64, 220);
+       move_sprite(8, 45 + 72, 220);
+       move_sprite(9, 45 + 80, 220);
+       while(delayVerif != 4000){
+       delayVerif++;
+       if(joypad() == J_START){
+       StartPressed = 1;
+       delayVerif = 4000;
 
-      NR52_REG = 0x80;
-      NR51_REG = 0x11;
-      NR50_REG = 0x77;
+       NR52_REG = 0x80;
+       NR51_REG = 0x11;
+       NR50_REG = 0x77;
 
-      NR10_REG = 0x40;
-      NR11_REG = 0x9A;
-      NR12_REG = 0x41;
-      NR13_REG = 0x9A;
+       NR10_REG = 0x40;
+       NR11_REG = 0x9A;
+       NR12_REG = 0x41;
+    NR13_REG = 0x9A;
     NR14_REG = 0x98;
 
 }
@@ -276,110 +287,11 @@ HIDE_BKG;
 
 */
 getchar(); //ligne pour changer de Palette
-wait_vbl_done();
-set_bkg_data(0,19, HomeTile);
-set_bkg_tiles(0,0,20,18,Home);
-// set_bkg_data(0, 80, MapTownTile);
-// set_bkg_tiles(0,0,22,19,MapTownMap);
-SHOW_BKG;
-HIDE_SPRITES;
-SPRITES_8x16;
-set_sprite_data(0, 20, Robot);
-for(tileInc = 0; tileInc <= 9; tileInc++){
-    set_sprite_tile(tileInc, tileNumber);
-    tileNumber = tileNumber + 2;
-}
-xMove = 72;
-yMove = 84;
-xCounter = 168;
-yCounter = 10;
-move_sprite(0, xMove, yMove);
-SHOW_SPRITES;
-
+IDMap = 1;
 //INTRO//
+}
 
-
-//BOUCLE PRINCIPALE//
-while(1){
-
-    TabCollide[0] = 73;
-    TabCollide[1] = 94;
-    TabCollide[2] = 115;
-    TabCollide[3] = 136;
-    TabCollide[4] = 157;
-    TabCollide[5] = 178; //SPAWN Home
-    TabCollide[6] = 199;
-    TabCollide[7] = 220;
-    TabCollide[8] = 241;
-    TabCollide[9] = 262;
-    TabCollide[10] = 283;
-    TabCollide[11] = 304;
-    TabCollide[12] = 325;
-    TabCollide[13] = 324;
-    TabCollide[14] = 323;
-    TabCollide[15] = 322;
-    TabCollide[16] = 321;
-    TabCollide[17] = 320;
-    TabCollide[18] = 299;
-    TabCollide[19] = 278;
-    TabCollide[20] = 257;
-    TabCollide[21] = 236;
-    TabCollide[22] = 216;
-    TabCollide[23] = 195;
-    TabCollide[24] = 174;
-    TabCollide[25] = 152;
-    TabCollide[26] = 131;
-    TabCollide[27] = 110;
-    TabCollide[28] = 89;
-    TabCollide[29] = 68;
-    TabCollide[30] = 69;
-    TabCollide[31] = 70;
-    TabCollide[32] = 71;
-    TabCollide[33] = 93;
-
-
-
-
-
-    TabDirection[0] = 12;
-    TabDirection[1] = 2;
-    TabDirection[2] = 2;
-    TabDirection[3] = 2;
-    TabDirection[4] = 2;
-    TabDirection[5] = 2;
-    TabDirection[6] = 2;
-    TabDirection[7] = 2;
-    TabDirection[8] = 2;
-    TabDirection[9] = 2;
-    TabDirection[10] = 2;
-    TabDirection[11] = 2;
-    TabDirection[12] = 8;
-    TabDirection[13] = 4;
-    TabDirection[14] = 4;
-    TabDirection[15] = 4;
-    TabDirection[16] = 4;
-    TabDirection[17] = 6;
-    TabDirection[18] = 1;
-    TabDirection[19] = 1;
-    TabDirection[20] = 1;
-    TabDirection[21] = 5;
-    TabDirection[22] = 1;
-    TabDirection[23] = 1;
-    TabDirection[24] = 1;
-    TabDirection[25] = 6;
-    TabDirection[26] = 1;
-    TabDirection[27] = 1;
-    TabDirection[28] = 1;
-    TabDirection[29] = 5;
-    TabDirection[30] = 3;
-    TabDirection[31] = 3;
-    TabDirection[32] = 7;
-    TabDirection[33] = 3;
-
-
-
-
-    arrayLength = 34;
+void MoveAndColl(){
 
     //COLLISION ET MOUVEMENT//
 
@@ -605,7 +517,175 @@ while(1){
     //COLLISION ET MOUVEMENT//
 }
 
-//BOUCLE PRINCIPALE//
+void Spawn(){
+    xMove = 8;
+    yMove = 4;
+
+    xCounterForSpawn = xCounter;
+    yCounterForSpawn = yCounter;
+
+    while(xCounterForSpawn != 0){
+        xMove = xMove + 8;
+        xCounterForSpawn = xCounterForSpawn - 21;
+    }
+    while(yCounterForSpawn != 0){
+        yMove = yMove + 8;
+        yCounterForSpawn = yCounterForSpawn - 1;
+    }
+
+
+    SPRITES_8x16;
+    set_sprite_data(0, 20, Robot);
+    for(tileInc = 0; tileInc <= 9; tileInc++){
+        set_sprite_tile(tileInc, tileNumber);
+        tileNumber = tileNumber + 2;
+    }
+
+    move_sprite(0, xMove, yMove);
+    SHOW_SPRITES;
+}
+
+
+void Load_Home(){
+
+    HIDE_BKG;
+    wait_vbl_done();
+    set_bkg_data(0,19, HomeTile);
+    set_bkg_tiles(0,0,20,18,Home);
+    SHOW_BKG;
+    HIDE_SPRITES;
+    //SPAWN//
+    xCounter = 168;
+    yCounter = 10;
+    //SPAWN//
+
+}
+
+void Col_Home(){
+
+
+    TabCollide[0] = 73;
+    TabCollide[1] = 94;
+    TabCollide[2] = 115;
+    TabCollide[3] = 136;
+    TabCollide[4] = 157;
+    TabCollide[5] = 178; //SPAWN Home
+    TabCollide[6] = 199;
+    TabCollide[7] = 220;
+    TabCollide[8] = 241;
+    TabCollide[9] = 262;
+    TabCollide[10] = 283;
+    TabCollide[11] = 304;
+    TabCollide[12] = 325;
+    TabCollide[13] = 324;
+    TabCollide[14] = 323;
+    TabCollide[15] = 322;
+    TabCollide[16] = 321;
+    TabCollide[17] = 320;
+    TabCollide[18] = 299;
+    TabCollide[19] = 278;
+    TabCollide[20] = 257;
+    TabCollide[21] = 236;
+    TabCollide[22] = 216;
+    TabCollide[23] = 195;
+    TabCollide[24] = 174;
+    TabCollide[25] = 152;
+    TabCollide[26] = 131;
+    TabCollide[27] = 110;
+    TabCollide[28] = 89;
+    TabCollide[29] = 68;
+    TabCollide[30] = 69;
+    TabCollide[31] = 70;
+    TabCollide[32] = 71;
+    TabCollide[33] = 93;
+
+
+
+
+
+    TabDirection[0] = 12;
+    TabDirection[1] = 2;
+    TabDirection[2] = 2;
+    TabDirection[3] = 2;
+    TabDirection[4] = 2;
+    TabDirection[5] = 2;
+    TabDirection[6] = 2;
+    TabDirection[7] = 2;
+    TabDirection[8] = 2;
+    TabDirection[9] = 2;
+    TabDirection[10] = 2;
+    TabDirection[11] = 2;
+    TabDirection[12] = 8;
+    TabDirection[13] = 4;
+    TabDirection[14] = 4;
+    TabDirection[15] = 4;
+    TabDirection[16] = 4;
+    TabDirection[17] = 6;
+    TabDirection[18] = 1;
+    TabDirection[19] = 1;
+    TabDirection[20] = 1;
+    TabDirection[21] = 5;
+    TabDirection[22] = 1;
+    TabDirection[23] = 1;
+    TabDirection[24] = 1;
+    TabDirection[25] = 6;
+    TabDirection[26] = 1;
+    TabDirection[27] = 1;
+    TabDirection[28] = 1;
+    TabDirection[29] = 5;
+    TabDirection[30] = 3;
+    TabDirection[31] = 3;
+    TabDirection[32] = 7;
+    TabDirection[33] = 3;
+
+
+
+
+    arrayLength = 34;
+
+
+
+}
+
+
+void MapChanger(){
+
+    //CHANGEMENT DE MAP//
+
+    switch(IDMap){
+        case 0:
+            break;
+        case 1:
+            Load_Home();
+            Spawn();
+            Col_Home();
+            break;
+        default:
+            break;
+    }
+    IDMap = 0;
+
+    //FIN CHANGEMENT DE MAP//
+}
+
+
+//PROTOTYPE//
+
+// MAIN //
+void main(){
+
+    Intro();
+
+    //BOUCLE PRINCIPALE//
+    while(1){
+
+
+        MapChanger();
+        MoveAndColl();
+
+    }
+    //BOUCLE PRINCIPALE//
+
 }
 
 
