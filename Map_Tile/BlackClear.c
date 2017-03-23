@@ -1,8 +1,8 @@
 /*
 
- HOMETILE.H
+ BLACKCLEAR.C
 
- Include File.
+ Tile Source File.
 
  Info:
   Form                 : All tiles as one unit.
@@ -10,7 +10,7 @@
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 20
+  Tiles                : 0 to 0
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -22,10 +22,11 @@
 
 */
 
-
-/* Bank of tiles. */
-#define HomeTileBank 0
 /* Start of tile array. */
-extern unsigned char HomeTile[];
+unsigned char BlackClear[] =
+{
+  0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+  0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF
+};
 
-/* End of HOMETILE.H */
+/* End of BLACKCLEAR.C */

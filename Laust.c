@@ -14,6 +14,7 @@
 #include "Map_Tile/HomeTile.c"
 #include "Map_Tile/Home.c"
 #include "Map_Tile/HomeRoom.c"
+#include "Map_Tile/BlackClear.c"
 
 #define S_PALETTE    0x10U
 
@@ -47,8 +48,9 @@ int OffUp;
 int OffDown;
 
 
+int OffMove = 0;
 
-
+int OutCheck = 0;
 
 int incMove = 0;
 
@@ -288,6 +290,7 @@ HIDE_BKG;
 */
 getchar(); //ligne pour changer de Palette
 IDMap = 1;
+OutCheck = 1;
 //INTRO//
 }
 
@@ -371,6 +374,18 @@ void MoveAndColl(){
                     OffDown = 1;
                     OffLeft = 1;
                     OffUp = 1;
+                    OffRight = 0;
+                    break;
+                case 13:
+                    OffDown = 0;
+                    OffUp = 0;
+                    OffLeft = 1;
+                    OffRight = 1;
+                    break;
+                case 14:
+                    OffDown = 1;
+                    OffUp = 1;
+                    OffLeft = 0;
                     OffRight = 0;
                     break;
                 default:
@@ -542,6 +557,7 @@ void Spawn(){
     }
 
     move_sprite(0, xMove, yMove);
+    set_sprite_tile(0,0);
     SHOW_SPRITES;
 }
 
@@ -550,15 +566,23 @@ void Load_Home(){
 
     HIDE_BKG;
     wait_vbl_done();
-    set_bkg_data(0,19, HomeTile);
+    set_bkg_data(0,21, HomeTile);
     set_bkg_tiles(0,0,20,18,Home);
     SHOW_BKG;
     HIDE_SPRITES;
     //SPAWN//
-    xCounter = 168;
-    yCounter = 10;
+    xCounter = 294;
+    yCounter = 5;
     //SPAWN//
 
+    OutCheck = 1;
+
+}
+
+void Out_Home(){
+  if(WalkCounter == 320){
+    IDMap = 2;
+  }
 }
 
 void Col_Home(){
@@ -569,7 +593,7 @@ void Col_Home(){
     TabCollide[2] = 115;
     TabCollide[3] = 136;
     TabCollide[4] = 157;
-    TabCollide[5] = 178; //SPAWN Home
+    TabCollide[5] = 178;
     TabCollide[6] = 199;
     TabCollide[7] = 220;
     TabCollide[8] = 241;
@@ -647,23 +671,171 @@ void Col_Home(){
 
 }
 
+void Load_HomeRoom(){
+
+    HIDE_BKG;
+    wait_vbl_done();
+    set_bkg_data(0,21, HomeTile);
+    set_bkg_tiles(0,0,20,18,HomeRoom);
+    SHOW_BKG;
+    HIDE_SPRITES;
+    //SPAWN//
+    xCounter = 294;
+    yCounter = 5;
+    //SPAWN//
+
+    OutCheck = 2;
+
+
+}
+
+void Out_HomeRoom(){
+  if(WalkCounter == 320){
+    IDMap = 1;
+  }
+}
+
+void Col_HomeRoom(){
+
+
+    TabCollide[0] = 299;
+    TabCollide[1] = 278;
+    TabCollide[2] = 257;
+    TabCollide[3] = 258;
+    TabCollide[4] = 259;
+    TabCollide[5] = 260;
+    TabCollide[6] = 240;
+    TabCollide[7] = 218;
+    TabCollide[8] = 217;
+    TabCollide[9] = 216;
+    TabCollide[10] = 236;
+    TabCollide[11] = 215;
+    TabCollide[12] = 194;
+    TabCollide[13] = 173;
+    TabCollide[14] = 174;
+    TabCollide[15] = 175;
+    TabCollide[16] = 176;
+    TabCollide[17] = 198;
+    TabCollide[18] = 178;
+    TabCollide[19] = 199;
+    TabCollide[20] = 220;
+    TabCollide[21] = 241;
+    TabCollide[22] = 262;
+    TabCollide[23] = 283;
+    TabCollide[24] = 304;
+    TabCollide[25] = 325;
+    TabCollide[26] = 324;
+    TabCollide[27] = 323;
+    TabCollide[28] = 322;
+    TabCollide[29] = 321;
+    TabCollide[30] = 320;
+
+
+
+
+
+    TabDirection[0] = 1;
+    TabDirection[1] = 1;
+    TabDirection[2] = 1;
+    TabDirection[3] = 3;
+    TabDirection[4] = 3;
+    TabDirection[5] = 3;
+    TabDirection[6] = 1;
+    TabDirection[7] = 4;
+    TabDirection[8] = 4;
+    TabDirection[9] = 4;
+    TabDirection[10] = 14;
+    TabDirection[11] = 1;
+    TabDirection[12] = 1;
+    TabDirection[13] = 5;
+    TabDirection[14] = 3;
+    TabDirection[15] = 3;
+    TabDirection[16] = 7;
+    TabDirection[17] = 3;
+    TabDirection[18] = 12;
+    TabDirection[19] = 2;
+    TabDirection[20] = 2;
+    TabDirection[21] = 2;
+    TabDirection[22] = 2;
+    TabDirection[23] = 2;
+    TabDirection[24] = 2;
+    TabDirection[25] = 8;
+    TabDirection[26] = 4;
+    TabDirection[27] = 4;
+    TabDirection[28] = 4;
+    TabDirection[29] = 4;
+    TabDirection[30] = 6;
+
+
+
+
+    arrayLength = 31;
+
+
+
+}
+
+
+void Black_Clear(){
+        int x, y;
+
+        set_bkg_data(0, 1, BlackClear);
+
+    for(y=0; y<=17; y++){
+        for(x=0; x<=19; x++){
+            set_bkg_tiles(x, y, 1, 1, BlackClear);
+            delay(4);
+        }
+    }
+
+
+
+}
+
+void OutMatrix(){
+
+    switch(OutCheck){
+
+        case 1:
+            Out_Home();
+            break;
+        case 2:
+            Out_HomeRoom();
+            break;
+        default:
+            break;
+
+
+    }
+
+}
 
 void MapChanger(){
 
     //CHANGEMENT DE MAP//
 
+    OffMove = 1;
+
     switch(IDMap){
         case 0:
             break;
         case 1:
+            Col_Home();
+            Black_Clear();
             Load_Home();
             Spawn();
-            Col_Home();
+            break;
+        case 2:
+            Col_HomeRoom();
+            Black_Clear();
+            Load_HomeRoom();
+            Spawn();
             break;
         default:
             break;
     }
     IDMap = 0;
+    OffMove = 0;
 
     //FIN CHANGEMENT DE MAP//
 }
@@ -681,8 +853,10 @@ void main(){
 
 
         MapChanger();
-        MoveAndColl();
-
+        if(!OffMove){
+          MoveAndColl();
+        }
+        OutMatrix();
     }
     //BOUCLE PRINCIPALE//
 
