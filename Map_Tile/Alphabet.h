@@ -1,8 +1,8 @@
 /*
 
- BLACKCLEAR.C
+ ALPHABET.H
 
- Tile Source File.
+ Include File.
 
  Info:
   Form                 : All tiles as one unit.
@@ -10,7 +10,7 @@
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 0
+  Tiles                : 0 to 122
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -22,11 +22,10 @@
 
 */
 
-/* Start of tile array. */
-const unsigned char BlackClear[] =
-{
-  0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
-  0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF
-};
 
-/* End of BLACKCLEAR.C */
+/* Bank of tiles. */
+#define AlphabetBank 1
+/* Start of tile array. */
+extern unsigned char Alphabet[];
+
+/* End of ALPHABET.H */

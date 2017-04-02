@@ -2,19 +2,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gb/console.h>
+
+
+
 #include "Map_Tile/TitleScreenTiles.c"
 #include "Map_Tile/TitleScreenMap.c"
 #include "Map_Tile/PressStart.c"
 #include "Map_Tile/By.c"
 #include "Map_Tile/textIcon.c"
 #include "IncludeCustom/MessageIntro.c"
-#include "Map_Tile/MapTownTile.c"
-#include "Map_Tile/MapTownMap.c"
 #include "Map_Tile/Robot.c"
 #include "Map_Tile/HomeTile.c"
 #include "Map_Tile/Home.c"
 #include "Map_Tile/HomeRoom.c"
 #include "Map_Tile/BlackClear.c"
+#include "Map_Tile/HomeChest.c"
+#include "Map_Tile/BlackClearMap.c"
+#include "Map_Tile/Alphabet.c"
+#include "Map_Tile/textNES.c"
+#include "Map_Tile/textNES1.c"
+#include "Map_Tile/textORDI.c"
+#include "Map_Tile/textORDI1.c"
+#include "Map_Tile/TownTile.c"
+#include "Map_Tile/TownMap.c"
 
 #define S_PALETTE    0x10U
 
@@ -47,6 +57,7 @@ int OffLeft;
 int OffUp;
 int OffDown;
 
+int Direction = 0;
 
 int OffMove = 0;
 
@@ -399,6 +410,7 @@ void MoveAndColl(){
     }
 
     if(joypad() == J_DOWN){
+
         for(incMove = 0; incMove <= 7; incMove++){
 
             if(incMove <= 5 && !switchMove){
@@ -427,10 +439,14 @@ void MoveAndColl(){
         if(OffDown != 1){
             yCounter = yCounter + 1;
         }
+
+        Direction = 1;
+
     }
 
 
     else if(joypad() == J_RIGHT){
+
         for(incMove = 0; incMove <= 7; incMove++){
 
             if(incMove <= 5 && !switchMove){
@@ -459,6 +475,9 @@ void MoveAndColl(){
         if(OffRight != 1){
             xCounter = xCounter + 21;
         }
+
+        Direction = 2;
+
     }
 
 
@@ -491,6 +510,9 @@ void MoveAndColl(){
         if(OffLeft != 1){
             xCounter = xCounter - 21;
         }
+
+        Direction = 3;
+
     }
 
 
@@ -523,6 +545,9 @@ void MoveAndColl(){
         if(OffUp != 1){
             yCounter = yCounter - 1;
         }
+
+        Direction = 4;
+
     }
     OffUp = 0;
     OffDown = 0;
@@ -551,6 +576,9 @@ void Spawn(){
 
     SPRITES_8x16;
     set_sprite_data(0, 20, Robot);
+
+    tileNumber = 0;
+
     for(tileInc = 0; tileInc <= 9; tileInc++){
         set_sprite_tile(tileInc, tileNumber);
         tileNumber = tileNumber + 2;
@@ -566,7 +594,7 @@ void Load_Home(){
 
     HIDE_BKG;
     wait_vbl_done();
-    set_bkg_data(0,21, HomeTile);
+    set_bkg_data(0,41, HomeTile);
     set_bkg_tiles(0,0,20,18,Home);
     SHOW_BKG;
     HIDE_SPRITES;
@@ -580,92 +608,123 @@ void Load_Home(){
 }
 
 void Out_Home(){
-  if(WalkCounter == 320){
-    IDMap = 2;
-  }
+    if(WalkCounter == 320){
+        IDMap = 2;
+    }
+    else if(WalkCounter == 200 || WalkCounter == 179){
+        IDMap = 3;
+    }
+
+
+    if(WalkCounter == 304 && joypad() == J_A && Direction == 4 || WalkCounter == 325 && joypad() == J_A && Direction == 4){
+          OffMove = 1;
+          HIDE_WIN;
+          tileInc = 0;
+          set_win_data(128, 122, Alphabet);
+            set_win_tiles(0, 0, 20, 5, textORDI);
+            move_win(8, 104);
+          SHOW_WIN;
+          delay(1000);
+
+          waitpad(J_A);
+
+
+          HIDE_WIN;
+          tileInc = 0;
+          set_win_data(128, 122, Alphabet);
+            set_win_tiles(0, 0, 20, 5, textORDI1);
+            move_win(8, 104);
+          SHOW_WIN;
+          delay(1000);
+
+          waitpad(J_A);
+
+          HIDE_WIN;
+          OffMove = 0;
+          delay(500);
+
+    }
 }
 
 void Col_Home(){
 
 
-    TabCollide[0] = 73;
-    TabCollide[1] = 94;
-    TabCollide[2] = 115;
-    TabCollide[3] = 136;
-    TabCollide[4] = 157;
-    TabCollide[5] = 178;
-    TabCollide[6] = 199;
-    TabCollide[7] = 220;
-    TabCollide[8] = 241;
-    TabCollide[9] = 262;
-    TabCollide[10] = 283;
-    TabCollide[11] = 304;
-    TabCollide[12] = 325;
-    TabCollide[13] = 324;
-    TabCollide[14] = 323;
-    TabCollide[15] = 322;
-    TabCollide[16] = 321;
-    TabCollide[17] = 320;
-    TabCollide[18] = 299;
-    TabCollide[19] = 278;
-    TabCollide[20] = 257;
-    TabCollide[21] = 236;
-    TabCollide[22] = 216;
-    TabCollide[23] = 195;
-    TabCollide[24] = 174;
-    TabCollide[25] = 152;
-    TabCollide[26] = 131;
-    TabCollide[27] = 110;
-    TabCollide[28] = 89;
-    TabCollide[29] = 68;
-    TabCollide[30] = 69;
-    TabCollide[31] = 70;
-    TabCollide[32] = 71;
-    TabCollide[33] = 93;
+    TabCollide[0] = 299;
+    TabCollide[1] = 278;
+    TabCollide[2] = 257;
+    TabCollide[3] = 236;
+    TabCollide[4] = 216;
+    TabCollide[5] = 195;
+    TabCollide[6] = 174;
+    TabCollide[7] = 152;
+    TabCollide[8] = 131;
+    TabCollide[9] = 110;
+    TabCollide[10] = 90;
+    TabCollide[11] = 69;
+    TabCollide[12] = 70;
+    TabCollide[13] = 91;
+    TabCollide[14] = 113;
+    TabCollide[15] = 114;
+    TabCollide[16] = 115;
+    TabCollide[17] = 136;
+    TabCollide[18] = 157;
+    TabCollide[19] = 178;
+    TabCollide[20] = 199;
+    TabCollide[21] = 220;
+    TabCollide[22] = 241;
+    TabCollide[23] = 262;
+    TabCollide[24] = 283;
+    TabCollide[25] = 304;
+    TabCollide[26] = 325;
+    TabCollide[27] = 282;
+    TabCollide[28] = 281;
+    TabCollide[29] = 301;
+    TabCollide[30] = 322;
+    TabCollide[31] = 321;
+    TabCollide[32] = 320;
 
 
 
 
 
-    TabDirection[0] = 12;
-    TabDirection[1] = 2;
-    TabDirection[2] = 2;
-    TabDirection[3] = 2;
-    TabDirection[4] = 2;
-    TabDirection[5] = 2;
-    TabDirection[6] = 2;
-    TabDirection[7] = 2;
-    TabDirection[8] = 2;
-    TabDirection[9] = 2;
-    TabDirection[10] = 2;
-    TabDirection[11] = 2;
-    TabDirection[12] = 8;
-    TabDirection[13] = 4;
-    TabDirection[14] = 4;
-    TabDirection[15] = 4;
-    TabDirection[16] = 4;
-    TabDirection[17] = 6;
-    TabDirection[18] = 1;
-    TabDirection[19] = 1;
-    TabDirection[20] = 1;
-    TabDirection[21] = 5;
-    TabDirection[22] = 1;
-    TabDirection[23] = 1;
-    TabDirection[24] = 1;
-    TabDirection[25] = 6;
-    TabDirection[26] = 1;
-    TabDirection[27] = 1;
-    TabDirection[28] = 1;
-    TabDirection[29] = 5;
-    TabDirection[30] = 3;
-    TabDirection[31] = 3;
-    TabDirection[32] = 7;
-    TabDirection[33] = 3;
+    TabDirection[0] = 1;
+    TabDirection[1] = 1;
+    TabDirection[2] = 1;
+    TabDirection[3] = 5;
+    TabDirection[4] = 1;
+    TabDirection[5] = 1;
+    TabDirection[6] = 1;
+    TabDirection[7] = 6;
+    TabDirection[8] = 1;
+    TabDirection[9] = 5;
+    TabDirection[10] = 1;
+    TabDirection[11] = 5;
+    TabDirection[12] = 7;
+    TabDirection[13] = 2;
+    TabDirection[14] = 3;
+    TabDirection[15] = 3;
+    TabDirection[16] = 7;
+    TabDirection[17] = 2;
+    TabDirection[18] = 2;
+    TabDirection[19] = NULL;
+    TabDirection[20] = NULL;
+    TabDirection[21] = 2;
+    TabDirection[22] = 2;
+    TabDirection[23] = 2;
+    TabDirection[24] = 2;
+    TabDirection[25] = 14;
+    TabDirection[26] = 10;
+    TabDirection[27] = 4;
+    TabDirection[28] = 4;
+    TabDirection[29] = 2;
+    TabDirection[30] = 8;
+    TabDirection[31] = 4;
+    TabDirection[32] = 6;
 
 
 
 
-    arrayLength = 34;
+    arrayLength = 33;
 
 
 
@@ -673,11 +732,13 @@ void Col_Home(){
 
 void Load_HomeRoom(){
 
+
     HIDE_BKG;
     wait_vbl_done();
-    set_bkg_data(0,21, HomeTile);
+    set_bkg_data(0,40, HomeTile);
     set_bkg_tiles(0,0,20,18,HomeRoom);
     SHOW_BKG;
+
     HIDE_SPRITES;
     //SPAWN//
     xCounter = 294;
@@ -690,9 +751,44 @@ void Load_HomeRoom(){
 }
 
 void Out_HomeRoom(){
-  if(WalkCounter == 320){
-    IDMap = 1;
-  }
+    if(WalkCounter == 320){
+        IDMap = 1;
+    }
+
+    if(WalkCounter == 176 && joypad() == J_A && Direction == 1 || WalkCounter == 198 && joypad() == J_A && Direction == 3 || WalkCounter == 178 && joypad() == J_A && Direction == 4){
+
+        set_bkg_tiles(8, 8, 1, 2, HomeChest);
+    }
+
+    if(WalkCounter == 260 && joypad() == J_A && Direction == 3 || WalkCounter == 218 && joypad() == J_A && Direction == 2){
+          OffMove = 1;
+          HIDE_WIN;
+          tileInc = 0;
+          set_win_data(128, 122, Alphabet);
+            set_win_tiles(0, 0, 20, 5, textNES);
+            move_win(8, 104);
+          SHOW_WIN;
+          delay(1000);
+
+          waitpad(J_A);
+
+          
+          HIDE_WIN;
+          tileInc = 0;
+          set_win_data(128, 122, Alphabet);
+            set_win_tiles(0, 0, 20, 5, textNES1);
+            move_win(8, 104);
+          SHOW_WIN;
+          delay(1000);
+
+          waitpad(J_A);
+
+          HIDE_WIN;
+          OffMove = 0;
+          delay(500);
+
+    }
+
 }
 
 void Col_HomeRoom(){
@@ -710,9 +806,9 @@ void Col_HomeRoom(){
     TabCollide[9] = 216;
     TabCollide[10] = 236;
     TabCollide[11] = 215;
-    TabCollide[12] = 194;
-    TabCollide[13] = 173;
-    TabCollide[14] = 174;
+    TabCollide[12] = 195;
+    TabCollide[13] = 174;
+    TabCollide[14] = NULL;
     TabCollide[15] = 175;
     TabCollide[16] = 176;
     TabCollide[17] = 198;
@@ -745,10 +841,10 @@ void Col_HomeRoom(){
     TabDirection[8] = 4;
     TabDirection[9] = 4;
     TabDirection[10] = 14;
-    TabDirection[11] = 1;
+    TabDirection[11] = 5;
     TabDirection[12] = 1;
     TabDirection[13] = 5;
-    TabDirection[14] = 3;
+    TabDirection[14] = NULL;
     TabDirection[15] = 3;
     TabDirection[16] = 7;
     TabDirection[17] = 3;
@@ -775,16 +871,39 @@ void Col_HomeRoom(){
 
 }
 
+void Load_Town1(){
+
+
+    HIDE_BKG;
+    wait_vbl_done();
+    set_bkg_data(0,57, TownTile);
+    set_bkg_tiles(0,0,20,18,TownMap);
+    SHOW_BKG;
+
+    HIDE_SPRITES;
+    //SPAWN//
+    xCounter = 63;
+    yCounter = 4;
+    //SPAWN//
+
+    OutCheck = 3;
+
+
+}
 
 void Black_Clear(){
-        int x, y;
 
-        set_bkg_data(0, 1, BlackClear);
+    int x, y;
 
+    set_bkg_data(0, 1, BlackClear);
+    wait_vbl_done();
     for(y=0; y<=17; y++){
+        if(y == 7){
+            HIDE_SPRITES;
+        }
         for(x=0; x<=19; x++){
-            set_bkg_tiles(x, y, 1, 1, BlackClear);
-            delay(4);
+            set_bkg_tiles(x, y, 1, 1, BlackClearMap);
+            delay(1);
         }
     }
 
@@ -814,28 +933,37 @@ void MapChanger(){
 
     //CHANGEMENT DE MAP//
 
-    OffMove = 1;
 
     switch(IDMap){
         case 0:
             break;
         case 1:
+            OffMove = 1;
             Col_Home();
             Black_Clear();
             Load_Home();
             Spawn();
+            OffMove = 0;
             break;
         case 2:
+            OffMove = 1;
             Col_HomeRoom();
             Black_Clear();
             Load_HomeRoom();
             Spawn();
+            OffMove = 0;
+            break;
+        case 3:
+            OffMove = 1;
+            Black_Clear();
+            Load_Town1();
+            Spawn();
+            OffMove = 0;
             break;
         default:
             break;
     }
     IDMap = 0;
-    OffMove = 0;
 
     //FIN CHANGEMENT DE MAP//
 }
@@ -854,7 +982,7 @@ void main(){
 
         MapChanger();
         if(!OffMove){
-          MoveAndColl();
+            MoveAndColl();
         }
         OutMatrix();
     }
