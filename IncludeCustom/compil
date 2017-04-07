@@ -1,1 +1,13 @@
 lcc -Wl-yt3 -Wl-yo4 -Wl-ya4 -o Laust.gb Laust.c 
+
+
+
+lcc -Wa-l -c -o Laust.o Laust.c
+
+lcc -Wa-l -Wf-bo1 -c -o bank1.o bank1.c
+
+..
+
+.. for all bank
+
+lcc -Wl-yt3 -Wl-yo64 -Wl-ya4 -o Laust.gb Laust.o bank1.o
