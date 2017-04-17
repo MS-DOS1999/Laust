@@ -76,7 +76,7 @@ void Intro() BANKED{
 
     //INTRO//
 
-      /* wait_vbl_done();
+       wait_vbl_done();
        DISPLAY_OFF;
        set_bkg_data(0, 219, TitleScreenTiles);
        set_bkg_tiles(0,0,20,18,TitleScreenMap);
@@ -192,12 +192,23 @@ if(StartPressed == 1){
         move_sprite(tileInc, 200, 200);
     }
 
-}*/
+}
 }
 
 void Intro2() BANKED{
 	
-/*messageIntroPart1();
+printf("\n\n Ton nom: ");
+for(delayVerif = 0; delayVerif < 6; delayVerif++){
+
+    nomPlayer[delayVerif] = getchar();
+    printf("%c", nomPlayer[delayVerif]);
+
+}
+clearScreenLetter();
+HIDE_SPRITES;
+delay(200);
+	
+messageIntroPart1();
 SPRITES_8x8;
 set_sprite_data(0, 1, textIcon);
 set_sprite_tile(0, 0);
@@ -213,28 +224,11 @@ SHOW_SPRITES;
 textNext();
 clearScreenLetter();
 HIDE_SPRITES;
-printf("\n\n Ton nom: ");
-for(delayVerif = 0; delayVerif < 6; delayVerif++){
-
-    nomPlayer[delayVerif] = getchar();
-    printf("%c", nomPlayer[delayVerif]);
-
-}
-clearScreenLetter();
-HIDE_SPRITES;
-delay(200);
-
-messageIntroPart3(nomPlayer);
-SHOW_SPRITES;
-textNext();
-clearScreenLetter();
 HIDE_BKG;
-*/
 
-getchar(); //ligne pour changer de Palette
 IDMap = 1;
 OutCheck = 1;
-//INTRO//*/
+//INTRO//
 
 }
 

@@ -397,8 +397,8 @@ void Col1_Town1(){
     TabCollide[2] = 162;
     TabCollide[3] = 140;
     TabCollide[4] = NULL;
-    TabCollide[5] = 118;
-    TabCollide[6] = 97;
+    TabCollide[5] = 119;
+    TabCollide[6] = 98;
     TabCollide[7] = 77;
     TabCollide[8] = 57;
     TabCollide[9] = 58;
@@ -436,11 +436,11 @@ void Col1_Town1(){
     TabDirection[0] = 3;
     TabDirection[1] = 3;
     TabDirection[2] = 3;
-    TabDirection[3] = 7;
+    TabDirection[3] = 2;
     TabDirection[4] = NULL;
     TabDirection[5] = 2;
     TabDirection[6] = 2;
-    TabDirection[7] = 8;
+    TabDirection[7] = 2;
     TabDirection[8] = 4;
     TabDirection[9] = 8;
     TabDirection[10] = 7;
@@ -477,7 +477,7 @@ void Col1_Town1(){
 
 }
 
-void Col2_Town1() BANKED{
+void Col2_Town1(){
 
 TabCollide[0] = 174;
 TabCollide[1] = 194;
@@ -489,12 +489,12 @@ TabCollide[6] = 254;
 TabCollide[7] = 275;
 TabCollide[8] = 296;
 TabCollide[9] = 297;
-TabCollide[10] = 303;
-TabCollide[11] = 282;
-TabCollide[12] = 262;
-TabCollide[13] = 263;
-TabCollide[14] = 264;
-TabCollide[15] = 265;
+TabCollide[10] = 304;
+TabCollide[11] = 283;
+TabCollide[12] = 263;
+TabCollide[13] = 264;
+TabCollide[14] = 265;
+TabCollide[15] = 266;
 TabCollide[16] = 308;
 TabCollide[17] = 288;
 TabCollide[18] = 310;
@@ -563,10 +563,104 @@ TabDirection[39] = NULL;
 
 }
 
+void Col3_Town1(){
+
+TabCollide[0] = 317;
+TabCollide[1] = 319;
+TabCollide[2] = 338;
+TabCollide[3] = 339;
+TabCollide[4] = 359;
+TabCollide[5] = 380;
+TabCollide[6] = 381;
+TabCollide[7] = 382;
+TabCollide[8] = 383;
+TabCollide[9] = 405;
+TabCollide[10] = 408;
+TabCollide[11] = 325;
+TabCollide[12] = 388;
+TabCollide[13] = 347;
+TabCollide[14] = 389;
+TabCollide[15] = 348;
+TabCollide[16] = 390;
+TabCollide[17] = 349;
+TabCollide[18] = 371;
+TabCollide[19] = 391;
+TabCollide[20] = 350;
+TabCollide[21] = 392;
+TabCollide[22] = 330;
+TabCollide[23] = 351;
+TabCollide[24] = 393;
+TabCollide[25] = 331;
+TabCollide[26] = 352;
+TabCollide[27] = 373;
+TabCollide[28] = 394;
+TabCollide[29] = NULL;
+TabCollide[30] = NULL;
+TabCollide[31] = NULL;
+TabCollide[32] = NULL;
+TabCollide[33] = NULL;
+TabCollide[34] = NULL;
+TabCollide[35] = NULL;
+TabCollide[36] = NULL;
+TabCollide[37] = NULL;
+TabCollide[38] = NULL;
+TabCollide[39] = NULL;
+
+TabDirection[0] = 14;
+TabDirection[1] = 1;
+TabDirection[2] = 1;
+TabDirection[3] = 3;
+TabDirection[4] = 1;
+TabDirection[5] = 6;
+TabDirection[6] = 4;
+TabDirection[7] = 4;
+TabDirection[8] = 4;
+TabDirection[9] = 1;
+TabDirection[10] = 2;
+TabDirection[11] = 2;
+TabDirection[12] = 4;
+TabDirection[13] = 3;
+TabDirection[14] = 4;
+TabDirection[15] = 3;
+TabDirection[16] = 4;
+TabDirection[17] = 3;
+TabDirection[18] = 2;
+TabDirection[19] = 4;
+TabDirection[20] = 3;
+TabDirection[21] = 4;
+TabDirection[22] = 1;
+TabDirection[23] = 4;
+TabDirection[24] = 13;
+TabDirection[25] = 2;
+TabDirection[26] = 2;
+TabDirection[27] = 14;
+TabDirection[28] = 8;
+TabDirection[29] = NULL;
+TabDirection[30] = NULL;
+TabDirection[31] = NULL;
+TabDirection[32] = NULL;
+TabDirection[33] = NULL;
+TabDirection[34] = NULL;
+TabDirection[35] = NULL;
+TabDirection[36] = NULL;
+TabDirection[37] = NULL;
+TabDirection[38] = NULL;
+TabDirection[39] = NULL;
+
+}
 
 void Out_Town1() BANKED{
     if(WalkCounter == 67){
         IDMap = 1;
+    }
+    if(xCounter<=147){
+	    Col1_Town1();
+    }
+    else if(xCounter > 147 && xCounter <= 294){
+	    Col2_Town1();
+    }
+    else{
+	    Col3_Town1();
     }
 
 }
