@@ -1,0 +1,3091 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.3.1 Mon Apr 17 13:59:23 2017
+                              4 
+                              5 ;--------------------------------------------------------
+                              6 	.module lcc50600
+                              7 	
+                              8 ;--------------------------------------------------------
+                              9 ; Public variables in this module
+                             10 ;--------------------------------------------------------
+                             11 	.globl _main
+                             12 	.globl _MapChanger
+                             13 	.globl _OutMatrix
+                             14 	.globl _MoveAndColl
+                             15 	.globl _clearScreenLetter
+                             16 	.globl _delayVerif
+                             17 	.globl _A_Pressed
+                             18 	.globl _StartPressed
+                             19 	.globl _tileNumber
+                             20 	.globl _tileInc
+                             21 	.globl _nomPlayer
+                             22 	.globl _switchMove
+                             23 	.globl _incMove
+                             24 	.globl _OutCheck
+                             25 	.globl _OffMove
+                             26 	.globl _Direction
+                             27 	.globl _OffDown
+                             28 	.globl _OffUp
+                             29 	.globl _OffLeft
+                             30 	.globl _OffRight
+                             31 	.globl _sizeOfTab
+                             32 	.globl _arrayLength
+                             33 	.globl _TabDirection
+                             34 	.globl _TabCollide
+                             35 	.globl _WalkCounter
+                             36 	.globl _yCounterForSpawn
+                             37 	.globl _xCounterForSpawn
+                             38 	.globl _yCounter
+                             39 	.globl _xCounter
+                             40 	.globl _yMove
+                             41 	.globl _xMove
+                             42 	.globl _i
+                             43 	.globl _IDMap
+                             44 	.globl _Robot
+                             45 ;--------------------------------------------------------
+                             46 ; special function registers
+                             47 ;--------------------------------------------------------
+                             48 ;--------------------------------------------------------
+                             49 ; special function bits 
+                             50 ;--------------------------------------------------------
+                             51 ;--------------------------------------------------------
+                             52 ; internal ram data
+                             53 ;--------------------------------------------------------
+                             54 	.area _DATA
+   0000                      55 _IDMap::
+   0000                      56 	.ds 2
+   0002                      57 _i::
+   0002                      58 	.ds 2
+   0004                      59 _xMove::
+   0004                      60 	.ds 2
+   0006                      61 _yMove::
+   0006                      62 	.ds 2
+   0008                      63 _xCounter::
+   0008                      64 	.ds 4
+   000C                      65 _yCounter::
+   000C                      66 	.ds 4
+   0010                      67 _xCounterForSpawn::
+   0010                      68 	.ds 4
+   0014                      69 _yCounterForSpawn::
+   0014                      70 	.ds 4
+   0018                      71 _WalkCounter::
+   0018                      72 	.ds 4
+   001C                      73 _TabCollide::
+   001C                      74 	.ds 160
+   00BC                      75 _TabDirection::
+   00BC                      76 	.ds 80
+   010C                      77 _arrayLength::
+   010C                      78 	.ds 2
+   010E                      79 _sizeOfTab::
+   010E                      80 	.ds 2
+   0110                      81 _OffRight::
+   0110                      82 	.ds 2
+   0112                      83 _OffLeft::
+   0112                      84 	.ds 2
+   0114                      85 _OffUp::
+   0114                      86 	.ds 2
+   0116                      87 _OffDown::
+   0116                      88 	.ds 2
+   0118                      89 _Direction::
+   0118                      90 	.ds 2
+   011A                      91 _OffMove::
+   011A                      92 	.ds 2
+   011C                      93 _OutCheck::
+   011C                      94 	.ds 2
+   011E                      95 _incMove::
+   011E                      96 	.ds 2
+   0120                      97 _switchMove::
+   0120                      98 	.ds 2
+   0122                      99 _nomPlayer::
+   0122                     100 	.ds 6
+   0128                     101 _tileInc::
+   0128                     102 	.ds 2
+   012A                     103 _tileNumber::
+   012A                     104 	.ds 2
+   012C                     105 _StartPressed::
+   012C                     106 	.ds 2
+   012E                     107 _A_Pressed::
+   012E                     108 	.ds 2
+   0130                     109 _delayVerif::
+   0130                     110 	.ds 2
+                            111 ;--------------------------------------------------------
+                            112 ; overlayable items in internal ram 
+                            113 ;--------------------------------------------------------
+                            114 	.area _OVERLAY
+                            115 ;--------------------------------------------------------
+                            116 ; indirectly addressable internal ram data
+                            117 ;--------------------------------------------------------
+                            118 	.area _ISEG
+                            119 ;--------------------------------------------------------
+                            120 ; bit data
+                            121 ;--------------------------------------------------------
+                            122 	.area _BSEG
+                            123 ;--------------------------------------------------------
+                            124 ; external ram data
+                            125 ;--------------------------------------------------------
+                            126 	.area _XSEG
+                            127 ;--------------------------------------------------------
+                            128 ; global & static initialisations
+                            129 ;--------------------------------------------------------
+                            130 	.area _GSINIT
+                            131 	.area _GSFINAL
+                            132 	.area _GSINIT
+                            133 ;	Laust.c 17
+                            134 ;	genAssign
+                            135 ;	AOP_HL for _IDMap
+   0000 21 00 00            136 	ld	hl,#_IDMap
+   0003 36 00               137 	ld	(hl),#0x00
+   0005 23                  138 	inc	hl
+   0006 36 00               139 	ld	(hl),#0x00
+                            140 ;	Laust.c 21
+                            141 ;	genAssign
+                            142 ;	AOP_HL for _xMove
+   0008 21 04 00            143 	ld	hl,#_xMove
+   000B 36 00               144 	ld	(hl),#0x00
+   000D 23                  145 	inc	hl
+   000E 36 00               146 	ld	(hl),#0x00
+                            147 ;	Laust.c 22
+                            148 ;	genAssign
+                            149 ;	AOP_HL for _yMove
+   0010 21 06 00            150 	ld	hl,#_yMove
+   0013 36 00               151 	ld	(hl),#0x00
+   0015 23                  152 	inc	hl
+   0016 36 00               153 	ld	(hl),#0x00
+                            154 ;	Laust.c 24
+                            155 ;	genAssign
+                            156 ;	AOP_HL for _xCounter
+   0018 AF                  157 	xor	a,a
+   0019 21 08 00            158 	ld	hl,#_xCounter
+   001C 22                  159 	ld	(hl+),a
+   001D 22                  160 	ld	(hl+),a
+   001E 22                  161 	ld	(hl+),a
+   001F 77                  162 	ld	(hl),a
+                            163 ;	Laust.c 25
+                            164 ;	genAssign
+                            165 ;	AOP_HL for _yCounter
+   0020 AF                  166 	xor	a,a
+   0021 21 0C 00            167 	ld	hl,#_yCounter
+   0024 22                  168 	ld	(hl+),a
+   0025 22                  169 	ld	(hl+),a
+   0026 22                  170 	ld	(hl+),a
+   0027 77                  171 	ld	(hl),a
+                            172 ;	Laust.c 27
+                            173 ;	genAssign
+                            174 ;	AOP_HL for _xCounterForSpawn
+   0028 AF                  175 	xor	a,a
+   0029 21 10 00            176 	ld	hl,#_xCounterForSpawn
+   002C 22                  177 	ld	(hl+),a
+   002D 22                  178 	ld	(hl+),a
+   002E 22                  179 	ld	(hl+),a
+   002F 77                  180 	ld	(hl),a
+                            181 ;	Laust.c 28
+                            182 ;	genAssign
+                            183 ;	AOP_HL for _yCounterForSpawn
+   0030 AF                  184 	xor	a,a
+   0031 21 14 00            185 	ld	hl,#_yCounterForSpawn
+   0034 22                  186 	ld	(hl+),a
+   0035 22                  187 	ld	(hl+),a
+   0036 22                  188 	ld	(hl+),a
+   0037 77                  189 	ld	(hl),a
+                            190 ;	Laust.c 30
+                            191 ;	genAssign
+                            192 ;	AOP_HL for _WalkCounter
+   0038 AF                  193 	xor	a,a
+   0039 21 18 00            194 	ld	hl,#_WalkCounter
+   003C 22                  195 	ld	(hl+),a
+   003D 22                  196 	ld	(hl+),a
+   003E 22                  197 	ld	(hl+),a
+   003F 77                  198 	ld	(hl),a
+                            199 ;	Laust.c 33
+                            200 ;	genAssign
+                            201 ;	AOP_HL for _arrayLength
+   0040 21 0C 01            202 	ld	hl,#_arrayLength
+   0043 36 00               203 	ld	(hl),#0x00
+   0045 23                  204 	inc	hl
+   0046 36 00               205 	ld	(hl),#0x00
+                            206 ;	Laust.c 40
+                            207 ;	genAssign
+                            208 ;	AOP_HL for _Direction
+   0048 21 18 01            209 	ld	hl,#_Direction
+   004B 36 00               210 	ld	(hl),#0x00
+   004D 23                  211 	inc	hl
+   004E 36 00               212 	ld	(hl),#0x00
+                            213 ;	Laust.c 42
+                            214 ;	genAssign
+                            215 ;	AOP_HL for _OffMove
+   0050 21 1A 01            216 	ld	hl,#_OffMove
+   0053 36 00               217 	ld	(hl),#0x00
+   0055 23                  218 	inc	hl
+   0056 36 00               219 	ld	(hl),#0x00
+                            220 ;	Laust.c 44
+                            221 ;	genAssign
+                            222 ;	AOP_HL for _OutCheck
+   0058 21 1C 01            223 	ld	hl,#_OutCheck
+   005B 36 00               224 	ld	(hl),#0x00
+   005D 23                  225 	inc	hl
+   005E 36 00               226 	ld	(hl),#0x00
+                            227 ;	Laust.c 46
+                            228 ;	genAssign
+                            229 ;	AOP_HL for _incMove
+   0060 21 1E 01            230 	ld	hl,#_incMove
+   0063 36 00               231 	ld	(hl),#0x00
+   0065 23                  232 	inc	hl
+   0066 36 00               233 	ld	(hl),#0x00
+                            234 ;	Laust.c 48
+                            235 ;	genAssign
+                            236 ;	AOP_HL for _switchMove
+   0068 21 20 01            237 	ld	hl,#_switchMove
+   006B 36 00               238 	ld	(hl),#0x00
+   006D 23                  239 	inc	hl
+   006E 36 00               240 	ld	(hl),#0x00
+                            241 ;	Laust.c 51
+                            242 ;	genAssign
+                            243 ;	AOP_HL for _tileInc
+   0070 21 28 01            244 	ld	hl,#_tileInc
+   0073 36 00               245 	ld	(hl),#0x00
+   0075 23                  246 	inc	hl
+   0076 36 00               247 	ld	(hl),#0x00
+                            248 ;	Laust.c 52
+                            249 ;	genAssign
+                            250 ;	AOP_HL for _tileNumber
+   0078 21 2A 01            251 	ld	hl,#_tileNumber
+   007B 36 00               252 	ld	(hl),#0x00
+   007D 23                  253 	inc	hl
+   007E 36 00               254 	ld	(hl),#0x00
+                            255 ;	Laust.c 53
+                            256 ;	genAssign
+                            257 ;	AOP_HL for _StartPressed
+   0080 21 2C 01            258 	ld	hl,#_StartPressed
+   0083 36 00               259 	ld	(hl),#0x00
+   0085 23                  260 	inc	hl
+   0086 36 00               261 	ld	(hl),#0x00
+                            262 ;	Laust.c 54
+                            263 ;	genAssign
+                            264 ;	AOP_HL for _A_Pressed
+   0088 21 2E 01            265 	ld	hl,#_A_Pressed
+   008B 36 00               266 	ld	(hl),#0x00
+   008D 23                  267 	inc	hl
+   008E 36 00               268 	ld	(hl),#0x00
+                            269 ;	Laust.c 55
+                            270 ;	genAssign
+                            271 ;	AOP_HL for _delayVerif
+   0090 21 30 01            272 	ld	hl,#_delayVerif
+   0093 36 00               273 	ld	(hl),#0x00
+   0095 23                  274 	inc	hl
+   0096 36 00               275 	ld	(hl),#0x00
+                            276 ;--------------------------------------------------------
+                            277 ; Home
+                            278 ;--------------------------------------------------------
+                            279 	.area _HOME
+                            280 	.area _CODE
+                            281 ;--------------------------------------------------------
+                            282 ; code
+                            283 ;--------------------------------------------------------
+                            284 	.area _CODE
+                            285 ;	Laust.c 71
+                            286 ;	genLabel
+                            287 ;	genFunction
+                            288 ;	---------------------------------
+                            289 ; Function clearScreenLetter
+                            290 ; ---------------------------------
+   0000                     291 ___clearScreenLetter_start:
+   0000                     292 _clearScreenLetter:
+   0000 E8 F9               293 	lda	sp,-7(sp)
+                            294 ;	Laust.c 75
+                            295 ;	genAssign
+                            296 ;	AOP_STK for _clearScreenLetter_y_1_1
+   0002 F8 03               297 	lda	hl,3(sp)
+   0004 36 00               298 	ld	(hl),#0x00
+   0006 23                  299 	inc	hl
+   0007 36 00               300 	ld	(hl),#0x00
+                            301 ;	genLabel
+   0009                     302 00105$:
+                            303 ;	genCmpLt
+                            304 ;	AOP_STK for _clearScreenLetter_y_1_1
+   0009 F8 04               305 	lda	hl,4(sp)
+   000B 7E                  306 	ld	a,(hl)
+   000C EE 80               307 	xor	a,#0x80
+   000E 5F                  308 	ld	e,a
+   000F 16 80               309 	ld	d,#0x80
+   0011 2B                  310 	dec	hl
+   0012 7E                  311 	ld	a,(hl)
+   0013 D6 14               312 	sub	a,#0x14
+   0015 7B                  313 	ld	a,e
+   0016 9A                  314 	sbc	a,d
+   0017 D2 7A 00            315 	jp	nc,00108$
+                            316 ;	Laust.c 76
+                            317 ;	genAssign
+                            318 ;	AOP_STK for _clearScreenLetter_x_1_1
+   001A 23                  319 	inc	hl
+   001B 23                  320 	inc	hl
+   001C 36 00               321 	ld	(hl),#0x00
+   001E 23                  322 	inc	hl
+   001F 36 00               323 	ld	(hl),#0x00
+                            324 ;	genLabel
+   0021                     325 00101$:
+                            326 ;	genCmpLt
+                            327 ;	AOP_STK for _clearScreenLetter_x_1_1
+                            328 ;	AOP_STK for _clearScreenLetter_sloc0_1_0
+   0021 F8 06               329 	lda	hl,6(sp)
+   0023 7E                  330 	ld	a,(hl)
+   0024 EE 80               331 	xor	a,#0x80
+   0026 5F                  332 	ld	e,a
+   0027 16 80               333 	ld	d,#0x80
+   0029 2B                  334 	dec	hl
+   002A 7E                  335 	ld	a,(hl)
+   002B D6 1E               336 	sub	a,#0x1E
+   002D 7B                  337 	ld	a,e
+   002E 9A                  338 	sbc	a,d
+   002F 3E 00               339 	ld	a,#0x00
+   0031 17                  340 	rla
+   0032 F8 02               341 	lda	hl,2(sp)
+   0034 77                  342 	ld	(hl),a
+                            343 ;	genIfx
+                            344 ;	AOP_STK for _clearScreenLetter_sloc0_1_0
+   0035 AF                  345 	xor	a,a
+   0036 B6                  346 	or	a,(hl)
+   0037 CA 70 00            347 	jp	z,00107$
+                            348 ;	Laust.c 77
+                            349 ;	genCast
+                            350 ;	AOP_STK for _clearScreenLetter_y_1_1
+   003A 23                  351 	inc	hl
+   003B 4E                  352 	ld	c,(hl)
+                            353 ;	genCast
+                            354 ;	AOP_STK for _clearScreenLetter_x_1_1
+   003C 23                  355 	inc	hl
+   003D 23                  356 	inc	hl
+   003E 46                  357 	ld	b,(hl)
+                            358 ;	genIpush
+                            359 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   003F C5                  360 	push	bc
+   0040 79                  361 	ld	a,c
+   0041 F5                  362 	push	af
+   0042 33                  363 	inc	sp
+                            364 ;	genIpush
+   0043 78                  365 	ld	a,b
+   0044 F5                  366 	push	af
+   0045 33                  367 	inc	sp
+                            368 ;	genCall
+   0046 CD 00 00            369 	call	_gotoxy
+   0049 E8 02               370 	lda	sp,2(sp)
+   004B C1                  371 	pop	bc
+                            372 ;	Laust.c 78
+                            373 ;	genIpush
+                            374 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   004C C5                  375 	push	bc
+   004D 3E 20               376 	ld	a,#0x20
+   004F F5                  377 	push	af
+   0050 33                  378 	inc	sp
+                            379 ;	genCall
+   0051 CD 00 00            380 	call	_setchar
+   0054 E8 01               381 	lda	sp,1(sp)
+   0056 C1                  382 	pop	bc
+                            383 ;	Laust.c 76
+                            384 ;	genPlus
+                            385 ;	AOP_STK for _clearScreenLetter_x_1_1
+                            386 ;	AOP_STK for _clearScreenLetter_sloc1_1_0
+                            387 ;	genPlusIncr
+                            388 ;	Can't optimise plus by inc, falling back to the normal way
+   0057 F8 05               389 	lda	hl,5(sp)
+   0059 5E                  390 	ld	e,(hl)
+   005A 23                  391 	inc	hl
+   005B 56                  392 	ld	d,(hl)
+   005C 21 01 00            393 	ld	hl,#0x0001
+   005F 19                  394 	add	hl,de
+   0060 7D                  395 	ld	a,l
+   0061 54                  396 	ld	d,h
+   0062 F8 00               397 	lda	hl,0(sp)
+   0064 22                  398 	ld	(hl+),a
+   0065 72                  399 	ld	(hl),d
+                            400 ;	genAssign
+                            401 ;	AOP_STK for _clearScreenLetter_sloc1_1_0
+                            402 ;	AOP_STK for _clearScreenLetter_x_1_1
+   0066 2B                  403 	dec	hl
+   0067 2A                  404 	ld	a,(hl+)
+   0068 5E                  405 	ld	e,(hl)
+   0069 F8 05               406 	lda	hl,5(sp)
+   006B 22                  407 	ld	(hl+),a
+   006C 73                  408 	ld	(hl),e
+                            409 ;	genGoto
+   006D C3 21 00            410 	jp	00101$
+                            411 ;	genLabel
+   0070                     412 00107$:
+                            413 ;	Laust.c 75
+                            414 ;	genPlus
+                            415 ;	AOP_STK for _clearScreenLetter_y_1_1
+                            416 ;	genPlusIncr
+   0070 F8 03               417 	lda	hl,3(sp)
+   0072 34                  418 	inc	(hl)
+   0073 20 02               419 	jr	nz,00115$
+   0075 23                  420 	inc	hl
+   0076 34                  421 	inc	(hl)
+   0077                     422 00115$:
+                            423 ;	genGoto
+   0077 C3 09 00            424 	jp	00105$
+                            425 ;	genLabel
+   007A                     426 00108$:
+                            427 ;	Laust.c 82
+                            428 ;	genIpush
+                            429 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   007A 21 00 00            430 	ld	hl,#0x0000
+   007D E5                  431 	push	hl
+                            432 ;	genCall
+   007E CD 00 00            433 	call	_gotoxy
+   0081 E8 02               434 	lda	sp,2(sp)
+                            435 ;	genLabel
+   0083                     436 00109$:
+                            437 ;	genEndFunction
+   0083 E8 07               438 	lda	sp,7(sp)
+   0085 C9                  439 	ret
+   0086                     440 ___clearScreenLetter_end:
+   0086                     441 _Robot:
+   0086 02                  442 	.db #0x02
+   0087 04                  443 	.db #0x04
+   0088 00                  444 	.db #0x00
+   0089 08                  445 	.db #0x08
+   008A 3C                  446 	.db #0x3C
+   008B 00                  447 	.db #0x00
+   008C 42                  448 	.db #0x42
+   008D 3C                  449 	.db #0x3C
+   008E A5                  450 	.db #0xA5
+   008F 5A                  451 	.db #0x5A
+   0090 81                  452 	.db #0x81
+   0091 7E                  453 	.db #0x7E
+   0092 5A                  454 	.db #0x5A
+   0093 3C                  455 	.db #0x3C
+   0094 3C                  456 	.db #0x3C
+   0095 00                  457 	.db #0x00
+   0096 42                  458 	.db #0x42
+   0097 3C                  459 	.db #0x3C
+   0098 D3                  460 	.db #0xD3
+   0099 3C                  461 	.db #0x3C
+   009A AD                  462 	.db #0xAD
+   009B 18                  463 	.db #0x18
+   009C A5                  464 	.db #0xA5
+   009D 18                  465 	.db #0x18
+   009E 18                  466 	.db #0x18
+   009F 00                  467 	.db #0x00
+   00A0 24                  468 	.db #0x24
+   00A1 00                  469 	.db #0x00
+   00A2 24                  470 	.db #0x24
+   00A3 00                  471 	.db #0x00
+   00A4 66                  472 	.db #0x66
+   00A5 00                  473 	.db #0x00
+   00A6 02                  474 	.db #0x02
+   00A7 04                  475 	.db #0x04
+   00A8 00                  476 	.db #0x00
+   00A9 08                  477 	.db #0x08
+   00AA 3C                  478 	.db #0x3C
+   00AB 00                  479 	.db #0x00
+   00AC 42                  480 	.db #0x42
+   00AD 3C                  481 	.db #0x3C
+   00AE A5                  482 	.db #0xA5
+   00AF 5A                  483 	.db #0x5A
+   00B0 81                  484 	.db #0x81
+   00B1 7E                  485 	.db #0x7E
+   00B2 5A                  486 	.db #0x5A
+   00B3 3C                  487 	.db #0x3C
+   00B4 3C                  488 	.db #0x3C
+   00B5 00                  489 	.db #0x00
+   00B6 42                  490 	.db #0x42
+   00B7 3C                  491 	.db #0x3C
+   00B8 D3                  492 	.db #0xD3
+   00B9 3C                  493 	.db #0x3C
+   00BA AD                  494 	.db #0xAD
+   00BB 18                  495 	.db #0x18
+   00BC A5                  496 	.db #0xA5
+   00BD 18                  497 	.db #0x18
+   00BE 18                  498 	.db #0x18
+   00BF 00                  499 	.db #0x00
+   00C0 24                  500 	.db #0x24
+   00C1 00                  501 	.db #0x00
+   00C2 26                  502 	.db #0x26
+   00C3 00                  503 	.db #0x00
+   00C4 26                  504 	.db #0x26
+   00C5 00                  505 	.db #0x00
+   00C6 02                  506 	.db #0x02
+   00C7 04                  507 	.db #0x04
+   00C8 00                  508 	.db #0x00
+   00C9 08                  509 	.db #0x08
+   00CA 3C                  510 	.db #0x3C
+   00CB 00                  511 	.db #0x00
+   00CC 42                  512 	.db #0x42
+   00CD 3C                  513 	.db #0x3C
+   00CE A5                  514 	.db #0xA5
+   00CF 5A                  515 	.db #0x5A
+   00D0 81                  516 	.db #0x81
+   00D1 7E                  517 	.db #0x7E
+   00D2 5A                  518 	.db #0x5A
+   00D3 3C                  519 	.db #0x3C
+   00D4 3C                  520 	.db #0x3C
+   00D5 00                  521 	.db #0x00
+   00D6 42                  522 	.db #0x42
+   00D7 3C                  523 	.db #0x3C
+   00D8 D3                  524 	.db #0xD3
+   00D9 3C                  525 	.db #0x3C
+   00DA AD                  526 	.db #0xAD
+   00DB 18                  527 	.db #0x18
+   00DC A5                  528 	.db #0xA5
+   00DD 18                  529 	.db #0x18
+   00DE 18                  530 	.db #0x18
+   00DF 00                  531 	.db #0x00
+   00E0 24                  532 	.db #0x24
+   00E1 00                  533 	.db #0x00
+   00E2 64                  534 	.db #0x64
+   00E3 00                  535 	.db #0x00
+   00E4 64                  536 	.db #0x64
+   00E5 00                  537 	.db #0x00
+   00E6 08                  538 	.db #0x08
+   00E7 00                  539 	.db #0x00
+   00E8 00                  540 	.db #0x00
+   00E9 08                  541 	.db #0x08
+   00EA 3C                  542 	.db #0x3C
+   00EB 00                  543 	.db #0x00
+   00EC 42                  544 	.db #0x42
+   00ED 3C                  545 	.db #0x3C
+   00EE A5                  546 	.db #0xA5
+   00EF 7A                  547 	.db #0x7A
+   00F0 C1                  548 	.db #0xC1
+   00F1 7E                  549 	.db #0x7E
+   00F2 46                  550 	.db #0x46
+   00F3 3C                  551 	.db #0x3C
+   00F4 3C                  552 	.db #0x3C
+   00F5 00                  553 	.db #0x00
+   00F6 38                  554 	.db #0x38
+   00F7 00                  555 	.db #0x00
+   00F8 34                  556 	.db #0x34
+   00F9 08                  557 	.db #0x08
+   00FA 34                  558 	.db #0x34
+   00FB 08                  559 	.db #0x08
+   00FC 2C                  560 	.db #0x2C
+   00FD 18                  561 	.db #0x18
+   00FE 28                  562 	.db #0x28
+   00FF 10                  563 	.db #0x10
+   0100 10                  564 	.db #0x10
+   0101 00                  565 	.db #0x00
+   0102 10                  566 	.db #0x10
+   0103 00                  567 	.db #0x00
+   0104 18                  568 	.db #0x18
+   0105 00                  569 	.db #0x00
+   0106 10                  570 	.db #0x10
+   0107 00                  571 	.db #0x00
+   0108 00                  572 	.db #0x00
+   0109 08                  573 	.db #0x08
+   010A 3C                  574 	.db #0x3C
+   010B 00                  575 	.db #0x00
+   010C 42                  576 	.db #0x42
+   010D 3C                  577 	.db #0x3C
+   010E A5                  578 	.db #0xA5
+   010F 7A                  579 	.db #0x7A
+   0110 C1                  580 	.db #0xC1
+   0111 7E                  581 	.db #0x7E
+   0112 46                  582 	.db #0x46
+   0113 3C                  583 	.db #0x3C
+   0114 3C                  584 	.db #0x3C
+   0115 00                  585 	.db #0x00
+   0116 38                  586 	.db #0x38
+   0117 00                  587 	.db #0x00
+   0118 34                  588 	.db #0x34
+   0119 08                  589 	.db #0x08
+   011A 2C                  590 	.db #0x2C
+   011B 10                  591 	.db #0x10
+   011C 2C                  592 	.db #0x2C
+   011D 18                  593 	.db #0x18
+   011E 28                  594 	.db #0x28
+   011F 10                  595 	.db #0x10
+   0120 18                  596 	.db #0x18
+   0121 00                  597 	.db #0x00
+   0122 1A                  598 	.db #0x1A
+   0123 00                  599 	.db #0x00
+   0124 14                  600 	.db #0x14
+   0125 00                  601 	.db #0x00
+   0126 10                  602 	.db #0x10
+   0127 00                  603 	.db #0x00
+   0128 00                  604 	.db #0x00
+   0129 10                  605 	.db #0x10
+   012A 3C                  606 	.db #0x3C
+   012B 00                  607 	.db #0x00
+   012C 42                  608 	.db #0x42
+   012D 3C                  609 	.db #0x3C
+   012E A5                  610 	.db #0xA5
+   012F 5E                  611 	.db #0x5E
+   0130 83                  612 	.db #0x83
+   0131 7E                  613 	.db #0x7E
+   0132 62                  614 	.db #0x62
+   0133 3C                  615 	.db #0x3C
+   0134 3C                  616 	.db #0x3C
+   0135 00                  617 	.db #0x00
+   0136 1C                  618 	.db #0x1C
+   0137 00                  619 	.db #0x00
+   0138 2C                  620 	.db #0x2C
+   0139 10                  621 	.db #0x10
+   013A 2C                  622 	.db #0x2C
+   013B 10                  623 	.db #0x10
+   013C 34                  624 	.db #0x34
+   013D 18                  625 	.db #0x18
+   013E 14                  626 	.db #0x14
+   013F 08                  627 	.db #0x08
+   0140 08                  628 	.db #0x08
+   0141 00                  629 	.db #0x00
+   0142 08                  630 	.db #0x08
+   0143 00                  631 	.db #0x00
+   0144 18                  632 	.db #0x18
+   0145 00                  633 	.db #0x00
+   0146 08                  634 	.db #0x08
+   0147 00                  635 	.db #0x00
+   0148 00                  636 	.db #0x00
+   0149 10                  637 	.db #0x10
+   014A 3C                  638 	.db #0x3C
+   014B 00                  639 	.db #0x00
+   014C 42                  640 	.db #0x42
+   014D 3C                  641 	.db #0x3C
+   014E A5                  642 	.db #0xA5
+   014F 5E                  643 	.db #0x5E
+   0150 83                  644 	.db #0x83
+   0151 7E                  645 	.db #0x7E
+   0152 62                  646 	.db #0x62
+   0153 3C                  647 	.db #0x3C
+   0154 3C                  648 	.db #0x3C
+   0155 00                  649 	.db #0x00
+   0156 1C                  650 	.db #0x1C
+   0157 00                  651 	.db #0x00
+   0158 2C                  652 	.db #0x2C
+   0159 10                  653 	.db #0x10
+   015A 34                  654 	.db #0x34
+   015B 08                  655 	.db #0x08
+   015C 34                  656 	.db #0x34
+   015D 18                  657 	.db #0x18
+   015E 14                  658 	.db #0x14
+   015F 08                  659 	.db #0x08
+   0160 18                  660 	.db #0x18
+   0161 00                  661 	.db #0x00
+   0162 58                  662 	.db #0x58
+   0163 00                  663 	.db #0x00
+   0164 28                  664 	.db #0x28
+   0165 00                  665 	.db #0x00
+   0166 40                  666 	.db #0x40
+   0167 20                  667 	.db #0x20
+   0168 00                  668 	.db #0x00
+   0169 10                  669 	.db #0x10
+   016A 3C                  670 	.db #0x3C
+   016B 00                  671 	.db #0x00
+   016C 42                  672 	.db #0x42
+   016D 3C                  673 	.db #0x3C
+   016E 81                  674 	.db #0x81
+   016F 7E                  675 	.db #0x7E
+   0170 99                  676 	.db #0x99
+   0171 7E                  677 	.db #0x7E
+   0172 5A                  678 	.db #0x5A
+   0173 3C                  679 	.db #0x3C
+   0174 3C                  680 	.db #0x3C
+   0175 00                  681 	.db #0x00
+   0176 42                  682 	.db #0x42
+   0177 3C                  683 	.db #0x3C
+   0178 CB                  684 	.db #0xCB
+   0179 3C                  685 	.db #0x3C
+   017A B5                  686 	.db #0xB5
+   017B 18                  687 	.db #0x18
+   017C A5                  688 	.db #0xA5
+   017D 18                  689 	.db #0x18
+   017E 18                  690 	.db #0x18
+   017F 00                  691 	.db #0x00
+   0180 24                  692 	.db #0x24
+   0181 00                  693 	.db #0x00
+   0182 24                  694 	.db #0x24
+   0183 00                  695 	.db #0x00
+   0184 66                  696 	.db #0x66
+   0185 00                  697 	.db #0x00
+   0186 40                  698 	.db #0x40
+   0187 20                  699 	.db #0x20
+   0188 00                  700 	.db #0x00
+   0189 10                  701 	.db #0x10
+   018A 3C                  702 	.db #0x3C
+   018B 00                  703 	.db #0x00
+   018C 42                  704 	.db #0x42
+   018D 3C                  705 	.db #0x3C
+   018E 81                  706 	.db #0x81
+   018F 7E                  707 	.db #0x7E
+   0190 99                  708 	.db #0x99
+   0191 7E                  709 	.db #0x7E
+   0192 5A                  710 	.db #0x5A
+   0193 3C                  711 	.db #0x3C
+   0194 3C                  712 	.db #0x3C
+   0195 00                  713 	.db #0x00
+   0196 42                  714 	.db #0x42
+   0197 3C                  715 	.db #0x3C
+   0198 CB                  716 	.db #0xCB
+   0199 3C                  717 	.db #0x3C
+   019A B5                  718 	.db #0xB5
+   019B 18                  719 	.db #0x18
+   019C A5                  720 	.db #0xA5
+   019D 18                  721 	.db #0x18
+   019E 18                  722 	.db #0x18
+   019F 00                  723 	.db #0x00
+   01A0 24                  724 	.db #0x24
+   01A1 00                  725 	.db #0x00
+   01A2 26                  726 	.db #0x26
+   01A3 00                  727 	.db #0x00
+   01A4 26                  728 	.db #0x26
+   01A5 00                  729 	.db #0x00
+   01A6 40                  730 	.db #0x40
+   01A7 20                  731 	.db #0x20
+   01A8 00                  732 	.db #0x00
+   01A9 10                  733 	.db #0x10
+   01AA 3C                  734 	.db #0x3C
+   01AB 00                  735 	.db #0x00
+   01AC 42                  736 	.db #0x42
+   01AD 3C                  737 	.db #0x3C
+   01AE 81                  738 	.db #0x81
+   01AF 7E                  739 	.db #0x7E
+   01B0 99                  740 	.db #0x99
+   01B1 7E                  741 	.db #0x7E
+   01B2 5A                  742 	.db #0x5A
+   01B3 3C                  743 	.db #0x3C
+   01B4 3C                  744 	.db #0x3C
+   01B5 00                  745 	.db #0x00
+   01B6 42                  746 	.db #0x42
+   01B7 3C                  747 	.db #0x3C
+   01B8 CB                  748 	.db #0xCB
+   01B9 3C                  749 	.db #0x3C
+   01BA B5                  750 	.db #0xB5
+   01BB 18                  751 	.db #0x18
+   01BC A5                  752 	.db #0xA5
+   01BD 18                  753 	.db #0x18
+   01BE 18                  754 	.db #0x18
+   01BF 00                  755 	.db #0x00
+   01C0 24                  756 	.db #0x24
+   01C1 00                  757 	.db #0x00
+   01C2 64                  758 	.db #0x64
+   01C3 00                  759 	.db #0x00
+   01C4 64                  760 	.db #0x64
+   01C5 00                  761 	.db #0x00
+                            762 ;	Laust.c 87
+                            763 ;	genLabel
+                            764 ;	genFunction
+                            765 ;	---------------------------------
+                            766 ; Function MoveAndColl
+                            767 ; ---------------------------------
+   01C6                     768 ___MoveAndColl_start:
+   01C6                     769 _MoveAndColl:
+   01C6 E8 FC               770 	lda	sp,-4(sp)
+                            771 ;	Laust.c 91
+                            772 ;	genPlus
+                            773 ;	AOP_HL for _xCounter
+                            774 ;	AOP_HL for _yCounter
+                            775 ;	AOP_HL for _WalkCounter
+                            776 ;	Can't optimise plus by inc, falling back to the normal way
+   01C8 21 08 00            777 	ld	hl,#_xCounter
+   01CB 5E                  778 	ld	e,(hl)
+   01CC 23                  779 	inc	hl
+   01CD 56                  780 	ld	d,(hl)
+   01CE 7B                  781 	ld	a,e
+   01CF 21 0C 00            782 	ld	hl,#_yCounter
+   01D2 86                  783 	add	a,(hl)
+   01D3 5F                  784 	ld	e,a
+   01D4 7A                  785 	ld	a,d
+   01D5 23                  786 	inc	hl
+   01D6 8E                  787 	adc	a,(hl)
+   01D7 F5                  788 	push	af
+   01D8 21 19 00            789 	ld	hl,#_WalkCounter + 1
+   01DB 32                  790 	ld      (hl-),a
+   01DC 73                  791 	ld	(hl),e
+   01DD 21 0A 00            792 	ld	hl,#_xCounter + 2
+   01E0 5E                  793 	ld	e,(hl)
+   01E1 23                  794 	inc	hl
+   01E2 56                  795 	ld	d,(hl)
+   01E3 21 0E 00            796 	ld	hl,#_yCounter + 2
+   01E6 F1                  797 	pop	af
+   01E7 7B                  798 	ld	a,e
+   01E8 8E                  799 	adc	a,(hl)
+   01E9 5F                  800 	ld	e,a
+   01EA 7A                  801 	ld	a,d
+   01EB 23                  802 	inc	hl
+   01EC 8E                  803 	adc	a,(hl)
+   01ED 21 1B 00            804 	ld	hl,#_WalkCounter + 3
+   01F0 32                  805 	ld      (hl-),a
+   01F1 73                  806 	ld	(hl),e
+                            807 ;	Laust.c 93
+                            808 ;	genAssign
+                            809 ;	AOP_HL for _i
+   01F2 21 02 00            810 	ld	hl,#_i
+   01F5 36 00               811 	ld	(hl),#0x00
+   01F7 23                  812 	inc	hl
+   01F8 36 00               813 	ld	(hl),#0x00
+                            814 ;	genLabel
+   01FA                     815 00198$:
+                            816 ;	genCmpLt
+                            817 ;	AOP_HL for _i
+                            818 ;	AOP_HL for _arrayLength
+   01FA 21 03 00            819 	ld	hl,#_i + 1
+   01FD 7E                  820 	ld	a,(hl)
+   01FE EE 80               821 	xor	a,#0x80
+   0200 5F                  822 	ld	e,a
+   0201 21 0D 01            823 	ld	hl,#_arrayLength + 1
+   0204 7E                  824 	ld	a,(hl)
+   0205 EE 80               825 	xor	a,#0x80
+   0207 57                  826 	ld	d,a
+   0208 21 02 00            827 	ld	hl,#_i
+   020B 7E                  828 	ld	a,(hl)
+   020C 21 0C 01            829 	ld	hl,#_arrayLength
+   020F 96                  830 	sub	a,(hl)
+   0210 7B                  831 	ld	a,e
+   0211 9A                  832 	sbc	a,d
+   0212 D2 E6 04            833 	jp	nc,00201$
+                            834 ;	Laust.c 94
+                            835 ;	genLeftShift
+                            836 ;	AOP_HL for _i
+   0215 21 02 00            837 	ld	hl,#_i
+   0218 4E                  838 	ld	c,(hl)
+   0219 23                  839 	inc	hl
+   021A 46                  840 	ld	b,(hl)
+   021B 3E 03               841 	ld	a,#0x02+1
+   021D 18 04               842 	jr	00270$
+   021F                     843 00269$:
+   021F CB 21               844 	sla	c
+   0221 CB 10               845 	rl	b
+   0223                     846 00270$:
+   0223 3D                  847 	dec	a
+   0224 20 F9               848 	jr	nz,00269$
+                            849 ;	genPlus
+                            850 ;	Can't optimise plus by inc, falling back to the normal way
+   0226 21 1C 00            851 	ld	hl,#_TabCollide
+   0229 09                  852 	add	hl,bc
+   022A 4D                  853 	ld	c,l
+   022B 44                  854 	ld	b,h
+                            855 ;	genPointerGet
+                            856 ;	AOP_STK for _MoveAndColl_sloc0_1_0
+   022C 59                  857 	ld	e,c
+   022D 50                  858 	ld	d,b
+   022E 1A                  859 	ld	a,(de)
+   022F F8 00               860 	lda	hl,0(sp)
+   0231 77                  861 	ld	(hl),a
+   0232 13                  862 	inc	de
+   0233 1A                  863 	ld	a,(de)
+   0234 23                  864 	inc	hl
+   0235 77                  865 	ld	(hl),a
+   0236 13                  866 	inc	de
+   0237 1A                  867 	ld	a,(de)
+   0238 23                  868 	inc	hl
+   0239 77                  869 	ld	(hl),a
+   023A 13                  870 	inc	de
+   023B 1A                  871 	ld	a,(de)
+   023C 23                  872 	inc	hl
+   023D 77                  873 	ld	(hl),a
+                            874 ;	genCmpEq
+                            875 ;	AOP_STK for _MoveAndColl_sloc0_1_0
+                            876 ;	AOP_HL for _WalkCounter
+                            877 ; genCmpEq: left 4, right 4, result 0
+   023E 21 18 00            878 	ld	hl,#_WalkCounter
+   0241 7E                  879 	ld	a,(hl)
+   0242 F8 00               880 	lda	hl,0(sp)
+   0244 BE                  881 	cp	(hl)
+   0245 20 1D               882 	jr	nz,00271$
+   0247 21 19 00            883 	ld	hl,#_WalkCounter + 1
+   024A 7E                  884 	ld	a,(hl)
+   024B F8 01               885 	lda	hl,1(sp)
+   024D BE                  886 	cp	(hl)
+   024E 20 14               887 	jr	nz,00271$
+   0250 21 1A 00            888 	ld	hl,#_WalkCounter + 2
+   0253 7E                  889 	ld	a,(hl)
+   0254 F8 02               890 	lda	hl,2(sp)
+   0256 BE                  891 	cp	(hl)
+   0257 20 0B               892 	jr	nz,00271$
+   0259 21 1B 00            893 	ld	hl,#_WalkCounter + 3
+   025C 7E                  894 	ld	a,(hl)
+   025D F8 03               895 	lda	hl,3(sp)
+   025F BE                  896 	cp	(hl)
+   0260 20 02               897 	jr	nz,00271$
+   0262 18 03               898 	jr	00272$
+   0264                     899 00271$:
+   0264 C3 DB 04            900 	jp	00200$
+   0267                     901 00272$:
+                            902 ;	Laust.c 95
+                            903 ;	genLeftShift
+                            904 ;	AOP_HL for _i
+   0267 21 02 00            905 	ld	hl,#_i
+   026A 4E                  906 	ld	c,(hl)
+   026B 23                  907 	inc	hl
+   026C 46                  908 	ld	b,(hl)
+   026D CB 21               909 	sla	c
+   026F CB 10               910 	rl	b
+                            911 ;	genPlus
+                            912 ;	Can't optimise plus by inc, falling back to the normal way
+   0271 21 BC 00            913 	ld	hl,#_TabDirection
+   0274 09                  914 	add	hl,bc
+   0275 4D                  915 	ld	c,l
+   0276 44                  916 	ld	b,h
+                            917 ;	genPointerGet
+   0277 59                  918 	ld	e,c
+   0278 50                  919 	ld	d,b
+   0279 1A                  920 	ld	a,(de)
+   027A 4F                  921 	ld	c,a
+   027B 13                  922 	inc	de
+   027C 1A                  923 	ld	a,(de)
+                            924 ;	genCmpLt
+   027D 47                  925 	ld	b,a
+   027E EE 80               926 	xor	a,#0x80
+   0280 5F                  927 	ld	e,a
+   0281 16 80               928 	ld	d,#0x80
+   0283 79                  929 	ld	a,c
+   0284 D6 01               930 	sub	a,#0x01
+   0286 7B                  931 	ld	a,e
+   0287 9A                  932 	sbc	a,d
+   0288 DA BB 04            933 	jp	c,00115$
+                            934 ;	genCmpGt
+   028B 1E 80               935 	ld	e,#0x80
+   028D 78                  936 	ld	a,b
+   028E EE 80               937 	xor	a,#0x80
+   0290 57                  938 	ld	d,a
+   0291 3E 0E               939 	ld	a,#0x0E
+   0293 91                  940 	sub	a,c
+   0294 7B                  941 	ld	a,e
+   0295 9A                  942 	sbc	a,d
+   0296 DA BB 04            943 	jp	c,00115$
+                            944 ;	genMinus
+   0299 79                  945 	ld	a,c
+   029A C6 FF               946 	add	a,#0xFF
+   029C 4F                  947 	ld	c,a
+                            948 ;	genJumpTab
+   029D 59                  949 	ld	e,c
+   029E 16 00               950 	ld	d,#0x00
+   02A0 21 A7 02            951 	ld	hl,#00275$
+   02A3 19                  952 	add	hl,de
+   02A4 19                  953 	add	hl,de
+   02A5 19                  954 	add	hl,de
+   02A6 E9                  955 	jp	(hl)
+   02A7                     956 00275$:
+   02A7 C3 D1 02            957 	jp	00101$
+   02AA C3 F4 02            958 	jp	00102$
+   02AD C3 17 03            959 	jp	00103$
+   02B0 C3 3A 03            960 	jp	00104$
+   02B3 C3 5D 03            961 	jp	00105$
+   02B6 C3 80 03            962 	jp	00106$
+   02B9 C3 A3 03            963 	jp	00107$
+   02BC C3 C6 03            964 	jp	00108$
+   02BF C3 E9 03            965 	jp	00109$
+   02C2 C3 0C 04            966 	jp	00110$
+   02C5 C3 2F 04            967 	jp	00111$
+   02C8 C3 52 04            968 	jp	00112$
+   02CB C3 75 04            969 	jp	00113$
+   02CE C3 98 04            970 	jp	00114$
+                            971 ;	Laust.c 98
+                            972 ;	genLabel
+   02D1                     973 00101$:
+                            974 ;	genAssign
+                            975 ;	AOP_HL for _OffUp
+   02D1 21 14 01            976 	ld	hl,#_OffUp
+   02D4 36 01               977 	ld	(hl),#0x01
+   02D6 23                  978 	inc	hl
+   02D7 36 00               979 	ld	(hl),#0x00
+                            980 ;	Laust.c 99
+                            981 ;	genAssign
+                            982 ;	AOP_HL for _OffDown
+   02D9 21 16 01            983 	ld	hl,#_OffDown
+   02DC 36 00               984 	ld	(hl),#0x00
+   02DE 23                  985 	inc	hl
+   02DF 36 00               986 	ld	(hl),#0x00
+                            987 ;	Laust.c 100
+                            988 ;	genAssign
+                            989 ;	AOP_HL for _OffRight
+   02E1 21 10 01            990 	ld	hl,#_OffRight
+   02E4 36 00               991 	ld	(hl),#0x00
+   02E6 23                  992 	inc	hl
+   02E7 36 00               993 	ld	(hl),#0x00
+                            994 ;	Laust.c 101
+                            995 ;	genAssign
+                            996 ;	AOP_HL for _OffLeft
+   02E9 21 12 01            997 	ld	hl,#_OffLeft
+   02EC 36 00               998 	ld	(hl),#0x00
+   02EE 23                  999 	inc	hl
+   02EF 36 00              1000 	ld	(hl),#0x00
+                           1001 ;	Laust.c 102
+                           1002 ;	genGoto
+   02F1 C3 DB 04           1003 	jp	00200$
+                           1004 ;	Laust.c 104
+                           1005 ;	genLabel
+   02F4                    1006 00102$:
+                           1007 ;	genAssign
+                           1008 ;	AOP_HL for _OffDown
+   02F4 21 16 01           1009 	ld	hl,#_OffDown
+   02F7 36 01              1010 	ld	(hl),#0x01
+   02F9 23                 1011 	inc	hl
+   02FA 36 00              1012 	ld	(hl),#0x00
+                           1013 ;	Laust.c 105
+                           1014 ;	genAssign
+                           1015 ;	AOP_HL for _OffUp
+   02FC 21 14 01           1016 	ld	hl,#_OffUp
+   02FF 36 00              1017 	ld	(hl),#0x00
+   0301 23                 1018 	inc	hl
+   0302 36 00              1019 	ld	(hl),#0x00
+                           1020 ;	Laust.c 106
+                           1021 ;	genAssign
+                           1022 ;	AOP_HL for _OffLeft
+   0304 21 12 01           1023 	ld	hl,#_OffLeft
+   0307 36 00              1024 	ld	(hl),#0x00
+   0309 23                 1025 	inc	hl
+   030A 36 00              1026 	ld	(hl),#0x00
+                           1027 ;	Laust.c 107
+                           1028 ;	genAssign
+                           1029 ;	AOP_HL for _OffRight
+   030C 21 10 01           1030 	ld	hl,#_OffRight
+   030F 36 00              1031 	ld	(hl),#0x00
+   0311 23                 1032 	inc	hl
+   0312 36 00              1033 	ld	(hl),#0x00
+                           1034 ;	Laust.c 108
+                           1035 ;	genGoto
+   0314 C3 DB 04           1036 	jp	00200$
+                           1037 ;	Laust.c 110
+                           1038 ;	genLabel
+   0317                    1039 00103$:
+                           1040 ;	genAssign
+                           1041 ;	AOP_HL for _OffLeft
+   0317 21 12 01           1042 	ld	hl,#_OffLeft
+   031A 36 01              1043 	ld	(hl),#0x01
+   031C 23                 1044 	inc	hl
+   031D 36 00              1045 	ld	(hl),#0x00
+                           1046 ;	Laust.c 111
+                           1047 ;	genAssign
+                           1048 ;	AOP_HL for _OffRight
+   031F 21 10 01           1049 	ld	hl,#_OffRight
+   0322 36 00              1050 	ld	(hl),#0x00
+   0324 23                 1051 	inc	hl
+   0325 36 00              1052 	ld	(hl),#0x00
+                           1053 ;	Laust.c 112
+                           1054 ;	genAssign
+                           1055 ;	AOP_HL for _OffUp
+   0327 21 14 01           1056 	ld	hl,#_OffUp
+   032A 36 00              1057 	ld	(hl),#0x00
+   032C 23                 1058 	inc	hl
+   032D 36 00              1059 	ld	(hl),#0x00
+                           1060 ;	Laust.c 113
+                           1061 ;	genAssign
+                           1062 ;	AOP_HL for _OffDown
+   032F 21 16 01           1063 	ld	hl,#_OffDown
+   0332 36 00              1064 	ld	(hl),#0x00
+   0334 23                 1065 	inc	hl
+   0335 36 00              1066 	ld	(hl),#0x00
+                           1067 ;	Laust.c 114
+                           1068 ;	genGoto
+   0337 C3 DB 04           1069 	jp	00200$
+                           1070 ;	Laust.c 116
+                           1071 ;	genLabel
+   033A                    1072 00104$:
+                           1073 ;	genAssign
+                           1074 ;	AOP_HL for _OffRight
+   033A 21 10 01           1075 	ld	hl,#_OffRight
+   033D 36 01              1076 	ld	(hl),#0x01
+   033F 23                 1077 	inc	hl
+   0340 36 00              1078 	ld	(hl),#0x00
+                           1079 ;	Laust.c 117
+                           1080 ;	genAssign
+                           1081 ;	AOP_HL for _OffLeft
+   0342 21 12 01           1082 	ld	hl,#_OffLeft
+   0345 36 00              1083 	ld	(hl),#0x00
+   0347 23                 1084 	inc	hl
+   0348 36 00              1085 	ld	(hl),#0x00
+                           1086 ;	Laust.c 118
+                           1087 ;	genAssign
+                           1088 ;	AOP_HL for _OffUp
+   034A 21 14 01           1089 	ld	hl,#_OffUp
+   034D 36 00              1090 	ld	(hl),#0x00
+   034F 23                 1091 	inc	hl
+   0350 36 00              1092 	ld	(hl),#0x00
+                           1093 ;	Laust.c 119
+                           1094 ;	genAssign
+                           1095 ;	AOP_HL for _OffDown
+   0352 21 16 01           1096 	ld	hl,#_OffDown
+   0355 36 00              1097 	ld	(hl),#0x00
+   0357 23                 1098 	inc	hl
+   0358 36 00              1099 	ld	(hl),#0x00
+                           1100 ;	Laust.c 120
+                           1101 ;	genGoto
+   035A C3 DB 04           1102 	jp	00200$
+                           1103 ;	Laust.c 122
+                           1104 ;	genLabel
+   035D                    1105 00105$:
+                           1106 ;	genAssign
+                           1107 ;	AOP_HL for _OffUp
+   035D 21 14 01           1108 	ld	hl,#_OffUp
+   0360 36 01              1109 	ld	(hl),#0x01
+   0362 23                 1110 	inc	hl
+   0363 36 00              1111 	ld	(hl),#0x00
+                           1112 ;	Laust.c 123
+                           1113 ;	genAssign
+                           1114 ;	AOP_HL for _OffLeft
+   0365 21 12 01           1115 	ld	hl,#_OffLeft
+   0368 36 01              1116 	ld	(hl),#0x01
+   036A 23                 1117 	inc	hl
+   036B 36 00              1118 	ld	(hl),#0x00
+                           1119 ;	Laust.c 124
+                           1120 ;	genAssign
+                           1121 ;	AOP_HL for _OffRight
+   036D 21 10 01           1122 	ld	hl,#_OffRight
+   0370 36 00              1123 	ld	(hl),#0x00
+   0372 23                 1124 	inc	hl
+   0373 36 00              1125 	ld	(hl),#0x00
+                           1126 ;	Laust.c 125
+                           1127 ;	genAssign
+                           1128 ;	AOP_HL for _OffDown
+   0375 21 16 01           1129 	ld	hl,#_OffDown
+   0378 36 00              1130 	ld	(hl),#0x00
+   037A 23                 1131 	inc	hl
+   037B 36 00              1132 	ld	(hl),#0x00
+                           1133 ;	Laust.c 126
+                           1134 ;	genGoto
+   037D C3 DB 04           1135 	jp	00200$
+                           1136 ;	Laust.c 128
+                           1137 ;	genLabel
+   0380                    1138 00106$:
+                           1139 ;	genAssign
+                           1140 ;	AOP_HL for _OffUp
+   0380 21 14 01           1141 	ld	hl,#_OffUp
+   0383 36 01              1142 	ld	(hl),#0x01
+   0385 23                 1143 	inc	hl
+   0386 36 00              1144 	ld	(hl),#0x00
+                           1145 ;	Laust.c 129
+                           1146 ;	genAssign
+                           1147 ;	AOP_HL for _OffRight
+   0388 21 10 01           1148 	ld	hl,#_OffRight
+   038B 36 01              1149 	ld	(hl),#0x01
+   038D 23                 1150 	inc	hl
+   038E 36 00              1151 	ld	(hl),#0x00
+                           1152 ;	Laust.c 130
+                           1153 ;	genAssign
+                           1154 ;	AOP_HL for _OffLeft
+   0390 21 12 01           1155 	ld	hl,#_OffLeft
+   0393 36 00              1156 	ld	(hl),#0x00
+   0395 23                 1157 	inc	hl
+   0396 36 00              1158 	ld	(hl),#0x00
+                           1159 ;	Laust.c 131
+                           1160 ;	genAssign
+                           1161 ;	AOP_HL for _OffDown
+   0398 21 16 01           1162 	ld	hl,#_OffDown
+   039B 36 00              1163 	ld	(hl),#0x00
+   039D 23                 1164 	inc	hl
+   039E 36 00              1165 	ld	(hl),#0x00
+                           1166 ;	Laust.c 132
+                           1167 ;	genGoto
+   03A0 C3 DB 04           1168 	jp	00200$
+                           1169 ;	Laust.c 134
+                           1170 ;	genLabel
+   03A3                    1171 00107$:
+                           1172 ;	genAssign
+                           1173 ;	AOP_HL for _OffDown
+   03A3 21 16 01           1174 	ld	hl,#_OffDown
+   03A6 36 01              1175 	ld	(hl),#0x01
+   03A8 23                 1176 	inc	hl
+   03A9 36 00              1177 	ld	(hl),#0x00
+                           1178 ;	Laust.c 135
+                           1179 ;	genAssign
+                           1180 ;	AOP_HL for _OffLeft
+   03AB 21 12 01           1181 	ld	hl,#_OffLeft
+   03AE 36 01              1182 	ld	(hl),#0x01
+   03B0 23                 1183 	inc	hl
+   03B1 36 00              1184 	ld	(hl),#0x00
+                           1185 ;	Laust.c 136
+                           1186 ;	genAssign
+                           1187 ;	AOP_HL for _OffRight
+   03B3 21 10 01           1188 	ld	hl,#_OffRight
+   03B6 36 00              1189 	ld	(hl),#0x00
+   03B8 23                 1190 	inc	hl
+   03B9 36 00              1191 	ld	(hl),#0x00
+                           1192 ;	Laust.c 137
+                           1193 ;	genAssign
+                           1194 ;	AOP_HL for _OffUp
+   03BB 21 14 01           1195 	ld	hl,#_OffUp
+   03BE 36 00              1196 	ld	(hl),#0x00
+   03C0 23                 1197 	inc	hl
+   03C1 36 00              1198 	ld	(hl),#0x00
+                           1199 ;	Laust.c 138
+                           1200 ;	genGoto
+   03C3 C3 DB 04           1201 	jp	00200$
+                           1202 ;	Laust.c 140
+                           1203 ;	genLabel
+   03C6                    1204 00108$:
+                           1205 ;	genAssign
+                           1206 ;	AOP_HL for _OffDown
+   03C6 21 16 01           1207 	ld	hl,#_OffDown
+   03C9 36 01              1208 	ld	(hl),#0x01
+   03CB 23                 1209 	inc	hl
+   03CC 36 00              1210 	ld	(hl),#0x00
+                           1211 ;	Laust.c 141
+                           1212 ;	genAssign
+                           1213 ;	AOP_HL for _OffRight
+   03CE 21 10 01           1214 	ld	hl,#_OffRight
+   03D1 36 01              1215 	ld	(hl),#0x01
+   03D3 23                 1216 	inc	hl
+   03D4 36 00              1217 	ld	(hl),#0x00
+                           1218 ;	Laust.c 142
+                           1219 ;	genAssign
+                           1220 ;	AOP_HL for _OffLeft
+   03D6 21 12 01           1221 	ld	hl,#_OffLeft
+   03D9 36 00              1222 	ld	(hl),#0x00
+   03DB 23                 1223 	inc	hl
+   03DC 36 00              1224 	ld	(hl),#0x00
+                           1225 ;	Laust.c 143
+                           1226 ;	genAssign
+                           1227 ;	AOP_HL for _OffUp
+   03DE 21 14 01           1228 	ld	hl,#_OffUp
+   03E1 36 00              1229 	ld	(hl),#0x00
+   03E3 23                 1230 	inc	hl
+   03E4 36 00              1231 	ld	(hl),#0x00
+                           1232 ;	Laust.c 144
+                           1233 ;	genGoto
+   03E6 C3 DB 04           1234 	jp	00200$
+                           1235 ;	Laust.c 146
+                           1236 ;	genLabel
+   03E9                    1237 00109$:
+                           1238 ;	genAssign
+                           1239 ;	AOP_HL for _OffLeft
+   03E9 21 12 01           1240 	ld	hl,#_OffLeft
+   03EC 36 01              1241 	ld	(hl),#0x01
+   03EE 23                 1242 	inc	hl
+   03EF 36 00              1243 	ld	(hl),#0x00
+                           1244 ;	Laust.c 147
+                           1245 ;	genAssign
+                           1246 ;	AOP_HL for _OffUp
+   03F1 21 14 01           1247 	ld	hl,#_OffUp
+   03F4 36 01              1248 	ld	(hl),#0x01
+   03F6 23                 1249 	inc	hl
+   03F7 36 00              1250 	ld	(hl),#0x00
+                           1251 ;	Laust.c 148
+                           1252 ;	genAssign
+                           1253 ;	AOP_HL for _OffRight
+   03F9 21 10 01           1254 	ld	hl,#_OffRight
+   03FC 36 01              1255 	ld	(hl),#0x01
+   03FE 23                 1256 	inc	hl
+   03FF 36 00              1257 	ld	(hl),#0x00
+                           1258 ;	Laust.c 149
+                           1259 ;	genAssign
+                           1260 ;	AOP_HL for _OffDown
+   0401 21 16 01           1261 	ld	hl,#_OffDown
+   0404 36 00              1262 	ld	(hl),#0x00
+   0406 23                 1263 	inc	hl
+   0407 36 00              1264 	ld	(hl),#0x00
+                           1265 ;	Laust.c 150
+                           1266 ;	genGoto
+   0409 C3 DB 04           1267 	jp	00200$
+                           1268 ;	Laust.c 152
+                           1269 ;	genLabel
+   040C                    1270 00110$:
+                           1271 ;	genAssign
+                           1272 ;	AOP_HL for _OffUp
+   040C 21 14 01           1273 	ld	hl,#_OffUp
+   040F 36 01              1274 	ld	(hl),#0x01
+   0411 23                 1275 	inc	hl
+   0412 36 00              1276 	ld	(hl),#0x00
+                           1277 ;	Laust.c 153
+                           1278 ;	genAssign
+                           1279 ;	AOP_HL for _OffRight
+   0414 21 10 01           1280 	ld	hl,#_OffRight
+   0417 36 01              1281 	ld	(hl),#0x01
+   0419 23                 1282 	inc	hl
+   041A 36 00              1283 	ld	(hl),#0x00
+                           1284 ;	Laust.c 154
+                           1285 ;	genAssign
+                           1286 ;	AOP_HL for _OffDown
+   041C 21 16 01           1287 	ld	hl,#_OffDown
+   041F 36 01              1288 	ld	(hl),#0x01
+   0421 23                 1289 	inc	hl
+   0422 36 00              1290 	ld	(hl),#0x00
+                           1291 ;	Laust.c 155
+                           1292 ;	genAssign
+                           1293 ;	AOP_HL for _OffLeft
+   0424 21 12 01           1294 	ld	hl,#_OffLeft
+   0427 36 00              1295 	ld	(hl),#0x00
+   0429 23                 1296 	inc	hl
+   042A 36 00              1297 	ld	(hl),#0x00
+                           1298 ;	Laust.c 156
+                           1299 ;	genGoto
+   042C C3 DB 04           1300 	jp	00200$
+                           1301 ;	Laust.c 158
+                           1302 ;	genLabel
+   042F                    1303 00111$:
+                           1304 ;	genAssign
+                           1305 ;	AOP_HL for _OffRight
+   042F 21 10 01           1306 	ld	hl,#_OffRight
+   0432 36 01              1307 	ld	(hl),#0x01
+   0434 23                 1308 	inc	hl
+   0435 36 00              1309 	ld	(hl),#0x00
+                           1310 ;	Laust.c 159
+                           1311 ;	genAssign
+                           1312 ;	AOP_HL for _OffDown
+   0437 21 16 01           1313 	ld	hl,#_OffDown
+   043A 36 01              1314 	ld	(hl),#0x01
+   043C 23                 1315 	inc	hl
+   043D 36 00              1316 	ld	(hl),#0x00
+                           1317 ;	Laust.c 160
+                           1318 ;	genAssign
+                           1319 ;	AOP_HL for _OffLeft
+   043F 21 12 01           1320 	ld	hl,#_OffLeft
+   0442 36 01              1321 	ld	(hl),#0x01
+   0444 23                 1322 	inc	hl
+   0445 36 00              1323 	ld	(hl),#0x00
+                           1324 ;	Laust.c 161
+                           1325 ;	genAssign
+                           1326 ;	AOP_HL for _OffUp
+   0447 21 14 01           1327 	ld	hl,#_OffUp
+   044A 36 00              1328 	ld	(hl),#0x00
+   044C 23                 1329 	inc	hl
+   044D 36 00              1330 	ld	(hl),#0x00
+                           1331 ;	Laust.c 162
+                           1332 ;	genGoto
+   044F C3 DB 04           1333 	jp	00200$
+                           1334 ;	Laust.c 164
+                           1335 ;	genLabel
+   0452                    1336 00112$:
+                           1337 ;	genAssign
+                           1338 ;	AOP_HL for _OffDown
+   0452 21 16 01           1339 	ld	hl,#_OffDown
+   0455 36 01              1340 	ld	(hl),#0x01
+   0457 23                 1341 	inc	hl
+   0458 36 00              1342 	ld	(hl),#0x00
+                           1343 ;	Laust.c 165
+                           1344 ;	genAssign
+                           1345 ;	AOP_HL for _OffLeft
+   045A 21 12 01           1346 	ld	hl,#_OffLeft
+   045D 36 01              1347 	ld	(hl),#0x01
+   045F 23                 1348 	inc	hl
+   0460 36 00              1349 	ld	(hl),#0x00
+                           1350 ;	Laust.c 166
+                           1351 ;	genAssign
+                           1352 ;	AOP_HL for _OffUp
+   0462 21 14 01           1353 	ld	hl,#_OffUp
+   0465 36 01              1354 	ld	(hl),#0x01
+   0467 23                 1355 	inc	hl
+   0468 36 00              1356 	ld	(hl),#0x00
+                           1357 ;	Laust.c 167
+                           1358 ;	genAssign
+                           1359 ;	AOP_HL for _OffRight
+   046A 21 10 01           1360 	ld	hl,#_OffRight
+   046D 36 00              1361 	ld	(hl),#0x00
+   046F 23                 1362 	inc	hl
+   0470 36 00              1363 	ld	(hl),#0x00
+                           1364 ;	Laust.c 168
+                           1365 ;	genGoto
+   0472 C3 DB 04           1366 	jp	00200$
+                           1367 ;	Laust.c 170
+                           1368 ;	genLabel
+   0475                    1369 00113$:
+                           1370 ;	genAssign
+                           1371 ;	AOP_HL for _OffDown
+   0475 21 16 01           1372 	ld	hl,#_OffDown
+   0478 36 00              1373 	ld	(hl),#0x00
+   047A 23                 1374 	inc	hl
+   047B 36 00              1375 	ld	(hl),#0x00
+                           1376 ;	Laust.c 171
+                           1377 ;	genAssign
+                           1378 ;	AOP_HL for _OffUp
+   047D 21 14 01           1379 	ld	hl,#_OffUp
+   0480 36 00              1380 	ld	(hl),#0x00
+   0482 23                 1381 	inc	hl
+   0483 36 00              1382 	ld	(hl),#0x00
+                           1383 ;	Laust.c 172
+                           1384 ;	genAssign
+                           1385 ;	AOP_HL for _OffLeft
+   0485 21 12 01           1386 	ld	hl,#_OffLeft
+   0488 36 01              1387 	ld	(hl),#0x01
+   048A 23                 1388 	inc	hl
+   048B 36 00              1389 	ld	(hl),#0x00
+                           1390 ;	Laust.c 173
+                           1391 ;	genAssign
+                           1392 ;	AOP_HL for _OffRight
+   048D 21 10 01           1393 	ld	hl,#_OffRight
+   0490 36 01              1394 	ld	(hl),#0x01
+   0492 23                 1395 	inc	hl
+   0493 36 00              1396 	ld	(hl),#0x00
+                           1397 ;	Laust.c 174
+                           1398 ;	genGoto
+   0495 C3 DB 04           1399 	jp	00200$
+                           1400 ;	Laust.c 176
+                           1401 ;	genLabel
+   0498                    1402 00114$:
+                           1403 ;	genAssign
+                           1404 ;	AOP_HL for _OffDown
+   0498 21 16 01           1405 	ld	hl,#_OffDown
+   049B 36 01              1406 	ld	(hl),#0x01
+   049D 23                 1407 	inc	hl
+   049E 36 00              1408 	ld	(hl),#0x00
+                           1409 ;	Laust.c 177
+                           1410 ;	genAssign
+                           1411 ;	AOP_HL for _OffUp
+   04A0 21 14 01           1412 	ld	hl,#_OffUp
+   04A3 36 01              1413 	ld	(hl),#0x01
+   04A5 23                 1414 	inc	hl
+   04A6 36 00              1415 	ld	(hl),#0x00
+                           1416 ;	Laust.c 178
+                           1417 ;	genAssign
+                           1418 ;	AOP_HL for _OffLeft
+   04A8 21 12 01           1419 	ld	hl,#_OffLeft
+   04AB 36 00              1420 	ld	(hl),#0x00
+   04AD 23                 1421 	inc	hl
+   04AE 36 00              1422 	ld	(hl),#0x00
+                           1423 ;	Laust.c 179
+                           1424 ;	genAssign
+                           1425 ;	AOP_HL for _OffRight
+   04B0 21 10 01           1426 	ld	hl,#_OffRight
+   04B3 36 00              1427 	ld	(hl),#0x00
+   04B5 23                 1428 	inc	hl
+   04B6 36 00              1429 	ld	(hl),#0x00
+                           1430 ;	Laust.c 180
+                           1431 ;	genGoto
+   04B8 C3 DB 04           1432 	jp	00200$
+                           1433 ;	Laust.c 182
+                           1434 ;	genLabel
+   04BB                    1435 00115$:
+                           1436 ;	genAssign
+                           1437 ;	AOP_HL for _OffDown
+   04BB 21 16 01           1438 	ld	hl,#_OffDown
+   04BE 36 00              1439 	ld	(hl),#0x00
+   04C0 23                 1440 	inc	hl
+   04C1 36 00              1441 	ld	(hl),#0x00
+                           1442 ;	Laust.c 183
+                           1443 ;	genAssign
+                           1444 ;	AOP_HL for _OffUp
+   04C3 21 14 01           1445 	ld	hl,#_OffUp
+   04C6 36 00              1446 	ld	(hl),#0x00
+   04C8 23                 1447 	inc	hl
+   04C9 36 00              1448 	ld	(hl),#0x00
+                           1449 ;	Laust.c 184
+                           1450 ;	genAssign
+                           1451 ;	AOP_HL for _OffLeft
+   04CB 21 12 01           1452 	ld	hl,#_OffLeft
+   04CE 36 00              1453 	ld	(hl),#0x00
+   04D0 23                 1454 	inc	hl
+   04D1 36 00              1455 	ld	(hl),#0x00
+                           1456 ;	Laust.c 185
+                           1457 ;	genAssign
+                           1458 ;	AOP_HL for _OffRight
+   04D3 21 10 01           1459 	ld	hl,#_OffRight
+   04D6 36 00              1460 	ld	(hl),#0x00
+   04D8 23                 1461 	inc	hl
+   04D9 36 00              1462 	ld	(hl),#0x00
+                           1463 ;	Laust.c 187
+                           1464 ;	genLabel
+   04DB                    1465 00200$:
+                           1466 ;	Laust.c 93
+                           1467 ;	genPlus
+                           1468 ;	AOP_HL for _i
+                           1469 ;	genPlusIncr
+   04DB 21 02 00           1470 	ld	hl,#_i
+   04DE 34                 1471 	inc	(hl)
+   04DF 20 02              1472 	jr	nz,00276$
+   04E1 23                 1473 	inc	hl
+   04E2 34                 1474 	inc	(hl)
+   04E3                    1475 00276$:
+                           1476 ;	genGoto
+   04E3 C3 FA 01           1477 	jp	00198$
+                           1478 ;	genLabel
+   04E6                    1479 00201$:
+                           1480 ;	Laust.c 191
+                           1481 ;	genCall
+                           1482 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   04E6 CD 00 00           1483 	call	_joypad
+   04E9 4B                 1484 	ld	c,e
+                           1485 ;	genCmpEq
+                           1486 ; genCmpEq: left 1, right 1, result 0
+   04EA 79                 1487 	ld	a,c
+   04EB FE 08              1488 	cp	a,#0x08
+   04ED C2 F7 05           1489 	jp	nz,00196$
+   04F0 18 03              1490 	jr	00278$
+   04F2                    1491 00277$:
+   04F2 C3 F7 05           1492 	jp	00196$
+   04F5                    1493 00278$:
+                           1494 ;	Laust.c 193
+                           1495 ;	genAssign
+                           1496 ;	AOP_HL for _incMove
+   04F5 21 1E 01           1497 	ld	hl,#_incMove
+   04F8 36 00              1498 	ld	(hl),#0x00
+   04FA 23                 1499 	inc	hl
+   04FB 36 00              1500 	ld	(hl),#0x00
+                           1501 ;	genLabel
+   04FD                    1502 00202$:
+                           1503 ;	genCmpGt
+                           1504 ;	AOP_HL for _incMove
+   04FD 1E 80              1505 	ld	e,#0x80
+   04FF 21 1F 01           1506 	ld	hl,#_incMove + 1
+   0502 7E                 1507 	ld	a,(hl)
+   0503 EE 80              1508 	xor	a,#0x80
+   0505 57                 1509 	ld	d,a
+   0506 3E 07              1510 	ld	a,#0x07
+   0508 2B                 1511 	dec	hl
+   0509 96                 1512 	sub	a,(hl)
+   050A 7B                 1513 	ld	a,e
+   050B 9A                 1514 	sbc	a,d
+   050C DA CD 05           1515 	jp	c,00205$
+                           1516 ;	Laust.c 195
+                           1517 ;	genCmpGt
+                           1518 ;	AOP_HL for _incMove
+   050F 1E 80              1519 	ld	e,#0x80
+   0511 23                 1520 	inc	hl
+   0512 7E                 1521 	ld	a,(hl)
+   0513 EE 80              1522 	xor	a,#0x80
+   0515 57                 1523 	ld	d,a
+   0516 3E 05              1524 	ld	a,#0x05
+   0518 2B                 1525 	dec	hl
+   0519 96                 1526 	sub	a,(hl)
+   051A 7B                 1527 	ld	a,e
+   051B 9A                 1528 	sbc	a,d
+   051C 3E 00              1529 	ld	a,#0x00
+   051E 17                 1530 	rla
+   051F 4F                 1531 	ld	c,a
+                           1532 ;	genIfx
+   0520 AF                 1533 	xor	a,a
+   0521 B1                 1534 	or	a,c
+   0522 C2 3C 05           1535 	jp	nz,00124$
+                           1536 ;	genIfx
+                           1537 ;	AOP_HL for _switchMove
+   0525 21 20 01           1538 	ld	hl,#_switchMove
+   0528 2A                 1539 	ld	a,(hl+)
+   0529 B6                 1540 	or	a,(hl)
+   052A C2 3C 05           1541 	jp	nz,00124$
+                           1542 ;	Laust.c 196
+                           1543 ;	genIpush
+                           1544 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   052D C5                 1545 	push	bc
+   052E 21 00 02           1546 	ld	hl,#0x0200
+   0531 E5                 1547 	push	hl
+                           1548 ;	genCall
+   0532 CD 00 00           1549 	call	_set_sprite_tile
+   0535 E8 02              1550 	lda	sp,2(sp)
+   0537 E1                 1551 	pop	hl
+   0538 4D                 1552 	ld	c,l
+                           1553 ;	genGoto
+   0539 C3 5E 05           1554 	jp	00125$
+                           1555 ;	genLabel
+   053C                    1556 00124$:
+                           1557 ;	Laust.c 198
+                           1558 ;	genIfx
+   053C AF                 1559 	xor	a,a
+   053D B1                 1560 	or	a,c
+   053E C2 55 05           1561 	jp	nz,00120$
+                           1562 ;	genIfx
+                           1563 ;	AOP_HL for _switchMove
+   0541 21 20 01           1564 	ld	hl,#_switchMove
+   0544 2A                 1565 	ld	a,(hl+)
+   0545 B6                 1566 	or	a,(hl)
+   0546 CA 55 05           1567 	jp	z,00120$
+                           1568 ;	Laust.c 199
+                           1569 ;	genIpush
+                           1570 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0549 21 00 04           1571 	ld	hl,#0x0400
+   054C E5                 1572 	push	hl
+                           1573 ;	genCall
+   054D CD 00 00           1574 	call	_set_sprite_tile
+   0550 E8 02              1575 	lda	sp,2(sp)
+                           1576 ;	genGoto
+   0552 C3 5E 05           1577 	jp	00125$
+                           1578 ;	genLabel
+   0555                    1579 00120$:
+                           1580 ;	Laust.c 202
+                           1581 ;	genIpush
+                           1582 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0555 21 00 00           1583 	ld	hl,#0x0000
+   0558 E5                 1584 	push	hl
+                           1585 ;	genCall
+   0559 CD 00 00           1586 	call	_set_sprite_tile
+   055C E8 02              1587 	lda	sp,2(sp)
+                           1588 ;	genLabel
+   055E                    1589 00125$:
+                           1590 ;	Laust.c 204
+                           1591 ;	genCmpEq
+                           1592 ;	AOP_HL for _OffDown
+                           1593 ; genCmpEq: left 2, right 2, result 0
+   055E 21 16 01           1594 	ld	hl,#_OffDown
+   0561 7E                 1595 	ld	a,(hl)
+   0562 FE 01              1596 	cp	a,#0x01
+   0564 C2 6D 05           1597 	jp	nz,00279$
+   0567 23                 1598 	inc	hl
+   0568 7E                 1599 	ld	a,(hl)
+   0569 B7                 1600 	or	a,a
+   056A CA 75 05           1601 	jp	z,00128$
+   056D                    1602 00279$:
+                           1603 ;	Laust.c 205
+                           1604 ;	genPlus
+                           1605 ;	AOP_HL for _yMove
+                           1606 ;	genPlusIncr
+   056D 21 06 00           1607 	ld	hl,#_yMove
+   0570 34                 1608 	inc	(hl)
+   0571 20 02              1609 	jr	nz,00280$
+   0573 23                 1610 	inc	hl
+   0574 34                 1611 	inc	(hl)
+   0575                    1612 00280$:
+                           1613 ;	genLabel
+   0575                    1614 00128$:
+                           1615 ;	Laust.c 207
+                           1616 ;	genIpush
+                           1617 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0575 21 19 00           1618 	ld	hl,#0x0019
+   0578 E5                 1619 	push	hl
+                           1620 ;	genCall
+   0579 CD 00 00           1621 	call	_delay
+   057C E8 02              1622 	lda	sp,2(sp)
+                           1623 ;	Laust.c 208
+                           1624 ;	genCast
+                           1625 ;	AOP_HL for _yMove
+   057E 21 06 00           1626 	ld	hl,#_yMove
+   0581 4E                 1627 	ld	c,(hl)
+                           1628 ;	genCast
+                           1629 ;	AOP_HL for _xMove
+   0582 21 04 00           1630 	ld	hl,#_xMove
+   0585 46                 1631 	ld	b,(hl)
+                           1632 ;	genIpush
+                           1633 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0586 79                 1634 	ld	a,c
+   0587 F5                 1635 	push	af
+   0588 33                 1636 	inc	sp
+                           1637 ;	genIpush
+   0589 78                 1638 	ld	a,b
+   058A F5                 1639 	push	af
+   058B 33                 1640 	inc	sp
+                           1641 ;	genIpush
+   058C 3E 00              1642 	ld	a,#0x00
+   058E F5                 1643 	push	af
+   058F 33                 1644 	inc	sp
+                           1645 ;	genCall
+   0590 CD 00 00           1646 	call	_move_sprite
+   0593 E8 03              1647 	lda	sp,3(sp)
+                           1648 ;	Laust.c 209
+                           1649 ;	genCmpEq
+                           1650 ;	AOP_HL for _incMove
+                           1651 ; genCmpEq: left 2, right 2, result 0
+   0595 21 1E 01           1652 	ld	hl,#_incMove
+   0598 7E                 1653 	ld	a,(hl)
+   0599 FE 07              1654 	cp	a,#0x07
+   059B C2 A6 05           1655 	jp	nz,00281$
+   059E 23                 1656 	inc	hl
+   059F 7E                 1657 	ld	a,(hl)
+   05A0 B7                 1658 	or	a,a
+   05A1 C2 C2 05           1659 	jp	nz,00204$
+   05A4 18 03              1660 	jr	00282$
+   05A6                    1661 00281$:
+   05A6 C3 C2 05           1662 	jp	00204$
+   05A9                    1663 00282$:
+                           1664 ;	Laust.c 210
+                           1665 ;	genIfx
+                           1666 ;	AOP_HL for _switchMove
+   05A9 21 20 01           1667 	ld	hl,#_switchMove
+   05AC 2A                 1668 	ld	a,(hl+)
+   05AD B6                 1669 	or	a,(hl)
+   05AE C2 BA 05           1670 	jp	nz,00130$
+                           1671 ;	Laust.c 211
+                           1672 ;	genAssign
+                           1673 ;	AOP_HL for _switchMove
+   05B1 2B                 1674 	dec	hl
+   05B2 36 01              1675 	ld	(hl),#0x01
+   05B4 23                 1676 	inc	hl
+   05B5 36 00              1677 	ld	(hl),#0x00
+                           1678 ;	genGoto
+   05B7 C3 C2 05           1679 	jp	00204$
+                           1680 ;	genLabel
+   05BA                    1681 00130$:
+                           1682 ;	Laust.c 214
+                           1683 ;	genAssign
+                           1684 ;	AOP_HL for _switchMove
+   05BA 21 20 01           1685 	ld	hl,#_switchMove
+   05BD 36 00              1686 	ld	(hl),#0x00
+   05BF 23                 1687 	inc	hl
+   05C0 36 00              1688 	ld	(hl),#0x00
+                           1689 ;	genLabel
+   05C2                    1690 00204$:
+                           1691 ;	Laust.c 193
+                           1692 ;	genPlus
+                           1693 ;	AOP_HL for _incMove
+                           1694 ;	genPlusIncr
+   05C2 21 1E 01           1695 	ld	hl,#_incMove
+   05C5 34                 1696 	inc	(hl)
+   05C6 20 02              1697 	jr	nz,00283$
+   05C8 23                 1698 	inc	hl
+   05C9 34                 1699 	inc	(hl)
+   05CA                    1700 00283$:
+                           1701 ;	genGoto
+   05CA C3 FD 04           1702 	jp	00202$
+                           1703 ;	genLabel
+   05CD                    1704 00205$:
+                           1705 ;	Laust.c 218
+                           1706 ;	genCmpEq
+                           1707 ;	AOP_HL for _OffDown
+                           1708 ; genCmpEq: left 2, right 2, result 0
+   05CD 21 16 01           1709 	ld	hl,#_OffDown
+   05D0 7E                 1710 	ld	a,(hl)
+   05D1 FE 01              1711 	cp	a,#0x01
+   05D3 C2 DC 05           1712 	jp	nz,00284$
+   05D6 23                 1713 	inc	hl
+   05D7 7E                 1714 	ld	a,(hl)
+   05D8 B7                 1715 	or	a,a
+   05D9 CA EC 05           1716 	jp	z,00135$
+   05DC                    1717 00284$:
+                           1718 ;	Laust.c 219
+                           1719 ;	genPlus
+                           1720 ;	AOP_HL for _yCounter
+                           1721 ;	genPlusIncr
+   05DC 21 0C 00           1722 	ld	hl,#_yCounter
+   05DF 34                 1723 	inc	(hl)
+   05E0 20 0A              1724 	jr	nz,00285$
+   05E2 23                 1725 	inc	hl
+   05E3 34                 1726 	inc	(hl)
+   05E4 20 06              1727 	jr	nz,00285$
+   05E6 23                 1728 	inc	hl
+   05E7 34                 1729 	inc	(hl)
+   05E8 20 02              1730 	jr	nz,00285$
+   05EA 23                 1731 	inc	hl
+   05EB 34                 1732 	inc	(hl)
+   05EC                    1733 00285$:
+                           1734 ;	genLabel
+   05EC                    1735 00135$:
+                           1736 ;	Laust.c 222
+                           1737 ;	genAssign
+                           1738 ;	AOP_HL for _Direction
+   05EC 21 18 01           1739 	ld	hl,#_Direction
+   05EF 36 01              1740 	ld	(hl),#0x01
+   05F1 23                 1741 	inc	hl
+   05F2 36 00              1742 	ld	(hl),#0x00
+                           1743 ;	genGoto
+   05F4 C3 5A 09           1744 	jp	00197$
+                           1745 ;	genLabel
+   05F7                    1746 00196$:
+                           1747 ;	Laust.c 227
+                           1748 ;	genCall
+                           1749 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   05F7 CD 00 00           1750 	call	_joypad
+   05FA 4B                 1751 	ld	c,e
+                           1752 ;	genCmpEq
+                           1753 ; genCmpEq: left 1, right 1, result 0
+   05FB 79                 1754 	ld	a,c
+   05FC FE 01              1755 	cp	a,#0x01
+   05FE C2 17 07           1756 	jp	nz,00193$
+   0601 18 03              1757 	jr	00287$
+   0603                    1758 00286$:
+   0603 C3 17 07           1759 	jp	00193$
+   0606                    1760 00287$:
+                           1761 ;	Laust.c 229
+                           1762 ;	genAssign
+                           1763 ;	AOP_HL for _incMove
+   0606 21 1E 01           1764 	ld	hl,#_incMove
+   0609 36 00              1765 	ld	(hl),#0x00
+   060B 23                 1766 	inc	hl
+   060C 36 00              1767 	ld	(hl),#0x00
+                           1768 ;	genLabel
+   060E                    1769 00206$:
+                           1770 ;	genCmpGt
+                           1771 ;	AOP_HL for _incMove
+   060E 1E 80              1772 	ld	e,#0x80
+   0610 21 1F 01           1773 	ld	hl,#_incMove + 1
+   0613 7E                 1774 	ld	a,(hl)
+   0614 EE 80              1775 	xor	a,#0x80
+   0616 57                 1776 	ld	d,a
+   0617 3E 07              1777 	ld	a,#0x07
+   0619 2B                 1778 	dec	hl
+   061A 96                 1779 	sub	a,(hl)
+   061B 7B                 1780 	ld	a,e
+   061C 9A                 1781 	sbc	a,d
+   061D DA DE 06           1782 	jp	c,00209$
+                           1783 ;	Laust.c 231
+                           1784 ;	genCmpGt
+                           1785 ;	AOP_HL for _incMove
+   0620 1E 80              1786 	ld	e,#0x80
+   0622 23                 1787 	inc	hl
+   0623 7E                 1788 	ld	a,(hl)
+   0624 EE 80              1789 	xor	a,#0x80
+   0626 57                 1790 	ld	d,a
+   0627 3E 05              1791 	ld	a,#0x05
+   0629 2B                 1792 	dec	hl
+   062A 96                 1793 	sub	a,(hl)
+   062B 7B                 1794 	ld	a,e
+   062C 9A                 1795 	sbc	a,d
+   062D 3E 00              1796 	ld	a,#0x00
+   062F 17                 1797 	rla
+   0630 4F                 1798 	ld	c,a
+                           1799 ;	genIfx
+   0631 AF                 1800 	xor	a,a
+   0632 B1                 1801 	or	a,c
+   0633 C2 4D 06           1802 	jp	nz,00141$
+                           1803 ;	genIfx
+                           1804 ;	AOP_HL for _switchMove
+   0636 21 20 01           1805 	ld	hl,#_switchMove
+   0639 2A                 1806 	ld	a,(hl+)
+   063A B6                 1807 	or	a,(hl)
+   063B C2 4D 06           1808 	jp	nz,00141$
+                           1809 ;	Laust.c 232
+                           1810 ;	genIpush
+                           1811 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   063E C5                 1812 	push	bc
+   063F 21 00 08           1813 	ld	hl,#0x0800
+   0642 E5                 1814 	push	hl
+                           1815 ;	genCall
+   0643 CD 00 00           1816 	call	_set_sprite_tile
+   0646 E8 02              1817 	lda	sp,2(sp)
+   0648 E1                 1818 	pop	hl
+   0649 4D                 1819 	ld	c,l
+                           1820 ;	genGoto
+   064A C3 6F 06           1821 	jp	00142$
+                           1822 ;	genLabel
+   064D                    1823 00141$:
+                           1824 ;	Laust.c 234
+                           1825 ;	genIfx
+   064D AF                 1826 	xor	a,a
+   064E B1                 1827 	or	a,c
+   064F C2 66 06           1828 	jp	nz,00137$
+                           1829 ;	genIfx
+                           1830 ;	AOP_HL for _switchMove
+   0652 21 20 01           1831 	ld	hl,#_switchMove
+   0655 2A                 1832 	ld	a,(hl+)
+   0656 B6                 1833 	or	a,(hl)
+   0657 CA 66 06           1834 	jp	z,00137$
+                           1835 ;	Laust.c 235
+                           1836 ;	genIpush
+                           1837 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   065A 21 00 06           1838 	ld	hl,#0x0600
+   065D E5                 1839 	push	hl
+                           1840 ;	genCall
+   065E CD 00 00           1841 	call	_set_sprite_tile
+   0661 E8 02              1842 	lda	sp,2(sp)
+                           1843 ;	genGoto
+   0663 C3 6F 06           1844 	jp	00142$
+                           1845 ;	genLabel
+   0666                    1846 00137$:
+                           1847 ;	Laust.c 238
+                           1848 ;	genIpush
+                           1849 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0666 21 00 06           1850 	ld	hl,#0x0600
+   0669 E5                 1851 	push	hl
+                           1852 ;	genCall
+   066A CD 00 00           1853 	call	_set_sprite_tile
+   066D E8 02              1854 	lda	sp,2(sp)
+                           1855 ;	genLabel
+   066F                    1856 00142$:
+                           1857 ;	Laust.c 240
+                           1858 ;	genCmpEq
+                           1859 ;	AOP_HL for _OffRight
+                           1860 ; genCmpEq: left 2, right 2, result 0
+   066F 21 10 01           1861 	ld	hl,#_OffRight
+   0672 7E                 1862 	ld	a,(hl)
+   0673 FE 01              1863 	cp	a,#0x01
+   0675 C2 7E 06           1864 	jp	nz,00288$
+   0678 23                 1865 	inc	hl
+   0679 7E                 1866 	ld	a,(hl)
+   067A B7                 1867 	or	a,a
+   067B CA 86 06           1868 	jp	z,00145$
+   067E                    1869 00288$:
+                           1870 ;	Laust.c 241
+                           1871 ;	genPlus
+                           1872 ;	AOP_HL for _xMove
+                           1873 ;	genPlusIncr
+   067E 21 04 00           1874 	ld	hl,#_xMove
+   0681 34                 1875 	inc	(hl)
+   0682 20 02              1876 	jr	nz,00289$
+   0684 23                 1877 	inc	hl
+   0685 34                 1878 	inc	(hl)
+   0686                    1879 00289$:
+                           1880 ;	genLabel
+   0686                    1881 00145$:
+                           1882 ;	Laust.c 243
+                           1883 ;	genIpush
+                           1884 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0686 21 19 00           1885 	ld	hl,#0x0019
+   0689 E5                 1886 	push	hl
+                           1887 ;	genCall
+   068A CD 00 00           1888 	call	_delay
+   068D E8 02              1889 	lda	sp,2(sp)
+                           1890 ;	Laust.c 244
+                           1891 ;	genCast
+                           1892 ;	AOP_HL for _yMove
+   068F 21 06 00           1893 	ld	hl,#_yMove
+   0692 4E                 1894 	ld	c,(hl)
+                           1895 ;	genCast
+                           1896 ;	AOP_HL for _xMove
+   0693 21 04 00           1897 	ld	hl,#_xMove
+   0696 46                 1898 	ld	b,(hl)
+                           1899 ;	genIpush
+                           1900 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0697 79                 1901 	ld	a,c
+   0698 F5                 1902 	push	af
+   0699 33                 1903 	inc	sp
+                           1904 ;	genIpush
+   069A 78                 1905 	ld	a,b
+   069B F5                 1906 	push	af
+   069C 33                 1907 	inc	sp
+                           1908 ;	genIpush
+   069D 3E 00              1909 	ld	a,#0x00
+   069F F5                 1910 	push	af
+   06A0 33                 1911 	inc	sp
+                           1912 ;	genCall
+   06A1 CD 00 00           1913 	call	_move_sprite
+   06A4 E8 03              1914 	lda	sp,3(sp)
+                           1915 ;	Laust.c 245
+                           1916 ;	genCmpEq
+                           1917 ;	AOP_HL for _incMove
+                           1918 ; genCmpEq: left 2, right 2, result 0
+   06A6 21 1E 01           1919 	ld	hl,#_incMove
+   06A9 7E                 1920 	ld	a,(hl)
+   06AA FE 07              1921 	cp	a,#0x07
+   06AC C2 B7 06           1922 	jp	nz,00290$
+   06AF 23                 1923 	inc	hl
+   06B0 7E                 1924 	ld	a,(hl)
+   06B1 B7                 1925 	or	a,a
+   06B2 C2 D3 06           1926 	jp	nz,00208$
+   06B5 18 03              1927 	jr	00291$
+   06B7                    1928 00290$:
+   06B7 C3 D3 06           1929 	jp	00208$
+   06BA                    1930 00291$:
+                           1931 ;	Laust.c 246
+                           1932 ;	genIfx
+                           1933 ;	AOP_HL for _switchMove
+   06BA 21 20 01           1934 	ld	hl,#_switchMove
+   06BD 2A                 1935 	ld	a,(hl+)
+   06BE B6                 1936 	or	a,(hl)
+   06BF C2 CB 06           1937 	jp	nz,00147$
+                           1938 ;	Laust.c 247
+                           1939 ;	genAssign
+                           1940 ;	AOP_HL for _switchMove
+   06C2 2B                 1941 	dec	hl
+   06C3 36 01              1942 	ld	(hl),#0x01
+   06C5 23                 1943 	inc	hl
+   06C6 36 00              1944 	ld	(hl),#0x00
+                           1945 ;	genGoto
+   06C8 C3 D3 06           1946 	jp	00208$
+                           1947 ;	genLabel
+   06CB                    1948 00147$:
+                           1949 ;	Laust.c 250
+                           1950 ;	genAssign
+                           1951 ;	AOP_HL for _switchMove
+   06CB 21 20 01           1952 	ld	hl,#_switchMove
+   06CE 36 00              1953 	ld	(hl),#0x00
+   06D0 23                 1954 	inc	hl
+   06D1 36 00              1955 	ld	(hl),#0x00
+                           1956 ;	genLabel
+   06D3                    1957 00208$:
+                           1958 ;	Laust.c 229
+                           1959 ;	genPlus
+                           1960 ;	AOP_HL for _incMove
+                           1961 ;	genPlusIncr
+   06D3 21 1E 01           1962 	ld	hl,#_incMove
+   06D6 34                 1963 	inc	(hl)
+   06D7 20 02              1964 	jr	nz,00292$
+   06D9 23                 1965 	inc	hl
+   06DA 34                 1966 	inc	(hl)
+   06DB                    1967 00292$:
+                           1968 ;	genGoto
+   06DB C3 0E 06           1969 	jp	00206$
+                           1970 ;	genLabel
+   06DE                    1971 00209$:
+                           1972 ;	Laust.c 254
+                           1973 ;	genCmpEq
+                           1974 ;	AOP_HL for _OffRight
+                           1975 ; genCmpEq: left 2, right 2, result 0
+   06DE 21 10 01           1976 	ld	hl,#_OffRight
+   06E1 7E                 1977 	ld	a,(hl)
+   06E2 FE 01              1978 	cp	a,#0x01
+   06E4 C2 ED 06           1979 	jp	nz,00293$
+   06E7 23                 1980 	inc	hl
+   06E8 7E                 1981 	ld	a,(hl)
+   06E9 B7                 1982 	or	a,a
+   06EA CA 0C 07           1983 	jp	z,00152$
+   06ED                    1984 00293$:
+                           1985 ;	Laust.c 255
+                           1986 ;	genPlus
+                           1987 ;	AOP_HL for _xCounter
+                           1988 ;	genPlusIncr
+                           1989 ;	Can't optimise plus by inc, falling back to the normal way
+   06ED 21 08 00           1990 	ld	hl,#_xCounter
+   06F0 5E                 1991 	ld	e,(hl)
+   06F1 23                 1992 	inc	hl
+   06F2 56                 1993 	ld	d,(hl)
+   06F3 7B                 1994 	ld	a,e
+   06F4 C6 15              1995 	add	a,#0x15
+   06F6 5F                 1996 	ld	e,a
+   06F7 7A                 1997 	ld	a,d
+   06F8 CE 00              1998 	adc	a,#0x00
+   06FA F5                 1999 	push	af
+   06FB 32                 2000 	ld      (hl-),a
+   06FC 73                 2001 	ld	(hl),e
+   06FD 23                 2002 	inc	hl
+   06FE 23                 2003 	inc	hl
+   06FF 5E                 2004 	ld	e,(hl)
+   0700 23                 2005 	inc	hl
+   0701 56                 2006 	ld	d,(hl)
+   0702 F1                 2007 	pop	af
+   0703 7B                 2008 	ld	a,e
+   0704 CE 00              2009 	adc	a,#0x00
+   0706 5F                 2010 	ld	e,a
+   0707 7A                 2011 	ld	a,d
+   0708 CE 00              2012 	adc	a,#0x00
+   070A 32                 2013 	ld      (hl-),a
+   070B 73                 2014 	ld	(hl),e
+                           2015 ;	genLabel
+   070C                    2016 00152$:
+                           2017 ;	Laust.c 258
+                           2018 ;	genAssign
+                           2019 ;	AOP_HL for _Direction
+   070C 21 18 01           2020 	ld	hl,#_Direction
+   070F 36 02              2021 	ld	(hl),#0x02
+   0711 23                 2022 	inc	hl
+   0712 36 00              2023 	ld	(hl),#0x00
+                           2024 ;	genGoto
+   0714 C3 5A 09           2025 	jp	00197$
+                           2026 ;	genLabel
+   0717                    2027 00193$:
+                           2028 ;	Laust.c 263
+                           2029 ;	genCall
+                           2030 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0717 CD 00 00           2031 	call	_joypad
+   071A 4B                 2032 	ld	c,e
+                           2033 ;	genCmpEq
+                           2034 ; genCmpEq: left 1, right 1, result 0
+   071B 79                 2035 	ld	a,c
+   071C FE 02              2036 	cp	a,#0x02
+   071E C2 3A 08           2037 	jp	nz,00190$
+   0721 18 03              2038 	jr	00295$
+   0723                    2039 00294$:
+   0723 C3 3A 08           2040 	jp	00190$
+   0726                    2041 00295$:
+                           2042 ;	Laust.c 264
+                           2043 ;	genAssign
+                           2044 ;	AOP_HL for _incMove
+   0726 21 1E 01           2045 	ld	hl,#_incMove
+   0729 36 00              2046 	ld	(hl),#0x00
+   072B 23                 2047 	inc	hl
+   072C 36 00              2048 	ld	(hl),#0x00
+                           2049 ;	genLabel
+   072E                    2050 00210$:
+                           2051 ;	genCmpGt
+                           2052 ;	AOP_HL for _incMove
+   072E 1E 80              2053 	ld	e,#0x80
+   0730 21 1F 01           2054 	ld	hl,#_incMove + 1
+   0733 7E                 2055 	ld	a,(hl)
+   0734 EE 80              2056 	xor	a,#0x80
+   0736 57                 2057 	ld	d,a
+   0737 3E 07              2058 	ld	a,#0x07
+   0739 2B                 2059 	dec	hl
+   073A 96                 2060 	sub	a,(hl)
+   073B 7B                 2061 	ld	a,e
+   073C 9A                 2062 	sbc	a,d
+   073D DA 01 08           2063 	jp	c,00213$
+                           2064 ;	Laust.c 266
+                           2065 ;	genCmpGt
+                           2066 ;	AOP_HL for _incMove
+   0740 1E 80              2067 	ld	e,#0x80
+   0742 23                 2068 	inc	hl
+   0743 7E                 2069 	ld	a,(hl)
+   0744 EE 80              2070 	xor	a,#0x80
+   0746 57                 2071 	ld	d,a
+   0747 3E 05              2072 	ld	a,#0x05
+   0749 2B                 2073 	dec	hl
+   074A 96                 2074 	sub	a,(hl)
+   074B 7B                 2075 	ld	a,e
+   074C 9A                 2076 	sbc	a,d
+   074D 3E 00              2077 	ld	a,#0x00
+   074F 17                 2078 	rla
+   0750 4F                 2079 	ld	c,a
+                           2080 ;	genIfx
+   0751 AF                 2081 	xor	a,a
+   0752 B1                 2082 	or	a,c
+   0753 C2 6D 07           2083 	jp	nz,00158$
+                           2084 ;	genIfx
+                           2085 ;	AOP_HL for _switchMove
+   0756 21 20 01           2086 	ld	hl,#_switchMove
+   0759 2A                 2087 	ld	a,(hl+)
+   075A B6                 2088 	or	a,(hl)
+   075B C2 6D 07           2089 	jp	nz,00158$
+                           2090 ;	Laust.c 267
+                           2091 ;	genIpush
+                           2092 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   075E C5                 2093 	push	bc
+   075F 21 00 0C           2094 	ld	hl,#0x0C00
+   0762 E5                 2095 	push	hl
+                           2096 ;	genCall
+   0763 CD 00 00           2097 	call	_set_sprite_tile
+   0766 E8 02              2098 	lda	sp,2(sp)
+   0768 E1                 2099 	pop	hl
+   0769 4D                 2100 	ld	c,l
+                           2101 ;	genGoto
+   076A C3 8F 07           2102 	jp	00159$
+                           2103 ;	genLabel
+   076D                    2104 00158$:
+                           2105 ;	Laust.c 269
+                           2106 ;	genIfx
+   076D AF                 2107 	xor	a,a
+   076E B1                 2108 	or	a,c
+   076F C2 86 07           2109 	jp	nz,00154$
+                           2110 ;	genIfx
+                           2111 ;	AOP_HL for _switchMove
+   0772 21 20 01           2112 	ld	hl,#_switchMove
+   0775 2A                 2113 	ld	a,(hl+)
+   0776 B6                 2114 	or	a,(hl)
+   0777 CA 86 07           2115 	jp	z,00154$
+                           2116 ;	Laust.c 270
+                           2117 ;	genIpush
+                           2118 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   077A 21 00 0A           2119 	ld	hl,#0x0A00
+   077D E5                 2120 	push	hl
+                           2121 ;	genCall
+   077E CD 00 00           2122 	call	_set_sprite_tile
+   0781 E8 02              2123 	lda	sp,2(sp)
+                           2124 ;	genGoto
+   0783 C3 8F 07           2125 	jp	00159$
+                           2126 ;	genLabel
+   0786                    2127 00154$:
+                           2128 ;	Laust.c 273
+                           2129 ;	genIpush
+                           2130 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0786 21 00 0A           2131 	ld	hl,#0x0A00
+   0789 E5                 2132 	push	hl
+                           2133 ;	genCall
+   078A CD 00 00           2134 	call	_set_sprite_tile
+   078D E8 02              2135 	lda	sp,2(sp)
+                           2136 ;	genLabel
+   078F                    2137 00159$:
+                           2138 ;	Laust.c 275
+                           2139 ;	genCmpEq
+                           2140 ;	AOP_HL for _OffLeft
+                           2141 ; genCmpEq: left 2, right 2, result 0
+   078F 21 12 01           2142 	ld	hl,#_OffLeft
+   0792 7E                 2143 	ld	a,(hl)
+   0793 FE 01              2144 	cp	a,#0x01
+   0795 C2 9E 07           2145 	jp	nz,00296$
+   0798 23                 2146 	inc	hl
+   0799 7E                 2147 	ld	a,(hl)
+   079A B7                 2148 	or	a,a
+   079B CA A9 07           2149 	jp	z,00162$
+   079E                    2150 00296$:
+                           2151 ;	Laust.c 276
+                           2152 ;	genMinus
+                           2153 ;	AOP_HL for _xMove
+   079E 21 04 00           2154 	ld	hl,#_xMove
+   07A1 5E                 2155 	ld	e,(hl)
+   07A2 23                 2156 	inc	hl
+   07A3 56                 2157 	ld	d,(hl)
+   07A4 1B                 2158 	dec	de
+   07A5 2B                 2159 	dec	hl
+   07A6 73                 2160 	ld	(hl),e
+   07A7 23                 2161 	inc	hl
+   07A8 72                 2162 	ld	(hl),d
+                           2163 ;	genLabel
+   07A9                    2164 00162$:
+                           2165 ;	Laust.c 278
+                           2166 ;	genIpush
+                           2167 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   07A9 21 19 00           2168 	ld	hl,#0x0019
+   07AC E5                 2169 	push	hl
+                           2170 ;	genCall
+   07AD CD 00 00           2171 	call	_delay
+   07B0 E8 02              2172 	lda	sp,2(sp)
+                           2173 ;	Laust.c 279
+                           2174 ;	genCast
+                           2175 ;	AOP_HL for _yMove
+   07B2 21 06 00           2176 	ld	hl,#_yMove
+   07B5 4E                 2177 	ld	c,(hl)
+                           2178 ;	genCast
+                           2179 ;	AOP_HL for _xMove
+   07B6 21 04 00           2180 	ld	hl,#_xMove
+   07B9 46                 2181 	ld	b,(hl)
+                           2182 ;	genIpush
+                           2183 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   07BA 79                 2184 	ld	a,c
+   07BB F5                 2185 	push	af
+   07BC 33                 2186 	inc	sp
+                           2187 ;	genIpush
+   07BD 78                 2188 	ld	a,b
+   07BE F5                 2189 	push	af
+   07BF 33                 2190 	inc	sp
+                           2191 ;	genIpush
+   07C0 3E 00              2192 	ld	a,#0x00
+   07C2 F5                 2193 	push	af
+   07C3 33                 2194 	inc	sp
+                           2195 ;	genCall
+   07C4 CD 00 00           2196 	call	_move_sprite
+   07C7 E8 03              2197 	lda	sp,3(sp)
+                           2198 ;	Laust.c 280
+                           2199 ;	genCmpEq
+                           2200 ;	AOP_HL for _incMove
+                           2201 ; genCmpEq: left 2, right 2, result 0
+   07C9 21 1E 01           2202 	ld	hl,#_incMove
+   07CC 7E                 2203 	ld	a,(hl)
+   07CD FE 07              2204 	cp	a,#0x07
+   07CF C2 DA 07           2205 	jp	nz,00297$
+   07D2 23                 2206 	inc	hl
+   07D3 7E                 2207 	ld	a,(hl)
+   07D4 B7                 2208 	or	a,a
+   07D5 C2 F6 07           2209 	jp	nz,00212$
+   07D8 18 03              2210 	jr	00298$
+   07DA                    2211 00297$:
+   07DA C3 F6 07           2212 	jp	00212$
+   07DD                    2213 00298$:
+                           2214 ;	Laust.c 281
+                           2215 ;	genIfx
+                           2216 ;	AOP_HL for _switchMove
+   07DD 21 20 01           2217 	ld	hl,#_switchMove
+   07E0 2A                 2218 	ld	a,(hl+)
+   07E1 B6                 2219 	or	a,(hl)
+   07E2 C2 EE 07           2220 	jp	nz,00164$
+                           2221 ;	Laust.c 282
+                           2222 ;	genAssign
+                           2223 ;	AOP_HL for _switchMove
+   07E5 2B                 2224 	dec	hl
+   07E6 36 01              2225 	ld	(hl),#0x01
+   07E8 23                 2226 	inc	hl
+   07E9 36 00              2227 	ld	(hl),#0x00
+                           2228 ;	genGoto
+   07EB C3 F6 07           2229 	jp	00212$
+                           2230 ;	genLabel
+   07EE                    2231 00164$:
+                           2232 ;	Laust.c 285
+                           2233 ;	genAssign
+                           2234 ;	AOP_HL for _switchMove
+   07EE 21 20 01           2235 	ld	hl,#_switchMove
+   07F1 36 00              2236 	ld	(hl),#0x00
+   07F3 23                 2237 	inc	hl
+   07F4 36 00              2238 	ld	(hl),#0x00
+                           2239 ;	genLabel
+   07F6                    2240 00212$:
+                           2241 ;	Laust.c 264
+                           2242 ;	genPlus
+                           2243 ;	AOP_HL for _incMove
+                           2244 ;	genPlusIncr
+   07F6 21 1E 01           2245 	ld	hl,#_incMove
+   07F9 34                 2246 	inc	(hl)
+   07FA 20 02              2247 	jr	nz,00299$
+   07FC 23                 2248 	inc	hl
+   07FD 34                 2249 	inc	(hl)
+   07FE                    2250 00299$:
+                           2251 ;	genGoto
+   07FE C3 2E 07           2252 	jp	00210$
+                           2253 ;	genLabel
+   0801                    2254 00213$:
+                           2255 ;	Laust.c 289
+                           2256 ;	genCmpEq
+                           2257 ;	AOP_HL for _OffLeft
+                           2258 ; genCmpEq: left 2, right 2, result 0
+   0801 21 12 01           2259 	ld	hl,#_OffLeft
+   0804 7E                 2260 	ld	a,(hl)
+   0805 FE 01              2261 	cp	a,#0x01
+   0807 C2 10 08           2262 	jp	nz,00300$
+   080A 23                 2263 	inc	hl
+   080B 7E                 2264 	ld	a,(hl)
+   080C B7                 2265 	or	a,a
+   080D CA 2F 08           2266 	jp	z,00169$
+   0810                    2267 00300$:
+                           2268 ;	Laust.c 290
+                           2269 ;	genMinus
+                           2270 ;	AOP_HL for _xCounter
+   0810 21 08 00           2271 	ld	hl,#_xCounter
+   0813 5E                 2272 	ld	e,(hl)
+   0814 23                 2273 	inc	hl
+   0815 56                 2274 	ld	d,(hl)
+   0816 7B                 2275 	ld	a,e
+   0817 D6 15              2276 	sub	a,#0x15
+   0819 5F                 2277 	ld	e,a
+   081A 7A                 2278 	ld	a,d
+   081B DE 00              2279 	sbc	a,#0x00
+   081D F5                 2280 	push	af
+   081E 32                 2281 	ld      (hl-),a
+   081F 73                 2282 	ld	(hl),e
+   0820 23                 2283 	inc	hl
+   0821 23                 2284 	inc	hl
+   0822 5E                 2285 	ld	e,(hl)
+   0823 23                 2286 	inc	hl
+   0824 56                 2287 	ld	d,(hl)
+   0825 F1                 2288 	pop	af
+   0826 7B                 2289 	ld	a,e
+   0827 DE 00              2290 	sbc	a,#0x00
+   0829 5F                 2291 	ld	e,a
+   082A 7A                 2292 	ld	a,d
+   082B DE 00              2293 	sbc	a,#0x00
+   082D 32                 2294 	ld      (hl-),a
+   082E 73                 2295 	ld	(hl),e
+                           2296 ;	genLabel
+   082F                    2297 00169$:
+                           2298 ;	Laust.c 293
+                           2299 ;	genAssign
+                           2300 ;	AOP_HL for _Direction
+   082F 21 18 01           2301 	ld	hl,#_Direction
+   0832 36 03              2302 	ld	(hl),#0x03
+   0834 23                 2303 	inc	hl
+   0835 36 00              2304 	ld	(hl),#0x00
+                           2305 ;	genGoto
+   0837 C3 5A 09           2306 	jp	00197$
+                           2307 ;	genLabel
+   083A                    2308 00190$:
+                           2309 ;	Laust.c 298
+                           2310 ;	genCall
+                           2311 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   083A CD 00 00           2312 	call	_joypad
+   083D 4B                 2313 	ld	c,e
+                           2314 ;	genCmpEq
+                           2315 ; genCmpEq: left 1, right 1, result 0
+   083E 79                 2316 	ld	a,c
+   083F FE 04              2317 	cp	a,#0x04
+   0841 C2 5A 09           2318 	jp	nz,00197$
+   0844 18 03              2319 	jr	00302$
+   0846                    2320 00301$:
+   0846 C3 5A 09           2321 	jp	00197$
+   0849                    2322 00302$:
+                           2323 ;	Laust.c 299
+                           2324 ;	genAssign
+                           2325 ;	AOP_HL for _incMove
+   0849 21 1E 01           2326 	ld	hl,#_incMove
+   084C 36 00              2327 	ld	(hl),#0x00
+   084E 23                 2328 	inc	hl
+   084F 36 00              2329 	ld	(hl),#0x00
+                           2330 ;	genLabel
+   0851                    2331 00214$:
+                           2332 ;	genCmpGt
+                           2333 ;	AOP_HL for _incMove
+   0851 1E 80              2334 	ld	e,#0x80
+   0853 21 1F 01           2335 	ld	hl,#_incMove + 1
+   0856 7E                 2336 	ld	a,(hl)
+   0857 EE 80              2337 	xor	a,#0x80
+   0859 57                 2338 	ld	d,a
+   085A 3E 07              2339 	ld	a,#0x07
+   085C 2B                 2340 	dec	hl
+   085D 96                 2341 	sub	a,(hl)
+   085E 7B                 2342 	ld	a,e
+   085F 9A                 2343 	sbc	a,d
+   0860 DA 24 09           2344 	jp	c,00217$
+                           2345 ;	Laust.c 301
+                           2346 ;	genCmpGt
+                           2347 ;	AOP_HL for _incMove
+   0863 1E 80              2348 	ld	e,#0x80
+   0865 23                 2349 	inc	hl
+   0866 7E                 2350 	ld	a,(hl)
+   0867 EE 80              2351 	xor	a,#0x80
+   0869 57                 2352 	ld	d,a
+   086A 3E 05              2353 	ld	a,#0x05
+   086C 2B                 2354 	dec	hl
+   086D 96                 2355 	sub	a,(hl)
+   086E 7B                 2356 	ld	a,e
+   086F 9A                 2357 	sbc	a,d
+   0870 3E 00              2358 	ld	a,#0x00
+   0872 17                 2359 	rla
+   0873 4F                 2360 	ld	c,a
+                           2361 ;	genIfx
+   0874 AF                 2362 	xor	a,a
+   0875 B1                 2363 	or	a,c
+   0876 C2 90 08           2364 	jp	nz,00175$
+                           2365 ;	genIfx
+                           2366 ;	AOP_HL for _switchMove
+   0879 21 20 01           2367 	ld	hl,#_switchMove
+   087C 2A                 2368 	ld	a,(hl+)
+   087D B6                 2369 	or	a,(hl)
+   087E C2 90 08           2370 	jp	nz,00175$
+                           2371 ;	Laust.c 302
+                           2372 ;	genIpush
+                           2373 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   0881 C5                 2374 	push	bc
+   0882 21 00 10           2375 	ld	hl,#0x1000
+   0885 E5                 2376 	push	hl
+                           2377 ;	genCall
+   0886 CD 00 00           2378 	call	_set_sprite_tile
+   0889 E8 02              2379 	lda	sp,2(sp)
+   088B E1                 2380 	pop	hl
+   088C 4D                 2381 	ld	c,l
+                           2382 ;	genGoto
+   088D C3 B2 08           2383 	jp	00176$
+                           2384 ;	genLabel
+   0890                    2385 00175$:
+                           2386 ;	Laust.c 304
+                           2387 ;	genIfx
+   0890 AF                 2388 	xor	a,a
+   0891 B1                 2389 	or	a,c
+   0892 C2 A9 08           2390 	jp	nz,00171$
+                           2391 ;	genIfx
+                           2392 ;	AOP_HL for _switchMove
+   0895 21 20 01           2393 	ld	hl,#_switchMove
+   0898 2A                 2394 	ld	a,(hl+)
+   0899 B6                 2395 	or	a,(hl)
+   089A CA A9 08           2396 	jp	z,00171$
+                           2397 ;	Laust.c 305
+                           2398 ;	genIpush
+                           2399 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   089D 21 00 12           2400 	ld	hl,#0x1200
+   08A0 E5                 2401 	push	hl
+                           2402 ;	genCall
+   08A1 CD 00 00           2403 	call	_set_sprite_tile
+   08A4 E8 02              2404 	lda	sp,2(sp)
+                           2405 ;	genGoto
+   08A6 C3 B2 08           2406 	jp	00176$
+                           2407 ;	genLabel
+   08A9                    2408 00171$:
+                           2409 ;	Laust.c 308
+                           2410 ;	genIpush
+                           2411 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   08A9 21 00 0E           2412 	ld	hl,#0x0E00
+   08AC E5                 2413 	push	hl
+                           2414 ;	genCall
+   08AD CD 00 00           2415 	call	_set_sprite_tile
+   08B0 E8 02              2416 	lda	sp,2(sp)
+                           2417 ;	genLabel
+   08B2                    2418 00176$:
+                           2419 ;	Laust.c 310
+                           2420 ;	genCmpEq
+                           2421 ;	AOP_HL for _OffUp
+                           2422 ; genCmpEq: left 2, right 2, result 0
+   08B2 21 14 01           2423 	ld	hl,#_OffUp
+   08B5 7E                 2424 	ld	a,(hl)
+   08B6 FE 01              2425 	cp	a,#0x01
+   08B8 C2 C1 08           2426 	jp	nz,00303$
+   08BB 23                 2427 	inc	hl
+   08BC 7E                 2428 	ld	a,(hl)
+   08BD B7                 2429 	or	a,a
+   08BE CA CC 08           2430 	jp	z,00179$
+   08C1                    2431 00303$:
+                           2432 ;	Laust.c 311
+                           2433 ;	genMinus
+                           2434 ;	AOP_HL for _yMove
+   08C1 21 06 00           2435 	ld	hl,#_yMove
+   08C4 5E                 2436 	ld	e,(hl)
+   08C5 23                 2437 	inc	hl
+   08C6 56                 2438 	ld	d,(hl)
+   08C7 1B                 2439 	dec	de
+   08C8 2B                 2440 	dec	hl
+   08C9 73                 2441 	ld	(hl),e
+   08CA 23                 2442 	inc	hl
+   08CB 72                 2443 	ld	(hl),d
+                           2444 ;	genLabel
+   08CC                    2445 00179$:
+                           2446 ;	Laust.c 313
+                           2447 ;	genIpush
+                           2448 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   08CC 21 19 00           2449 	ld	hl,#0x0019
+   08CF E5                 2450 	push	hl
+                           2451 ;	genCall
+   08D0 CD 00 00           2452 	call	_delay
+   08D3 E8 02              2453 	lda	sp,2(sp)
+                           2454 ;	Laust.c 314
+                           2455 ;	genCast
+                           2456 ;	AOP_HL for _yMove
+   08D5 21 06 00           2457 	ld	hl,#_yMove
+   08D8 4E                 2458 	ld	c,(hl)
+                           2459 ;	genCast
+                           2460 ;	AOP_HL for _xMove
+   08D9 21 04 00           2461 	ld	hl,#_xMove
+   08DC 46                 2462 	ld	b,(hl)
+                           2463 ;	genIpush
+                           2464 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   08DD 79                 2465 	ld	a,c
+   08DE F5                 2466 	push	af
+   08DF 33                 2467 	inc	sp
+                           2468 ;	genIpush
+   08E0 78                 2469 	ld	a,b
+   08E1 F5                 2470 	push	af
+   08E2 33                 2471 	inc	sp
+                           2472 ;	genIpush
+   08E3 3E 00              2473 	ld	a,#0x00
+   08E5 F5                 2474 	push	af
+   08E6 33                 2475 	inc	sp
+                           2476 ;	genCall
+   08E7 CD 00 00           2477 	call	_move_sprite
+   08EA E8 03              2478 	lda	sp,3(sp)
+                           2479 ;	Laust.c 315
+                           2480 ;	genCmpEq
+                           2481 ;	AOP_HL for _incMove
+                           2482 ; genCmpEq: left 2, right 2, result 0
+   08EC 21 1E 01           2483 	ld	hl,#_incMove
+   08EF 7E                 2484 	ld	a,(hl)
+   08F0 FE 07              2485 	cp	a,#0x07
+   08F2 C2 FD 08           2486 	jp	nz,00304$
+   08F5 23                 2487 	inc	hl
+   08F6 7E                 2488 	ld	a,(hl)
+   08F7 B7                 2489 	or	a,a
+   08F8 C2 19 09           2490 	jp	nz,00216$
+   08FB 18 03              2491 	jr	00305$
+   08FD                    2492 00304$:
+   08FD C3 19 09           2493 	jp	00216$
+   0900                    2494 00305$:
+                           2495 ;	Laust.c 316
+                           2496 ;	genIfx
+                           2497 ;	AOP_HL for _switchMove
+   0900 21 20 01           2498 	ld	hl,#_switchMove
+   0903 2A                 2499 	ld	a,(hl+)
+   0904 B6                 2500 	or	a,(hl)
+   0905 C2 11 09           2501 	jp	nz,00181$
+                           2502 ;	Laust.c 317
+                           2503 ;	genAssign
+                           2504 ;	AOP_HL for _switchMove
+   0908 2B                 2505 	dec	hl
+   0909 36 01              2506 	ld	(hl),#0x01
+   090B 23                 2507 	inc	hl
+   090C 36 00              2508 	ld	(hl),#0x00
+                           2509 ;	genGoto
+   090E C3 19 09           2510 	jp	00216$
+                           2511 ;	genLabel
+   0911                    2512 00181$:
+                           2513 ;	Laust.c 320
+                           2514 ;	genAssign
+                           2515 ;	AOP_HL for _switchMove
+   0911 21 20 01           2516 	ld	hl,#_switchMove
+   0914 36 00              2517 	ld	(hl),#0x00
+   0916 23                 2518 	inc	hl
+   0917 36 00              2519 	ld	(hl),#0x00
+                           2520 ;	genLabel
+   0919                    2521 00216$:
+                           2522 ;	Laust.c 299
+                           2523 ;	genPlus
+                           2524 ;	AOP_HL for _incMove
+                           2525 ;	genPlusIncr
+   0919 21 1E 01           2526 	ld	hl,#_incMove
+   091C 34                 2527 	inc	(hl)
+   091D 20 02              2528 	jr	nz,00306$
+   091F 23                 2529 	inc	hl
+   0920 34                 2530 	inc	(hl)
+   0921                    2531 00306$:
+                           2532 ;	genGoto
+   0921 C3 51 08           2533 	jp	00214$
+                           2534 ;	genLabel
+   0924                    2535 00217$:
+                           2536 ;	Laust.c 324
+                           2537 ;	genCmpEq
+                           2538 ;	AOP_HL for _OffUp
+                           2539 ; genCmpEq: left 2, right 2, result 0
+   0924 21 14 01           2540 	ld	hl,#_OffUp
+   0927 7E                 2541 	ld	a,(hl)
+   0928 FE 01              2542 	cp	a,#0x01
+   092A C2 33 09           2543 	jp	nz,00307$
+   092D 23                 2544 	inc	hl
+   092E 7E                 2545 	ld	a,(hl)
+   092F B7                 2546 	or	a,a
+   0930 CA 52 09           2547 	jp	z,00186$
+   0933                    2548 00307$:
+                           2549 ;	Laust.c 325
+                           2550 ;	genMinus
+                           2551 ;	AOP_HL for _yCounter
+   0933 21 0C 00           2552 	ld	hl,#_yCounter
+   0936 5E                 2553 	ld	e,(hl)
+   0937 23                 2554 	inc	hl
+   0938 56                 2555 	ld	d,(hl)
+   0939 7B                 2556 	ld	a,e
+   093A D6 01              2557 	sub	a,#0x01
+   093C 5F                 2558 	ld	e,a
+   093D 7A                 2559 	ld	a,d
+   093E DE 00              2560 	sbc	a,#0x00
+   0940 F5                 2561 	push	af
+   0941 32                 2562 	ld      (hl-),a
+   0942 73                 2563 	ld	(hl),e
+   0943 23                 2564 	inc	hl
+   0944 23                 2565 	inc	hl
+   0945 5E                 2566 	ld	e,(hl)
+   0946 23                 2567 	inc	hl
+   0947 56                 2568 	ld	d,(hl)
+   0948 F1                 2569 	pop	af
+   0949 7B                 2570 	ld	a,e
+   094A DE 00              2571 	sbc	a,#0x00
+   094C 5F                 2572 	ld	e,a
+   094D 7A                 2573 	ld	a,d
+   094E DE 00              2574 	sbc	a,#0x00
+   0950 32                 2575 	ld      (hl-),a
+   0951 73                 2576 	ld	(hl),e
+                           2577 ;	genLabel
+   0952                    2578 00186$:
+                           2579 ;	Laust.c 328
+                           2580 ;	genAssign
+                           2581 ;	AOP_HL for _Direction
+   0952 21 18 01           2582 	ld	hl,#_Direction
+   0955 36 04              2583 	ld	(hl),#0x04
+   0957 23                 2584 	inc	hl
+   0958 36 00              2585 	ld	(hl),#0x00
+                           2586 ;	genLabel
+   095A                    2587 00197$:
+                           2588 ;	Laust.c 331
+                           2589 ;	genAssign
+                           2590 ;	AOP_HL for _OffUp
+   095A 21 14 01           2591 	ld	hl,#_OffUp
+   095D 36 00              2592 	ld	(hl),#0x00
+   095F 23                 2593 	inc	hl
+   0960 36 00              2594 	ld	(hl),#0x00
+                           2595 ;	Laust.c 332
+                           2596 ;	genAssign
+                           2597 ;	AOP_HL for _OffDown
+   0962 21 16 01           2598 	ld	hl,#_OffDown
+   0965 36 00              2599 	ld	(hl),#0x00
+   0967 23                 2600 	inc	hl
+   0968 36 00              2601 	ld	(hl),#0x00
+                           2602 ;	Laust.c 333
+                           2603 ;	genAssign
+                           2604 ;	AOP_HL for _OffLeft
+   096A 21 12 01           2605 	ld	hl,#_OffLeft
+   096D 36 00              2606 	ld	(hl),#0x00
+   096F 23                 2607 	inc	hl
+   0970 36 00              2608 	ld	(hl),#0x00
+                           2609 ;	Laust.c 334
+                           2610 ;	genAssign
+                           2611 ;	AOP_HL for _OffRight
+   0972 21 10 01           2612 	ld	hl,#_OffRight
+   0975 36 00              2613 	ld	(hl),#0x00
+   0977 23                 2614 	inc	hl
+   0978 36 00              2615 	ld	(hl),#0x00
+                           2616 ;	genLabel
+   097A                    2617 00218$:
+                           2618 ;	genEndFunction
+   097A E8 04              2619 	lda	sp,4(sp)
+   097C C9                 2620 	ret
+   097D                    2621 ___MoveAndColl_end:
+                           2622 ;	Laust.c 352
+                           2623 ;	genLabel
+                           2624 ;	genFunction
+                           2625 ;	---------------------------------
+                           2626 ; Function OutMatrix
+                           2627 ; ---------------------------------
+   097D                    2628 ___OutMatrix_start:
+   097D                    2629 _OutMatrix:
+                           2630 	
+                           2631 ;	Laust.c 354
+                           2632 ;	genCmpEq
+                           2633 ;	AOP_HL for _OutCheck
+                           2634 ; genCmpEq: left 2, right 2, result 0
+   097D 21 1C 01           2635 	ld	hl,#_OutCheck
+   0980 7E                 2636 	ld	a,(hl)
+   0981 FE 01              2637 	cp	a,#0x01
+   0983 C2 8C 09           2638 	jp	nz,00111$
+   0986 23                 2639 	inc	hl
+   0987 7E                 2640 	ld	a,(hl)
+   0988 B7                 2641 	or	a,a
+   0989 CA AD 09           2642 	jp	z,00101$
+   098C                    2643 00111$:
+                           2644 ;	genCmpEq
+                           2645 ;	AOP_HL for _OutCheck
+                           2646 ; genCmpEq: left 2, right 2, result 0
+   098C 21 1C 01           2647 	ld	hl,#_OutCheck
+   098F 7E                 2648 	ld	a,(hl)
+   0990 FE 02              2649 	cp	a,#0x02
+   0992 C2 9B 09           2650 	jp	nz,00112$
+   0995 23                 2651 	inc	hl
+   0996 7E                 2652 	ld	a,(hl)
+   0997 B7                 2653 	or	a,a
+   0998 CA B9 09           2654 	jp	z,00102$
+   099B                    2655 00112$:
+                           2656 ;	genCmpEq
+                           2657 ;	AOP_HL for _OutCheck
+                           2658 ; genCmpEq: left 2, right 2, result 0
+   099B 21 1C 01           2659 	ld	hl,#_OutCheck
+   099E 7E                 2660 	ld	a,(hl)
+   099F FE 03              2661 	cp	a,#0x03
+   09A1 C2 AA 09           2662 	jp	nz,00113$
+   09A4 23                 2663 	inc	hl
+   09A5 7E                 2664 	ld	a,(hl)
+   09A6 B7                 2665 	or	a,a
+   09A7 CA C5 09           2666 	jp	z,00103$
+   09AA                    2667 00113$:
+                           2668 ;	genGoto
+   09AA C3 CE 09           2669 	jp	00106$
+                           2670 ;	Laust.c 357
+                           2671 ;	genLabel
+   09AD                    2672 00101$:
+                           2673 ;	genAssign
+   09AD 01 00 20           2674 	ld	bc,#0x2000
+                           2675 ;	genAssign (pointer)
+   09B0 3E 04              2676 	ld	a,#0x04
+   09B2 02                 2677 	ld	(bc),a
+                           2678 ;	Laust.c 358
+                           2679 ;	genCall
+                           2680 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   09B3 CD 00 00           2681 	call	_Out_Home
+                           2682 ;	Laust.c 359
+                           2683 ;	genGoto
+   09B6 C3 CE 09           2684 	jp	00106$
+                           2685 ;	Laust.c 361
+                           2686 ;	genLabel
+   09B9                    2687 00102$:
+                           2688 ;	genAssign
+   09B9 01 00 20           2689 	ld	bc,#0x2000
+                           2690 ;	genAssign (pointer)
+   09BC 3E 04              2691 	ld	a,#0x04
+   09BE 02                 2692 	ld	(bc),a
+                           2693 ;	Laust.c 362
+                           2694 ;	genCall
+                           2695 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   09BF CD 00 00           2696 	call	_Out_HomeRoom
+                           2697 ;	Laust.c 363
+                           2698 ;	genGoto
+   09C2 C3 CE 09           2699 	jp	00106$
+                           2700 ;	Laust.c 365
+                           2701 ;	genLabel
+   09C5                    2702 00103$:
+                           2703 ;	genAssign
+   09C5 01 00 20           2704 	ld	bc,#0x2000
+                           2705 ;	genAssign (pointer)
+   09C8 3E 04              2706 	ld	a,#0x04
+   09CA 02                 2707 	ld	(bc),a
+                           2708 ;	Laust.c 366
+                           2709 ;	genCall
+                           2710 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   09CB CD 00 00           2711 	call	_Out_Town1
+                           2712 ;	Laust.c 372
+                           2713 ;	genLabel
+   09CE                    2714 00106$:
+                           2715 ;	genEndFunction
+                           2716 	
+   09CE C9                 2717 	ret
+   09CF                    2718 ___OutMatrix_end:
+                           2719 ;	Laust.c 376
+                           2720 ;	genLabel
+                           2721 ;	genFunction
+                           2722 ;	---------------------------------
+                           2723 ; Function MapChanger
+                           2724 ; ---------------------------------
+   09CF                    2725 ___MapChanger_start:
+   09CF                    2726 _MapChanger:
+                           2727 	
+                           2728 ;	Laust.c 381
+                           2729 ;	genCmpLt
+                           2730 ;	AOP_HL for _IDMap
+   09CF 21 01 00           2731 	ld	hl,#_IDMap + 1
+   09D2 7E                 2732 	ld	a,(hl)
+   09D3 CB 7F              2733 	bit	7,a
+   09D5 C2 99 0A           2734 	jp	nz,00106$
+                           2735 ;	genCmpGt
+                           2736 ;	AOP_HL for _IDMap
+   09D8 1E 80              2737 	ld	e,#0x80
+   09DA 7E                 2738 	ld	a,(hl)
+   09DB EE 80              2739 	xor	a,#0x80
+   09DD 57                 2740 	ld	d,a
+   09DE 3E 03              2741 	ld	a,#0x03
+   09E0 2B                 2742 	dec	hl
+   09E1 96                 2743 	sub	a,(hl)
+   09E2 7B                 2744 	ld	a,e
+   09E3 9A                 2745 	sbc	a,d
+   09E4 DA 99 0A           2746 	jp	c,00106$
+                           2747 ;	genJumpTab
+                           2748 ;	AOP_HL for _IDMap
+   09E7 5E                 2749 	ld	e,(hl)
+   09E8 16 00              2750 	ld	d,#0x00
+   09EA 21 F1 09           2751 	ld	hl,#00111$
+   09ED 19                 2752 	add	hl,de
+   09EE 19                 2753 	add	hl,de
+   09EF 19                 2754 	add	hl,de
+   09F0 E9                 2755 	jp	(hl)
+   09F1                    2756 00111$:
+   09F1 C3 FD 09           2757 	jp	00101$
+   09F4 C3 00 0A           2758 	jp	00102$
+   09F7 C3 37 0A           2759 	jp	00103$
+   09FA C3 6E 0A           2760 	jp	00104$
+                           2761 ;	Laust.c 383
+                           2762 ;	genLabel
+   09FD                    2763 00101$:
+                           2764 ;	genGoto
+   09FD C3 99 0A           2765 	jp	00106$
+                           2766 ;	Laust.c 385
+                           2767 ;	genLabel
+   0A00                    2768 00102$:
+                           2769 ;	genAssign
+                           2770 ;	AOP_HL for _OffMove
+   0A00 21 1A 01           2771 	ld	hl,#_OffMove
+   0A03 36 01              2772 	ld	(hl),#0x01
+   0A05 23                 2773 	inc	hl
+   0A06 36 00              2774 	ld	(hl),#0x00
+                           2775 ;	Laust.c 386
+                           2776 ;	genAssign
+   0A08 01 00 20           2777 	ld	bc,#0x2000
+                           2778 ;	genAssign (pointer)
+   0A0B 3E 04              2779 	ld	a,#0x04
+   0A0D 02                 2780 	ld	(bc),a
+                           2781 ;	Laust.c 387
+                           2782 ;	genCall
+                           2783 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A0E CD 00 00           2784 	call	_Col_Home
+                           2785 ;	Laust.c 388
+                           2786 ;	genAssign
+   0A11 01 00 20           2787 	ld	bc,#0x2000
+                           2788 ;	genAssign (pointer)
+   0A14 3E 03              2789 	ld	a,#0x03
+   0A16 02                 2790 	ld	(bc),a
+                           2791 ;	Laust.c 389
+                           2792 ;	genCall
+                           2793 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A17 CD 00 00           2794 	call	_Black_Clear
+                           2795 ;	Laust.c 390
+                           2796 ;	genAssign
+   0A1A 01 00 20           2797 	ld	bc,#0x2000
+                           2798 ;	genAssign (pointer)
+   0A1D 3E 04              2799 	ld	a,#0x04
+   0A1F 02                 2800 	ld	(bc),a
+                           2801 ;	Laust.c 391
+                           2802 ;	genCall
+                           2803 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A20 CD 00 00           2804 	call	_Load_Home
+                           2805 ;	Laust.c 392
+                           2806 ;	genAssign
+   0A23 01 00 20           2807 	ld	bc,#0x2000
+                           2808 ;	genAssign (pointer)
+   0A26 3E 03              2809 	ld	a,#0x03
+   0A28 02                 2810 	ld	(bc),a
+                           2811 ;	Laust.c 393
+                           2812 ;	genCall
+                           2813 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A29 CD 00 00           2814 	call	_Spawn
+                           2815 ;	Laust.c 394
+                           2816 ;	genAssign
+                           2817 ;	AOP_HL for _OffMove
+   0A2C 21 1A 01           2818 	ld	hl,#_OffMove
+   0A2F 36 00              2819 	ld	(hl),#0x00
+   0A31 23                 2820 	inc	hl
+   0A32 36 00              2821 	ld	(hl),#0x00
+                           2822 ;	Laust.c 395
+                           2823 ;	genGoto
+   0A34 C3 99 0A           2824 	jp	00106$
+                           2825 ;	Laust.c 397
+                           2826 ;	genLabel
+   0A37                    2827 00103$:
+                           2828 ;	genAssign
+                           2829 ;	AOP_HL for _OffMove
+   0A37 21 1A 01           2830 	ld	hl,#_OffMove
+   0A3A 36 01              2831 	ld	(hl),#0x01
+   0A3C 23                 2832 	inc	hl
+   0A3D 36 00              2833 	ld	(hl),#0x00
+                           2834 ;	Laust.c 398
+                           2835 ;	genAssign
+   0A3F 01 00 20           2836 	ld	bc,#0x2000
+                           2837 ;	genAssign (pointer)
+   0A42 3E 04              2838 	ld	a,#0x04
+   0A44 02                 2839 	ld	(bc),a
+                           2840 ;	Laust.c 399
+                           2841 ;	genCall
+                           2842 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A45 CD 00 00           2843 	call	_Col_HomeRoom
+                           2844 ;	Laust.c 400
+                           2845 ;	genAssign
+   0A48 01 00 20           2846 	ld	bc,#0x2000
+                           2847 ;	genAssign (pointer)
+   0A4B 3E 03              2848 	ld	a,#0x03
+   0A4D 02                 2849 	ld	(bc),a
+                           2850 ;	Laust.c 401
+                           2851 ;	genCall
+                           2852 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A4E CD 00 00           2853 	call	_Black_Clear
+                           2854 ;	Laust.c 402
+                           2855 ;	genAssign
+   0A51 01 00 20           2856 	ld	bc,#0x2000
+                           2857 ;	genAssign (pointer)
+   0A54 3E 04              2858 	ld	a,#0x04
+   0A56 02                 2859 	ld	(bc),a
+                           2860 ;	Laust.c 403
+                           2861 ;	genCall
+                           2862 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A57 CD 00 00           2863 	call	_Load_HomeRoom
+                           2864 ;	Laust.c 404
+                           2865 ;	genAssign
+   0A5A 01 00 20           2866 	ld	bc,#0x2000
+                           2867 ;	genAssign (pointer)
+   0A5D 3E 03              2868 	ld	a,#0x03
+   0A5F 02                 2869 	ld	(bc),a
+                           2870 ;	Laust.c 405
+                           2871 ;	genCall
+                           2872 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A60 CD 00 00           2873 	call	_Spawn
+                           2874 ;	Laust.c 406
+                           2875 ;	genAssign
+                           2876 ;	AOP_HL for _OffMove
+   0A63 21 1A 01           2877 	ld	hl,#_OffMove
+   0A66 36 00              2878 	ld	(hl),#0x00
+   0A68 23                 2879 	inc	hl
+   0A69 36 00              2880 	ld	(hl),#0x00
+                           2881 ;	Laust.c 407
+                           2882 ;	genGoto
+   0A6B C3 99 0A           2883 	jp	00106$
+                           2884 ;	Laust.c 409
+                           2885 ;	genLabel
+   0A6E                    2886 00104$:
+                           2887 ;	genAssign
+                           2888 ;	AOP_HL for _OffMove
+   0A6E 21 1A 01           2889 	ld	hl,#_OffMove
+   0A71 36 01              2890 	ld	(hl),#0x01
+   0A73 23                 2891 	inc	hl
+   0A74 36 00              2892 	ld	(hl),#0x00
+                           2893 ;	Laust.c 410
+                           2894 ;	genAssign
+   0A76 01 00 20           2895 	ld	bc,#0x2000
+                           2896 ;	genAssign (pointer)
+   0A79 3E 03              2897 	ld	a,#0x03
+   0A7B 02                 2898 	ld	(bc),a
+                           2899 ;	Laust.c 411
+                           2900 ;	genCall
+                           2901 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A7C CD 00 00           2902 	call	_Black_Clear
+                           2903 ;	Laust.c 412
+                           2904 ;	genAssign
+   0A7F 01 00 20           2905 	ld	bc,#0x2000
+                           2906 ;	genAssign (pointer)
+   0A82 3E 04              2907 	ld	a,#0x04
+   0A84 02                 2908 	ld	(bc),a
+                           2909 ;	Laust.c 413
+                           2910 ;	genCall
+                           2911 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A85 CD 00 00           2912 	call	_Load_Town1
+                           2913 ;	Laust.c 414
+                           2914 ;	genAssign
+   0A88 01 00 20           2915 	ld	bc,#0x2000
+                           2916 ;	genAssign (pointer)
+   0A8B 3E 03              2917 	ld	a,#0x03
+   0A8D 02                 2918 	ld	(bc),a
+                           2919 ;	Laust.c 415
+                           2920 ;	genCall
+                           2921 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0A8E CD 00 00           2922 	call	_Spawn
+                           2923 ;	Laust.c 416
+                           2924 ;	genAssign
+                           2925 ;	AOP_HL for _OffMove
+   0A91 21 1A 01           2926 	ld	hl,#_OffMove
+   0A94 36 00              2927 	ld	(hl),#0x00
+   0A96 23                 2928 	inc	hl
+   0A97 36 00              2929 	ld	(hl),#0x00
+                           2930 ;	Laust.c 420
+                           2931 ;	genLabel
+   0A99                    2932 00106$:
+                           2933 ;	Laust.c 421
+                           2934 ;	genAssign
+                           2935 ;	AOP_HL for _IDMap
+   0A99 21 00 00           2936 	ld	hl,#_IDMap
+   0A9C 36 00              2937 	ld	(hl),#0x00
+   0A9E 23                 2938 	inc	hl
+   0A9F 36 00              2939 	ld	(hl),#0x00
+                           2940 ;	genLabel
+   0AA1                    2941 00107$:
+                           2942 ;	genEndFunction
+                           2943 	
+   0AA1 C9                 2944 	ret
+   0AA2                    2945 ___MapChanger_end:
+                           2946 ;	Laust.c 436
+                           2947 ;	genLabel
+                           2948 ;	genFunction
+                           2949 ;	---------------------------------
+                           2950 ; Function main
+                           2951 ; ---------------------------------
+   0AA2                    2952 ___main_start:
+   0AA2                    2953 _main:
+                           2954 	
+                           2955 ;	Laust.c 438
+                           2956 ;	genAssign
+   0AA2 01 00 20           2957 	ld	bc,#0x2000
+                           2958 ;	genAssign (pointer)
+   0AA5 3E 02              2959 	ld	a,#0x02
+   0AA7 02                 2960 	ld	(bc),a
+                           2961 ;	Laust.c 439
+                           2962 ;	genCall
+                           2963 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0AA8 CD 00 00           2964 	call	_Intro
+                           2965 ;	Laust.c 440
+                           2966 ;	genCall
+                           2967 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0AAB CD 00 00           2968 	call	_clearScreenLetter
+                           2969 ;	Laust.c 441
+                           2970 ;	genAssign
+   0AAE 01 00 20           2971 	ld	bc,#0x2000
+                           2972 ;	genAssign (pointer)
+   0AB1 3E 02              2973 	ld	a,#0x02
+   0AB3 02                 2974 	ld	(bc),a
+                           2975 ;	Laust.c 442
+                           2976 ;	genCall
+                           2977 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0AB4 CD 00 00           2978 	call	_Intro2
+                           2979 ;	Laust.c 445
+                           2980 ;	genLabel
+   0AB7                    2981 00104$:
+                           2982 ;	Laust.c 448
+                           2983 ;	genCall
+                           2984 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0AB7 CD CF 09           2985 	call	_MapChanger
+                           2986 ;	Laust.c 449
+                           2987 ;	genIfx
+                           2988 ;	AOP_HL for _OffMove
+   0ABA 21 1A 01           2989 	ld	hl,#_OffMove
+   0ABD 2A                 2990 	ld	a,(hl+)
+   0ABE B6                 2991 	or	a,(hl)
+   0ABF C2 C5 0A           2992 	jp	nz,00102$
+                           2993 ;	Laust.c 450
+                           2994 ;	genCall
+                           2995 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0AC2 CD C6 01           2996 	call	_MoveAndColl
+                           2997 ;	genLabel
+   0AC5                    2998 00102$:
+                           2999 ;	Laust.c 452
+                           3000 ;	genCall
+                           3001 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0AC5 CD 7D 09           3002 	call	_OutMatrix
+                           3003 ;	genGoto
+   0AC8 C3 B7 0A           3004 	jp	00104$
+                           3005 ;	genLabel
+   0ACB                    3006 00106$:
+                           3007 ;	genEndFunction
+                           3008 	
+   0ACB C9                 3009 	ret
+   0ACC                    3010 ___main_end:
+                           3011 	.area _CODE
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 1.
+
+Symbol Table
+
+  1 _A_Pressed                         012E GR
+    _Black_Clear                       **** GX
+    _Col_Home                          **** GX
+    _Col_HomeRoom                      **** GX
+  1 _Direction                         0118 GR
+  1 _IDMap                             0000 GR
+    _Intro                             **** GX
+    _Intro2                            **** GX
+    _Load_Home                         **** GX
+    _Load_HomeRoom                     **** GX
+    _Load_Town1                        **** GX
+  0 _MapChanger                        09CF GR
+  0 _MoveAndColl                       01C6 GR
+  1 _OffDown                           0116 GR
+  1 _OffLeft                           0112 GR
+  1 _OffMove                           011A GR
+  1 _OffRight                          0110 GR
+  1 _OffUp                             0114 GR
+  1 _OutCheck                          011C GR
+  0 _OutMatrix                         097D GR
+    _Out_Home                          **** GX
+    _Out_HomeRoom                      **** GX
+    _Out_Town1                         **** GX
+  0 _Robot                             0086 GR
+    _Spawn                             **** GX
+  1 _StartPressed                      012C GR
+  1 _TabCollide                        001C GR
+  1 _TabDirection                      00BC GR
+  1 _WalkCounter                       0018 GR
+  0 ___MapChanger_end                  0AA2 R
+  0 ___MapChanger_start                09CF R
+  0 ___MoveAndColl_end                 097D R
+  0 ___MoveAndColl_start               01C6 R
+  0 ___OutMatrix_end                   09CF R
+  0 ___OutMatrix_start                 097D R
+  0 ___clearScreenLetter_end           0086 R
+  0 ___clearScreenLetter_start         0000 R
+  0 ___main_end                        0ACC R
+  0 ___main_start                      0AA2 R
+  1 _arrayLength                       010C GR
+  0 _clearScreenLetter                 0000 GR
+    _delay                             **** GX
+  1 _delayVerif                        0130 GR
+    _gotoxy                            **** GX
+  1 _i                                 0002 GR
+  1 _incMove                           011E GR
+    _joypad                            **** GX
+  0 _main                              0AA2 GR
+    _move_sprite                       **** GX
+  1 _nomPlayer                         0122 GR
+    _set_sprite_tile                   **** GX
+    _setchar                           **** GX
+  1 _sizeOfTab                         010E GR
+  1 _switchMove                        0120 GR
+  1 _tileInc                           0128 GR
+  1 _tileNumber                        012A GR
+  1 _xCounter                          0008 GR
+  1 _xCounterForSpawn                  0010 GR
+  1 _xMove                             0004 GR
+  1 _yCounter                          000C GR
+  1 _yCounterForSpawn                  0014 GR
+  1 _yMove                             0006 GR
+
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 2.
+
+Area Table
+
+   0 _CODE                              size  ACC   flags 0
+   1 _DATA                              size  132   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _ISEG                              size    0   flags 0
+   4 _BSEG                              size    0   flags 0
+   5 _XSEG                              size    0   flags 0
+   6 _GSINIT                            size   98   flags 0
+   7 _GSFINAL                           size    0   flags 0
+   8 _HOME                              size    0   flags 0

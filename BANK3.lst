@@ -1,0 +1,681 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.3.1 Mon Apr 17 13:59:27 2017
+                              4 
+                              5 ;--------------------------------------------------------
+                              6 	.module lcc50760
+                              7 	
+                              8 ;--------------------------------------------------------
+                              9 ; Public variables in this module
+                             10 ;--------------------------------------------------------
+                             11 	.globl _Black_Clear
+                             12 	.globl _Spawn
+                             13 	.globl _BlackClearMap
+                             14 	.globl _BlackClear
+                             15 ;--------------------------------------------------------
+                             16 ; special function registers
+                             17 ;--------------------------------------------------------
+                             18 ;--------------------------------------------------------
+                             19 ; special function bits 
+                             20 ;--------------------------------------------------------
+                             21 ;--------------------------------------------------------
+                             22 ; internal ram data
+                             23 ;--------------------------------------------------------
+                             24 	.area _DATA
+                             25 ;--------------------------------------------------------
+                             26 ; overlayable items in internal ram 
+                             27 ;--------------------------------------------------------
+                             28 	.area _OVERLAY
+                             29 ;--------------------------------------------------------
+                             30 ; indirectly addressable internal ram data
+                             31 ;--------------------------------------------------------
+                             32 	.area _ISEG
+                             33 ;--------------------------------------------------------
+                             34 ; bit data
+                             35 ;--------------------------------------------------------
+                             36 	.area _BSEG
+                             37 ;--------------------------------------------------------
+                             38 ; external ram data
+                             39 ;--------------------------------------------------------
+                             40 	.area _XSEG
+                             41 ;--------------------------------------------------------
+                             42 ; global & static initialisations
+                             43 ;--------------------------------------------------------
+                             44 	.area _GSINIT
+                             45 	.area _GSFINAL
+                             46 	.area _GSINIT
+                             47 ;--------------------------------------------------------
+                             48 ; Home
+                             49 ;--------------------------------------------------------
+                             50 	.area _HOME
+                             51 	.area _CODE_3
+                             52 ;--------------------------------------------------------
+                             53 ; code
+                             54 ;--------------------------------------------------------
+                             55 	.area _CODE_3
+                             56 ;	BANK3.c 26
+                             57 ;	genLabel
+                             58 ;	genFunction
+                             59 ;	---------------------------------
+                             60 ; Function Spawn
+                             61 ; ---------------------------------
+   0000                      62 ___Spawn_start:
+   0000                      63 _Spawn:
+   0000 E8 FD                64 	lda	sp,-3(sp)
+                             65 ;	BANK3.c 27
+                             66 ;	genAssign
+                             67 ;	AOP_HL for _xMove
+   0002 21 00 00             68 	ld	hl,#_xMove
+   0005 36 08                69 	ld	(hl),#0x08
+   0007 23                   70 	inc	hl
+   0008 36 00                71 	ld	(hl),#0x00
+                             72 ;	BANK3.c 28
+                             73 ;	genAssign
+                             74 ;	AOP_HL for _yMove
+   000A 21 00 00             75 	ld	hl,#_yMove
+   000D 36 04                76 	ld	(hl),#0x04
+   000F 23                   77 	inc	hl
+   0010 36 00                78 	ld	(hl),#0x00
+                             79 ;	BANK3.c 30
+                             80 ;	genAssign
+                             81 ;	AOP_HL for _xCounter
+                             82 ;	AOP_HL for _xCounterForSpawn
+   0012 21 00 00             83 	ld	hl,#_xCounter
+   0015 54                   84 	ld	d,h
+   0016 5D                   85 	ld	e,l
+   0017 21 00 00             86 	ld	hl,#_xCounterForSpawn
+   001A 1A                   87 	ld	a,(de)
+   001B 22                   88 	ld	(hl+),a
+   001C 13                   89 	inc	de
+   001D 1A                   90 	ld	a,(de)
+   001E 22                   91 	ld	(hl+),a
+   001F 13                   92 	inc	de
+   0020 1A                   93 	ld	a,(de)
+   0021 22                   94 	ld	(hl+),a
+   0022 13                   95 	inc	de
+   0023 1A                   96 	ld	a,(de)
+   0024 77                   97 	ld	(hl),a
+                             98 ;	BANK3.c 31
+                             99 ;	genAssign
+                            100 ;	AOP_HL for _yCounter
+                            101 ;	AOP_HL for _yCounterForSpawn
+   0025 21 00 00            102 	ld	hl,#_yCounter
+   0028 54                  103 	ld	d,h
+   0029 5D                  104 	ld	e,l
+   002A 21 00 00            105 	ld	hl,#_yCounterForSpawn
+   002D 1A                  106 	ld	a,(de)
+   002E 22                  107 	ld	(hl+),a
+   002F 13                  108 	inc	de
+   0030 1A                  109 	ld	a,(de)
+   0031 22                  110 	ld	(hl+),a
+   0032 13                  111 	inc	de
+   0033 1A                  112 	ld	a,(de)
+   0034 22                  113 	ld	(hl+),a
+   0035 13                  114 	inc	de
+   0036 1A                  115 	ld	a,(de)
+   0037 77                  116 	ld	(hl),a
+                            117 ;	BANK3.c 33
+                            118 ;	genLabel
+   0038                     119 00101$:
+                            120 ;	genCmpEq
+                            121 ;	AOP_HL for _xCounterForSpawn
+                            122 ; genCmpEq: left 4, right 4, result 0
+   0038 21 00 00            123 	ld	hl,#_xCounterForSpawn
+   003B 2A                  124 	ld	a,(hl+)
+   003C B6                  125 	or	a,(hl)
+   003D 23                  126 	inc	hl
+   003E B6                  127 	or	a,(hl)
+   003F 23                  128 	inc	hl
+   0040 B6                  129 	or	a,(hl)
+   0041 CA 71 00            130 	jp	z,00104$
+   0044                     131 00119$:
+                            132 ;	BANK3.c 34
+                            133 ;	genPlus
+                            134 ;	AOP_HL for _xMove
+                            135 ;	genPlusIncr
+                            136 ;	Can't optimise plus by inc, falling back to the normal way
+   0044 21 00 00            137 	ld	hl,#_xMove
+   0047 7E                  138 	ld	a,(hl)
+   0048 C6 08               139 	add	a,#0x08
+   004A 22                  140 	ld	(hl+),a
+   004B 7E                  141 	ld	a,(hl)
+   004C CE 00               142 	adc	a,#0x00
+   004E 77                  143 	ld	(hl),a
+                            144 ;	BANK3.c 35
+                            145 ;	genMinus
+                            146 ;	AOP_HL for _xCounterForSpawn
+   004F 21 00 00            147 	ld	hl,#_xCounterForSpawn
+   0052 5E                  148 	ld	e,(hl)
+   0053 23                  149 	inc	hl
+   0054 56                  150 	ld	d,(hl)
+   0055 7B                  151 	ld	a,e
+   0056 D6 15               152 	sub	a,#0x15
+   0058 5F                  153 	ld	e,a
+   0059 7A                  154 	ld	a,d
+   005A DE 00               155 	sbc	a,#0x00
+   005C F5                  156 	push	af
+   005D 32                  157 	ld      (hl-),a
+   005E 73                  158 	ld	(hl),e
+   005F 23                  159 	inc	hl
+   0060 23                  160 	inc	hl
+   0061 5E                  161 	ld	e,(hl)
+   0062 23                  162 	inc	hl
+   0063 56                  163 	ld	d,(hl)
+   0064 F1                  164 	pop	af
+   0065 7B                  165 	ld	a,e
+   0066 DE 00               166 	sbc	a,#0x00
+   0068 5F                  167 	ld	e,a
+   0069 7A                  168 	ld	a,d
+   006A DE 00               169 	sbc	a,#0x00
+   006C 32                  170 	ld      (hl-),a
+   006D 73                  171 	ld	(hl),e
+                            172 ;	genGoto
+   006E C3 38 00            173 	jp	00101$
+                            174 ;	BANK3.c 37
+                            175 ;	genLabel
+   0071                     176 00104$:
+                            177 ;	genCmpEq
+                            178 ;	AOP_HL for _yCounterForSpawn
+                            179 ; genCmpEq: left 4, right 4, result 0
+   0071 21 00 00            180 	ld	hl,#_yCounterForSpawn
+   0074 2A                  181 	ld	a,(hl+)
+   0075 B6                  182 	or	a,(hl)
+   0076 23                  183 	inc	hl
+   0077 B6                  184 	or	a,(hl)
+   0078 23                  185 	inc	hl
+   0079 B6                  186 	or	a,(hl)
+   007A CA AA 00            187 	jp	z,00106$
+   007D                     188 00120$:
+                            189 ;	BANK3.c 38
+                            190 ;	genPlus
+                            191 ;	AOP_HL for _yMove
+                            192 ;	genPlusIncr
+                            193 ;	Can't optimise plus by inc, falling back to the normal way
+   007D 21 00 00            194 	ld	hl,#_yMove
+   0080 7E                  195 	ld	a,(hl)
+   0081 C6 08               196 	add	a,#0x08
+   0083 22                  197 	ld	(hl+),a
+   0084 7E                  198 	ld	a,(hl)
+   0085 CE 00               199 	adc	a,#0x00
+   0087 77                  200 	ld	(hl),a
+                            201 ;	BANK3.c 39
+                            202 ;	genMinus
+                            203 ;	AOP_HL for _yCounterForSpawn
+   0088 21 00 00            204 	ld	hl,#_yCounterForSpawn
+   008B 5E                  205 	ld	e,(hl)
+   008C 23                  206 	inc	hl
+   008D 56                  207 	ld	d,(hl)
+   008E 7B                  208 	ld	a,e
+   008F D6 01               209 	sub	a,#0x01
+   0091 5F                  210 	ld	e,a
+   0092 7A                  211 	ld	a,d
+   0093 DE 00               212 	sbc	a,#0x00
+   0095 F5                  213 	push	af
+   0096 32                  214 	ld      (hl-),a
+   0097 73                  215 	ld	(hl),e
+   0098 23                  216 	inc	hl
+   0099 23                  217 	inc	hl
+   009A 5E                  218 	ld	e,(hl)
+   009B 23                  219 	inc	hl
+   009C 56                  220 	ld	d,(hl)
+   009D F1                  221 	pop	af
+   009E 7B                  222 	ld	a,e
+   009F DE 00               223 	sbc	a,#0x00
+   00A1 5F                  224 	ld	e,a
+   00A2 7A                  225 	ld	a,d
+   00A3 DE 00               226 	sbc	a,#0x00
+   00A5 32                  227 	ld      (hl-),a
+   00A6 73                  228 	ld	(hl),e
+                            229 ;	genGoto
+   00A7 C3 71 00            230 	jp	00104$
+                            231 ;	genLabel
+   00AA                     232 00106$:
+                            233 ;	BANK3.c 43
+                            234 ;	genAssign
+   00AA 01 40 FF            235 	ld	bc,#0xFF40
+                            236 ;	genAssign
+                            237 ;	AOP_STK for _Spawn_sloc0_1_0
+   00AD F8 01               238 	lda	hl,1(sp)
+   00AF 36 40               239 	ld	(hl),#0x40
+   00B1 23                  240 	inc	hl
+   00B2 36 FF               241 	ld	(hl),#0xFF
+                            242 ;	genPointerGet
+                            243 ;	AOP_STK for _Spawn_sloc0_1_0
+                            244 ;	AOP_STK for _Spawn_sloc1_1_0
+   00B4 2B                  245 	dec	hl
+   00B5 5E                  246 	ld	e,(hl)
+   00B6 23                  247 	inc	hl
+   00B7 56                  248 	ld	d,(hl)
+   00B8 1A                  249 	ld	a,(de)
+   00B9 2B                  250 	dec	hl
+   00BA 2B                  251 	dec	hl
+                            252 ;	genOr
+                            253 ;	AOP_STK for _Spawn_sloc1_1_0
+   00BB 77                  254 	ld      (hl),a
+                            255 ; Removed redundent load
+   00BC F6 04               256 	or	a,#0x04
+                            257 ;	genAssign (pointer)
+   00BE 02                  258 	ld	(bc),a
+                            259 ;	BANK3.c 44
+                            260 ;	genIpush
+                            261 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00BF 21 00 00            262 	ld	hl,#_Robot
+   00C2 E5                  263 	push	hl
+                            264 ;	genIpush
+   00C3 21 00 14            265 	ld	hl,#0x1400
+   00C6 E5                  266 	push	hl
+                            267 ;	genCall
+   00C7 CD 00 00            268 	call	_set_sprite_data
+   00CA E8 04               269 	lda	sp,4(sp)
+                            270 ;	BANK3.c 46
+                            271 ;	genAssign
+                            272 ;	AOP_HL for _tileNumber
+   00CC 21 00 00            273 	ld	hl,#_tileNumber
+   00CF 36 00               274 	ld	(hl),#0x00
+   00D1 23                  275 	inc	hl
+   00D2 36 00               276 	ld	(hl),#0x00
+                            277 ;	BANK3.c 48
+                            278 ;	genAssign
+                            279 ;	AOP_HL for _tileInc
+   00D4 21 00 00            280 	ld	hl,#_tileInc
+   00D7 36 00               281 	ld	(hl),#0x00
+   00D9 23                  282 	inc	hl
+   00DA 36 00               283 	ld	(hl),#0x00
+                            284 ;	genLabel
+   00DC                     285 00107$:
+                            286 ;	genCmpGt
+                            287 ;	AOP_HL for _tileInc
+   00DC 1E 80               288 	ld	e,#0x80
+   00DE 21 01 00            289 	ld	hl,#_tileInc + 1
+   00E1 7E                  290 	ld	a,(hl)
+   00E2 EE 80               291 	xor	a,#0x80
+   00E4 57                  292 	ld	d,a
+   00E5 3E 09               293 	ld	a,#0x09
+   00E7 2B                  294 	dec	hl
+   00E8 96                  295 	sub	a,(hl)
+   00E9 7B                  296 	ld	a,e
+   00EA 9A                  297 	sbc	a,d
+   00EB DA 17 01            298 	jp	c,00110$
+                            299 ;	BANK3.c 49
+                            300 ;	genCast
+                            301 ;	AOP_HL for _tileNumber
+   00EE 21 00 00            302 	ld	hl,#_tileNumber
+   00F1 4E                  303 	ld	c,(hl)
+                            304 ;	genCast
+                            305 ;	AOP_HL for _tileInc
+   00F2 21 00 00            306 	ld	hl,#_tileInc
+   00F5 46                  307 	ld	b,(hl)
+                            308 ;	genIpush
+                            309 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00F6 79                  310 	ld	a,c
+   00F7 F5                  311 	push	af
+   00F8 33                  312 	inc	sp
+                            313 ;	genIpush
+   00F9 78                  314 	ld	a,b
+   00FA F5                  315 	push	af
+   00FB 33                  316 	inc	sp
+                            317 ;	genCall
+   00FC CD 00 00            318 	call	_set_sprite_tile
+   00FF E8 02               319 	lda	sp,2(sp)
+                            320 ;	BANK3.c 50
+                            321 ;	genPlus
+                            322 ;	AOP_HL for _tileNumber
+                            323 ;	genPlusIncr
+                            324 ;	Can't optimise plus by inc, falling back to the normal way
+   0101 21 00 00            325 	ld	hl,#_tileNumber
+   0104 7E                  326 	ld	a,(hl)
+   0105 C6 02               327 	add	a,#0x02
+   0107 22                  328 	ld	(hl+),a
+   0108 7E                  329 	ld	a,(hl)
+   0109 CE 00               330 	adc	a,#0x00
+   010B 77                  331 	ld	(hl),a
+                            332 ;	BANK3.c 48
+                            333 ;	genPlus
+                            334 ;	AOP_HL for _tileInc
+                            335 ;	genPlusIncr
+   010C 21 00 00            336 	ld	hl,#_tileInc
+   010F 34                  337 	inc	(hl)
+   0110 20 02               338 	jr	nz,00121$
+   0112 23                  339 	inc	hl
+   0113 34                  340 	inc	(hl)
+   0114                     341 00121$:
+                            342 ;	genGoto
+   0114 C3 DC 00            343 	jp	00107$
+                            344 ;	genLabel
+   0117                     345 00110$:
+                            346 ;	BANK3.c 53
+                            347 ;	genCast
+                            348 ;	AOP_HL for _yMove
+   0117 21 00 00            349 	ld	hl,#_yMove
+   011A 4E                  350 	ld	c,(hl)
+                            351 ;	genCast
+                            352 ;	AOP_HL for _xMove
+   011B 21 00 00            353 	ld	hl,#_xMove
+   011E 46                  354 	ld	b,(hl)
+                            355 ;	genIpush
+                            356 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   011F 79                  357 	ld	a,c
+   0120 F5                  358 	push	af
+   0121 33                  359 	inc	sp
+                            360 ;	genIpush
+   0122 78                  361 	ld	a,b
+   0123 F5                  362 	push	af
+   0124 33                  363 	inc	sp
+                            364 ;	genIpush
+   0125 3E 00               365 	ld	a,#0x00
+   0127 F5                  366 	push	af
+   0128 33                  367 	inc	sp
+                            368 ;	genCall
+   0129 CD 00 00            369 	call	_move_sprite
+   012C E8 03               370 	lda	sp,3(sp)
+                            371 ;	BANK3.c 54
+                            372 ;	genIpush
+                            373 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   012E 21 00 00            374 	ld	hl,#0x0000
+   0131 E5                  375 	push	hl
+                            376 ;	genCall
+   0132 CD 00 00            377 	call	_set_sprite_tile
+   0135 E8 02               378 	lda	sp,2(sp)
+                            379 ;	BANK3.c 55
+                            380 ;	genAssign
+   0137 01 40 FF            381 	ld	bc,#0xFF40
+                            382 ;	genAssign
+                            383 ;	AOP_STK for _Spawn_sloc0_1_0
+   013A F8 01               384 	lda	hl,1(sp)
+   013C 36 40               385 	ld	(hl),#0x40
+   013E 23                  386 	inc	hl
+   013F 36 FF               387 	ld	(hl),#0xFF
+                            388 ;	genPointerGet
+                            389 ;	AOP_STK for _Spawn_sloc0_1_0
+                            390 ;	AOP_STK for _Spawn_sloc1_1_0
+   0141 2B                  391 	dec	hl
+   0142 5E                  392 	ld	e,(hl)
+   0143 23                  393 	inc	hl
+   0144 56                  394 	ld	d,(hl)
+   0145 1A                  395 	ld	a,(de)
+   0146 2B                  396 	dec	hl
+   0147 2B                  397 	dec	hl
+                            398 ;	genOr
+                            399 ;	AOP_STK for _Spawn_sloc1_1_0
+   0148 77                  400 	ld      (hl),a
+                            401 ; Removed redundent load
+   0149 F6 02               402 	or	a,#0x02
+                            403 ;	genAssign (pointer)
+   014B 02                  404 	ld	(bc),a
+                            405 ;	genLabel
+   014C                     406 00111$:
+                            407 ;	genEndFunction
+   014C E8 03               408 	lda	sp,3(sp)
+   014E C9                  409 	ret
+   014F                     410 ___Spawn_end:
+   014F                     411 _BlackClear:
+   014F FF                  412 	.db #0xFF
+   0150 FF                  413 	.db #0xFF
+   0151 FF                  414 	.db #0xFF
+   0152 FF                  415 	.db #0xFF
+   0153 FF                  416 	.db #0xFF
+   0154 FF                  417 	.db #0xFF
+   0155 FF                  418 	.db #0xFF
+   0156 FF                  419 	.db #0xFF
+   0157 FF                  420 	.db #0xFF
+   0158 FF                  421 	.db #0xFF
+   0159 FF                  422 	.db #0xFF
+   015A FF                  423 	.db #0xFF
+   015B FF                  424 	.db #0xFF
+   015C FF                  425 	.db #0xFF
+   015D FF                  426 	.db #0xFF
+   015E FF                  427 	.db #0xFF
+   015F                     428 _BlackClearMap:
+   015F 00                  429 	.db #0x00
+                            430 ;	BANK3.c 58
+                            431 ;	genLabel
+                            432 ;	genFunction
+                            433 ;	---------------------------------
+                            434 ; Function Black_Clear
+                            435 ; ---------------------------------
+   0160                     436 ___Black_Clear_start:
+   0160                     437 _Black_Clear:
+   0160 E8 F9               438 	lda	sp,-7(sp)
+                            439 ;	BANK3.c 62
+                            440 ;	genIpush
+                            441 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0162 21 4F 01            442 	ld	hl,#_BlackClear
+   0165 E5                  443 	push	hl
+                            444 ;	genIpush
+   0166 21 00 01            445 	ld	hl,#0x0100
+   0169 E5                  446 	push	hl
+                            447 ;	genCall
+   016A CD 00 00            448 	call	_set_bkg_data
+   016D E8 04               449 	lda	sp,4(sp)
+                            450 ;	BANK3.c 63
+                            451 ;	genCall
+                            452 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   016F CD 00 00            453 	call	_wait_vbl_done
+                            454 ;	BANK3.c 64
+                            455 ;	genAssign
+                            456 ;	AOP_STK for _Black_Clear_y_1_1
+   0172 F8 03               457 	lda	hl,3(sp)
+   0174 36 00               458 	ld	(hl),#0x00
+   0176 23                  459 	inc	hl
+   0177 36 00               460 	ld	(hl),#0x00
+                            461 ;	genLabel
+   0179                     462 00107$:
+                            463 ;	genCmpGt
+                            464 ;	AOP_STK for _Black_Clear_y_1_1
+   0179 1E 80               465 	ld	e,#0x80
+   017B F8 04               466 	lda	hl,4(sp)
+   017D 7E                  467 	ld	a,(hl)
+   017E EE 80               468 	xor	a,#0x80
+   0180 57                  469 	ld	d,a
+   0181 3E 11               470 	ld	a,#0x11
+   0183 2B                  471 	dec	hl
+   0184 96                  472 	sub	a,(hl)
+   0185 7B                  473 	ld	a,e
+   0186 9A                  474 	sbc	a,d
+   0187 DA 19 02            475 	jp	c,00111$
+                            476 ;	BANK3.c 65
+                            477 ;	genCmpEq
+                            478 ;	AOP_STK for _Black_Clear_y_1_1
+                            479 ; genCmpEq: left 2, right 2, result 0
+   018A 7E                  480 	ld	a,(hl)
+   018B FE 07               481 	cp	a,#0x07
+   018D C2 98 01            482 	jp	nz,00118$
+   0190 23                  483 	inc	hl
+   0191 7E                  484 	ld	a,(hl)
+   0192 B7                  485 	or	a,a
+   0193 C2 B0 01            486 	jp	nz,00102$
+   0196 18 03               487 	jr	00119$
+   0198                     488 00118$:
+   0198 C3 B0 01            489 	jp	00102$
+   019B                     490 00119$:
+                            491 ;	BANK3.c 66
+                            492 ;	genAssign
+   019B 01 40 FF            493 	ld	bc,#0xFF40
+                            494 ;	genAssign
+                            495 ;	AOP_STK for _Black_Clear_sloc0_1_0
+   019E F8 01               496 	lda	hl,1(sp)
+   01A0 36 40               497 	ld	(hl),#0x40
+   01A2 23                  498 	inc	hl
+   01A3 36 FF               499 	ld	(hl),#0xFF
+                            500 ;	genPointerGet
+                            501 ;	AOP_STK for _Black_Clear_sloc0_1_0
+                            502 ;	AOP_STK for _Black_Clear_sloc1_1_0
+   01A5 2B                  503 	dec	hl
+   01A6 5E                  504 	ld	e,(hl)
+   01A7 23                  505 	inc	hl
+   01A8 56                  506 	ld	d,(hl)
+   01A9 1A                  507 	ld	a,(de)
+   01AA 2B                  508 	dec	hl
+   01AB 2B                  509 	dec	hl
+                            510 ;	genAnd
+                            511 ;	AOP_STK for _Black_Clear_sloc1_1_0
+   01AC 77                  512 	ld      (hl),a
+                            513 ; Removed redundent load
+   01AD E6 FD               514 	and	a,#0xFD
+                            515 ;	genAssign (pointer)
+   01AF 02                  516 	ld	(bc),a
+                            517 ;	genLabel
+   01B0                     518 00102$:
+                            519 ;	BANK3.c 68
+                            520 ;	genAssign
+                            521 ;	AOP_STK for _Black_Clear_x_1_1
+   01B0 F8 05               522 	lda	hl,5(sp)
+   01B2 36 00               523 	ld	(hl),#0x00
+   01B4 23                  524 	inc	hl
+   01B5 36 00               525 	ld	(hl),#0x00
+                            526 ;	genLabel
+   01B7                     527 00103$:
+                            528 ;	genCmpGt
+                            529 ;	AOP_STK for _Black_Clear_x_1_1
+                            530 ;	AOP_STK for _Black_Clear_sloc1_1_0
+   01B7 1E 80               531 	ld	e,#0x80
+   01B9 F8 06               532 	lda	hl,6(sp)
+   01BB 7E                  533 	ld	a,(hl)
+   01BC EE 80               534 	xor	a,#0x80
+   01BE 57                  535 	ld	d,a
+   01BF 3E 13               536 	ld	a,#0x13
+   01C1 2B                  537 	dec	hl
+   01C2 96                  538 	sub	a,(hl)
+   01C3 7B                  539 	ld	a,e
+   01C4 9A                  540 	sbc	a,d
+   01C5 3E 00               541 	ld	a,#0x00
+   01C7 17                  542 	rla
+   01C8 F8 00               543 	lda	hl,0(sp)
+   01CA 77                  544 	ld	(hl),a
+                            545 ;	genIfx
+                            546 ;	AOP_STK for _Black_Clear_sloc1_1_0
+   01CB AF                  547 	xor	a,a
+   01CC B6                  548 	or	a,(hl)
+   01CD C2 0F 02            549 	jp	nz,00109$
+                            550 ;	BANK3.c 69
+                            551 ;	genCast
+                            552 ;	AOP_STK for _Black_Clear_y_1_1
+   01D0 F8 03               553 	lda	hl,3(sp)
+   01D2 4E                  554 	ld	c,(hl)
+                            555 ;	genCast
+                            556 ;	AOP_STK for _Black_Clear_x_1_1
+   01D3 23                  557 	inc	hl
+   01D4 23                  558 	inc	hl
+   01D5 46                  559 	ld	b,(hl)
+                            560 ;	genIpush
+                            561 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   01D6 C5                  562 	push	bc
+   01D7 21 5F 01            563 	ld	hl,#_BlackClearMap
+   01DA E5                  564 	push	hl
+                            565 ;	genIpush
+   01DB 21 01 01            566 	ld	hl,#0x0101
+   01DE E5                  567 	push	hl
+                            568 ;	genIpush
+   01DF 79                  569 	ld	a,c
+   01E0 F5                  570 	push	af
+   01E1 33                  571 	inc	sp
+                            572 ;	genIpush
+   01E2 78                  573 	ld	a,b
+   01E3 F5                  574 	push	af
+   01E4 33                  575 	inc	sp
+                            576 ;	genCall
+   01E5 CD 00 00            577 	call	_set_bkg_tiles
+   01E8 E8 06               578 	lda	sp,6(sp)
+   01EA C1                  579 	pop	bc
+                            580 ;	BANK3.c 70
+                            581 ;	genIpush
+                            582 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   01EB C5                  583 	push	bc
+   01EC 21 01 00            584 	ld	hl,#0x0001
+   01EF E5                  585 	push	hl
+                            586 ;	genCall
+   01F0 CD 00 00            587 	call	_delay
+   01F3 E8 02               588 	lda	sp,2(sp)
+   01F5 C1                  589 	pop	bc
+                            590 ;	BANK3.c 68
+                            591 ;	genPlus
+                            592 ;	AOP_STK for _Black_Clear_x_1_1
+                            593 ;	AOP_STK for _Black_Clear_sloc0_1_0
+                            594 ;	genPlusIncr
+                            595 ;	Can't optimise plus by inc, falling back to the normal way
+   01F6 F8 05               596 	lda	hl,5(sp)
+   01F8 5E                  597 	ld	e,(hl)
+   01F9 23                  598 	inc	hl
+   01FA 56                  599 	ld	d,(hl)
+   01FB 21 01 00            600 	ld	hl,#0x0001
+   01FE 19                  601 	add	hl,de
+   01FF 7D                  602 	ld	a,l
+   0200 54                  603 	ld	d,h
+   0201 F8 01               604 	lda	hl,1(sp)
+   0203 22                  605 	ld	(hl+),a
+   0204 72                  606 	ld	(hl),d
+                            607 ;	genAssign
+                            608 ;	AOP_STK for _Black_Clear_sloc0_1_0
+                            609 ;	AOP_STK for _Black_Clear_x_1_1
+   0205 2B                  610 	dec	hl
+   0206 2A                  611 	ld	a,(hl+)
+   0207 5E                  612 	ld	e,(hl)
+   0208 F8 05               613 	lda	hl,5(sp)
+   020A 22                  614 	ld	(hl+),a
+   020B 73                  615 	ld	(hl),e
+                            616 ;	genGoto
+   020C C3 B7 01            617 	jp	00103$
+                            618 ;	genLabel
+   020F                     619 00109$:
+                            620 ;	BANK3.c 64
+                            621 ;	genPlus
+                            622 ;	AOP_STK for _Black_Clear_y_1_1
+                            623 ;	genPlusIncr
+   020F F8 03               624 	lda	hl,3(sp)
+   0211 34                  625 	inc	(hl)
+   0212 20 02               626 	jr	nz,00120$
+   0214 23                  627 	inc	hl
+   0215 34                  628 	inc	(hl)
+   0216                     629 00120$:
+                            630 ;	genGoto
+   0216 C3 79 01            631 	jp	00107$
+                            632 ;	genLabel
+   0219                     633 00111$:
+                            634 ;	genEndFunction
+   0219 E8 07               635 	lda	sp,7(sp)
+   021B C9                  636 	ret
+   021C                     637 ___Black_Clear_end:
+                            638 	.area _CODE_3
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 1.
+
+Symbol Table
+
+  9 _BlackClear                        014F GR
+  9 _BlackClearMap                     015F GR
+  9 _Black_Clear                       0160 GR
+    _Robot                             **** GX
+  9 _Spawn                             0000 GR
+  9 ___Black_Clear_end                 021C R
+  9 ___Black_Clear_start               0160 R
+  9 ___Spawn_end                       014F R
+  9 ___Spawn_start                     0000 R
+    _delay                             **** GX
+    _move_sprite                       **** GX
+    _set_bkg_data                      **** GX
+    _set_bkg_tiles                     **** GX
+    _set_sprite_data                   **** GX
+    _set_sprite_tile                   **** GX
+    _tileInc                           **** GX
+    _tileNumber                        **** GX
+    _wait_vbl_done                     **** GX
+    _xCounter                          **** GX
+    _xCounterForSpawn                  **** GX
+    _xMove                             **** GX
+    _yCounter                          **** GX
+    _yCounterForSpawn                  **** GX
+    _yMove                             **** GX
+
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 2.
+
+Area Table
+
+   0 _CODE                              size    0   flags 0
+   1 _DATA                              size    0   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _ISEG                              size    0   flags 0
+   4 _BSEG                              size    0   flags 0
+   5 _XSEG                              size    0   flags 0
+   6 _GSINIT                            size    0   flags 0
+   7 _GSFINAL                           size    0   flags 0
+   8 _HOME                              size    0   flags 0
+   9 _CODE_3                            size  21C   flags 0

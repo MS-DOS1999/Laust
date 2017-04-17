@@ -5,28 +5,8 @@
 
 
 
-#include "Map_Tile/TitleScreenTiles.c"
-#include "Map_Tile/TitleScreenMap.c"
-#include "Map_Tile/PressStart.c"
-#include "Map_Tile/By.c"
-#include "Map_Tile/textIcon.c"
-#include "IncludeCustom/MessageIntro.c"
-#include "Map_Tile/Robot.c"
-#include "Map_Tile/HomeTile.c"
-#include "Map_Tile/Home.c"
-#include "Map_Tile/HomeRoom.c"
-#include "Map_Tile/BlackClear.c"
-#include "Map_Tile/HomeChest.c"
-#include "Map_Tile/BlackClearMap.c"
-#include "Map_Tile/Alphabet.c"
-#include "Map_Tile/textNES.c"
-#include "Map_Tile/textNES1.c"
-#include "Map_Tile/textORDI.c"
-#include "Map_Tile/textORDI1.c"
-#include "Map_Tile/TownTile.c"
-#include "Map_Tile/TownMap.c"
 
-#define S_PALETTE    0x10U
+#include "Map_Tile/Robot.c"
 
 
 
@@ -80,6 +60,14 @@ int delayVerif = 0;
 
 
 //PROTOTYPE//
+
+
+extern void Intro();
+extern void Intro2();
+extern void Spawn();
+extern void Black_Clear();
+
+
 void clearScreenLetter(){
 
     int x, y;
@@ -95,215 +83,6 @@ void clearScreenLetter(){
 
 }
 
-void textNext(){
-
-    int A_PressedA = 0;
-    int delayVerifA = 0;
-    while(A_PressedA == 0){
-
-        move_sprite(0, 155, 142);
-        while(delayVerifA != 4000){
-            delayVerifA++;
-            if(joypad() == J_A){
-                A_PressedA = 1;
-                delayVerifA = 4000;
-                NR52_REG = 0x80;
-                NR51_REG = 0x11;
-                NR50_REG = 0x55;
-
-                NR10_REG = 0x09;
-                NR11_REG = 0x5A;
-                NR12_REG = 0x41;
-                NR13_REG = 0x00;
-                NR14_REG = 0x8A;
-            }
-        }
-        delayVerifA = 0;
-        move_sprite(0, 200, 200);
-        while(delayVerifA != 4000){
-            delayVerifA++;
-            if(joypad() == J_A){
-                A_PressedA = 1;
-                delayVerifA = 4000;
-                NR52_REG = 0x80;
-                NR51_REG = 0x11;
-                NR50_REG = 0x55;
-
-                NR10_REG = 0x09;
-                NR11_REG = 0x09;
-                NR12_REG = 0x41;
-                NR13_REG = 0x00;
-                NR14_REG = 0x8A;
-            }
-        }
-        delayVerifA = 0;
-
-    }
-
-}
-
-void Intro(){
-
-    //INTRO//
-
-    /*
-       wait_vbl_done();
-       DISPLAY_OFF;
-       set_bkg_data(0, 219, TitleScreenTiles);
-       set_bkg_tiles(0,0,20,18,TitleScreenMap);
-       SHOW_BKG;
-
-       SPRITES_8x8;
-       set_sprite_data(0, 10, PressStart);
-
-       for(tileInc = 0; tileInc <= 9; tileInc++){
-       set_sprite_tile(tileInc, tileInc);
-       }
-
-       move_sprite(0, 45, 110);
-       move_sprite(1, 45 + 8, 110);
-       move_sprite(2, 45 + 16, 110);
-       move_sprite(3, 45 + 24, 110);
-       move_sprite(4, 45 + 32, 110);
-       move_sprite(5, 45 + 48, 110);
-       move_sprite(6, 45 + 56, 110);
-       move_sprite(7, 45 + 64, 110);
-       move_sprite(8, 45 + 72, 110);
-       move_sprite(9, 45 + 80, 110);
-
-       set_sprite_data(10, 16, By);
-
-       for(tileInc = 10; tileInc <= 25; tileInc++){
-       set_sprite_tile(tileInc, tileInc);
-       }
-
-       move_sprite(10, 8, 144);
-       move_sprite(11, 8 + 8, 144);
-       move_sprite(12, 8 + 16, 144);
-       move_sprite(13, 8 + 24, 144);
-       move_sprite(20, 168 - 48, 144);
-       move_sprite(21, 168 - 40, 144);
-       move_sprite(22, 168 - 32, 144);
-       move_sprite(23, 168 - 24, 144);
-       move_sprite(24, 168 - 16, 144);
-       move_sprite(25, 168 - 8, 144);
-
-       SHOW_SPRITES;
-       wait_vbl_done();
-       DISPLAY_ON;
-
-       while(StartPressed == 0){
-
-       move_sprite(0, 45, 220);
-       move_sprite(1, 45 + 8, 220);
-       move_sprite(2, 45 + 16, 220);
-       move_sprite(3, 45 + 24, 220);
-       move_sprite(4, 45 + 32, 220);
-       move_sprite(5, 45 + 48, 220);
-       move_sprite(6, 45 + 56, 220);
-       move_sprite(7, 45 + 64, 220);
-       move_sprite(8, 45 + 72, 220);
-       move_sprite(9, 45 + 80, 220);
-       while(delayVerif != 4000){
-       delayVerif++;
-       if(joypad() == J_START){
-       StartPressed = 1;
-       delayVerif = 4000;
-
-       NR52_REG = 0x80;
-       NR51_REG = 0x11;
-       NR50_REG = 0x77;
-
-       NR10_REG = 0x40;
-       NR11_REG = 0x9A;
-       NR12_REG = 0x41;
-    NR13_REG = 0x9A;
-    NR14_REG = 0x98;
-
-}
-}
-delayVerif = 0;
-
-move_sprite(0, 45, 110);
-move_sprite(1, 45 + 8, 110);
-move_sprite(2, 45 + 16, 110);
-move_sprite(3, 45 + 24, 110);
-move_sprite(4, 45 + 32, 110);
-move_sprite(5, 45 + 48, 110);
-move_sprite(6, 45 + 56, 110);
-move_sprite(7, 45 + 64, 110);
-move_sprite(8, 45 + 72, 110);
-move_sprite(9, 45 + 80, 110);
-while(delayVerif != 4000){
-    delayVerif++;
-    if(joypad() == J_START){
-        StartPressed = 1;
-        delayVerif = 4000;
-
-        NR52_REG = 0x80;
-        NR51_REG = 0x11;
-        NR50_REG = 0x77;
-
-        NR10_REG = 0x40;
-        NR11_REG = 0x9A;
-        NR12_REG = 0x41;
-        NR13_REG = 0x9A;
-        NR14_REG = 0x98;
-
-    }
-}
-delayVerif = 0;
-}
-
-if(StartPressed == 1){
-    HIDE_SPRITES;
-
-    for(tileInc = 1; tileInc <= 25; tileInc++){
-        move_sprite(tileInc, 200, 200);
-    }
-
-    delay(10);
-    clearScreenLetter();
-}
-messageIntroPart1();
-SPRITES_8x8;
-set_sprite_data(0, 1, textIcon);
-set_sprite_tile(0, 0);
-move_sprite(0, 155, 142);
-SHOW_SPRITES;
-textNext();
-clearScreenLetter();
-HIDE_SPRITES;
-delay(200);
-
-messageIntroPart2();
-SHOW_SPRITES;
-textNext();
-clearScreenLetter();
-HIDE_SPRITES;
-printf("\n\n Ton nom: ");
-for(delayVerif = 0; delayVerif < 6; delayVerif++){
-
-    nomPlayer[delayVerif] = getchar();
-    printf("%c", nomPlayer[delayVerif]);
-
-}
-clearScreenLetter();
-HIDE_SPRITES;
-delay(200);
-
-messageIntroPart3(nomPlayer);
-SHOW_SPRITES;
-textNext();
-clearScreenLetter();
-HIDE_BKG;
-
-*/
-getchar(); //ligne pour changer de Palette
-IDMap = 1;
-OutCheck = 1;
-//INTRO//
-}
 
 void MoveAndColl(){
 
@@ -557,596 +336,33 @@ void MoveAndColl(){
     //COLLISION ET MOUVEMENT//
 }
 
-void Spawn(){
-    xMove = 8;
-    yMove = 4;
 
-    xCounterForSpawn = xCounter;
-    yCounterForSpawn = yCounter;
+extern void Load_Home();
+extern void Out_Home();
+extern void Col_Home();
+extern void Load_HomeRoom();
+extern void Out_HomeRoom();
+extern void Col_HomeRoom();
+extern void Load_Town1();
+extern void Col1_Town1();
+extern void Col2_Town1();
+extern void Out_Town1();
 
-    while(xCounterForSpawn != 0){
-        xMove = xMove + 8;
-        xCounterForSpawn = xCounterForSpawn - 21;
-    }
-    while(yCounterForSpawn != 0){
-        yMove = yMove + 8;
-        yCounterForSpawn = yCounterForSpawn - 1;
-    }
-
-
-    SPRITES_8x16;
-    set_sprite_data(0, 20, Robot);
-
-    tileNumber = 0;
-
-    for(tileInc = 0; tileInc <= 9; tileInc++){
-        set_sprite_tile(tileInc, tileNumber);
-        tileNumber = tileNumber + 2;
-    }
-
-    move_sprite(0, xMove, yMove);
-    set_sprite_tile(0,0);
-    SHOW_SPRITES;
-}
-
-
-void Load_Home(){
-
-    HIDE_BKG;
-    wait_vbl_done();
-    set_bkg_data(0,41, HomeTile);
-    set_bkg_tiles(0,0,20,18,Home);
-    SHOW_BKG;
-    HIDE_SPRITES;
-    //SPAWN//
-    if(WalkCounter == 320){
-    xCounter = 294;
-    yCounter = 5;
-    }
-    else if(WalkCounter == 67){
-      xCounter = 189;
-      yCounter = 10;
-    }
-    else{
-      xCounter = 294;
-      yCounter = 5;
-    }
-
-    //SPAWN//
-
-    OutCheck = 1;
-
-}
-
-void Out_Home(){
-    if(WalkCounter == 320){
-        IDMap = 2;
-    }
-    else if(WalkCounter == 200 || WalkCounter == 179){
-        IDMap = 3;
-    }
-
-
-    if(WalkCounter == 304 && joypad() == J_A && Direction == 4 || WalkCounter == 325 && joypad() == J_A && Direction == 4){
-        OffMove = 1;
-        HIDE_WIN;
-        tileInc = 0;
-        set_win_data(128, 122, Alphabet);
-        set_win_tiles(0, 0, 20, 5, textORDI);
-        move_win(8, 104);
-        SHOW_WIN;
-        delay(1000);
-
-        waitpad(J_A);
-
-
-        HIDE_WIN;
-        tileInc = 0;
-        set_win_data(128, 122, Alphabet);
-        set_win_tiles(0, 0, 20, 5, textORDI1);
-        move_win(8, 104);
-        SHOW_WIN;
-        delay(1000);
-
-        waitpad(J_A);
-
-        HIDE_WIN;
-        OffMove = 0;
-        delay(500);
-
-    }
-}
-
-void Col_Home(){
-
-
-    TabCollide[0] = 299;
-    TabCollide[1] = 278;
-    TabCollide[2] = 257;
-    TabCollide[3] = 236;
-    TabCollide[4] = 216;
-    TabCollide[5] = 195;
-    TabCollide[6] = 174;
-    TabCollide[7] = 152;
-    TabCollide[8] = 131;
-    TabCollide[9] = 110;
-    TabCollide[10] = 90;
-    TabCollide[11] = 69;
-    TabCollide[12] = 70;
-    TabCollide[13] = 91;
-    TabCollide[14] = 113;
-    TabCollide[15] = 114;
-    TabCollide[16] = 115;
-    TabCollide[17] = 136;
-    TabCollide[18] = 157;
-    TabCollide[19] = 178;
-    TabCollide[20] = 199;
-    TabCollide[21] = 220;
-    TabCollide[22] = 241;
-    TabCollide[23] = 262;
-    TabCollide[24] = 283;
-    TabCollide[25] = 304;
-    TabCollide[26] = 325;
-    TabCollide[27] = 282;
-    TabCollide[28] = 281;
-    TabCollide[29] = 301;
-    TabCollide[30] = 322;
-    TabCollide[31] = 321;
-    TabCollide[32] = 320;
-    TabCollide[33] = NULL;
-    TabCollide[34] = NULL;
-    TabCollide[35] = NULL;
-    TabCollide[36] = NULL;
-    TabCollide[37] = NULL;
-    TabCollide[38] = NULL;
-    TabCollide[39] = NULL;
-
-
-
-
-    TabDirection[0] = 1;
-    TabDirection[1] = 1;
-    TabDirection[2] = 1;
-    TabDirection[3] = 5;
-    TabDirection[4] = 1;
-    TabDirection[5] = 1;
-    TabDirection[6] = 1;
-    TabDirection[7] = 6;
-    TabDirection[8] = 1;
-    TabDirection[9] = 5;
-    TabDirection[10] = 1;
-    TabDirection[11] = 5;
-    TabDirection[12] = 7;
-    TabDirection[13] = 2;
-    TabDirection[14] = 3;
-    TabDirection[15] = 3;
-    TabDirection[16] = 7;
-    TabDirection[17] = 2;
-    TabDirection[18] = 2;
-    TabDirection[19] = NULL;
-    TabDirection[20] = NULL;
-    TabDirection[21] = 2;
-    TabDirection[22] = 2;
-    TabDirection[23] = 2;
-    TabDirection[24] = 2;
-    TabDirection[25] = 14;
-    TabDirection[26] = 10;
-    TabDirection[27] = 4;
-    TabDirection[28] = 4;
-    TabDirection[29] = 2;
-    TabDirection[30] = 8;
-    TabDirection[31] = 4;
-    TabDirection[32] = 6;
-    TabDirection[33] = NULL;
-    TabDirection[34] = NULL;
-    TabDirection[35] = NULL;
-    TabDirection[36] = NULL;
-    TabDirection[37] = NULL;
-    TabDirection[38] = NULL;
-    TabDirection[39] = NULL;
-
-
-
-    arrayLength = 40;
-
-
-
-}
-
-void Load_HomeRoom(){
-
-
-    HIDE_BKG;
-    wait_vbl_done();
-    set_bkg_data(0,40, HomeTile);
-    set_bkg_tiles(0,0,20,18,HomeRoom);
-    SHOW_BKG;
-
-    HIDE_SPRITES;
-    //SPAWN//
-    xCounter = 294;
-    yCounter = 5;
-    //SPAWN//
-
-    OutCheck = 2;
-
-
-}
-
-void Out_HomeRoom(){
-    if(WalkCounter == 320){
-        IDMap = 1;
-    }
-
-    if(WalkCounter == 176 && joypad() == J_A && Direction == 1 || WalkCounter == 198 && joypad() == J_A && Direction == 3 || WalkCounter == 178 && joypad() == J_A && Direction == 4){
-
-        set_bkg_tiles(8, 8, 1, 2, HomeChest);
-    }
-
-    if(WalkCounter == 260 && joypad() == J_A && Direction == 3 || WalkCounter == 218 && joypad() == J_A && Direction == 2){
-        OffMove = 1;
-        HIDE_WIN;
-        tileInc = 0;
-        set_win_data(128, 122, Alphabet);
-        set_win_tiles(0, 0, 20, 5, textNES);
-        move_win(8, 104);
-        SHOW_WIN;
-        delay(1000);
-
-        waitpad(J_A);
-
-
-        HIDE_WIN;
-        tileInc = 0;
-        set_win_data(128, 122, Alphabet);
-        set_win_tiles(0, 0, 20, 5, textNES1);
-        move_win(8, 104);
-        SHOW_WIN;
-        delay(1000);
-
-        waitpad(J_A);
-
-        HIDE_WIN;
-        OffMove = 0;
-        delay(500);
-
-    }
-
-}
-
-void Col_HomeRoom(){
-
-
-    TabCollide[0] = 299;
-    TabCollide[1] = 278;
-    TabCollide[2] = 257;
-    TabCollide[3] = 258;
-    TabCollide[4] = 259;
-    TabCollide[5] = 260;
-    TabCollide[6] = 240;
-    TabCollide[7] = 218;
-    TabCollide[8] = 217;
-    TabCollide[9] = 216;
-    TabCollide[10] = 236;
-    TabCollide[11] = 215;
-    TabCollide[12] = 195;
-    TabCollide[13] = 174;
-    TabCollide[14] = NULL;
-    TabCollide[15] = 175;
-    TabCollide[16] = 176;
-    TabCollide[17] = 198;
-    TabCollide[18] = 178;
-    TabCollide[19] = 199;
-    TabCollide[20] = 220;
-    TabCollide[21] = 241;
-    TabCollide[22] = 262;
-    TabCollide[23] = 283;
-    TabCollide[24] = 304;
-    TabCollide[25] = 325;
-    TabCollide[26] = 324;
-    TabCollide[27] = 323;
-    TabCollide[28] = 322;
-    TabCollide[29] = 321;
-    TabCollide[30] = 320;
-    TabCollide[31] = NULL;
-    TabCollide[32] = NULL;
-    TabCollide[33] = NULL;
-    TabCollide[34] = NULL;
-    TabCollide[35] = NULL;
-    TabCollide[36] = NULL;
-    TabCollide[37] = NULL;
-    TabCollide[38] = NULL;
-    TabCollide[39] = NULL;
-
-
-
-
-    TabDirection[0] = 1;
-    TabDirection[1] = 1;
-    TabDirection[2] = 1;
-    TabDirection[3] = 3;
-    TabDirection[4] = 3;
-    TabDirection[5] = 3;
-    TabDirection[6] = 1;
-    TabDirection[7] = 4;
-    TabDirection[8] = 4;
-    TabDirection[9] = 4;
-    TabDirection[10] = 14;
-    TabDirection[11] = 5;
-    TabDirection[12] = 1;
-    TabDirection[13] = 5;
-    TabDirection[14] = NULL;
-    TabDirection[15] = 3;
-    TabDirection[16] = 7;
-    TabDirection[17] = 3;
-    TabDirection[18] = 12;
-    TabDirection[19] = 2;
-    TabDirection[20] = 2;
-    TabDirection[21] = 2;
-    TabDirection[22] = 2;
-    TabDirection[23] = 2;
-    TabDirection[24] = 2;
-    TabDirection[25] = 8;
-    TabDirection[26] = 4;
-    TabDirection[27] = 4;
-    TabDirection[28] = 4;
-    TabDirection[29] = 4;
-    TabDirection[30] = 6;
-    TabDirection[31] = NULL;
-    TabDirection[32] = NULL;
-    TabDirection[33] = NULL;
-    TabDirection[34] = NULL;
-    TabDirection[35] = NULL;
-    TabDirection[36] = NULL;
-    TabDirection[37] = NULL;
-    TabDirection[38] = NULL;
-    TabDirection[39] = NULL;
-
-
-
-    arrayLength = 40;
-
-
-
-}
-
-void Load_Town1(){
-
-
-    HIDE_BKG;
-    wait_vbl_done();
-    set_bkg_data(0,80, TownTile);
-    set_bkg_tiles(0,0,20,18,TownMap);
-    SHOW_BKG;
-
-    HIDE_SPRITES;
-    //SPAWN//
-    xCounter = 63;
-    yCounter = 5;
-    //SPAWN//
-
-    OutCheck = 3;
-
-
-}
-
-void Col1_Town1(){
-
-    TabCollide[0] = 164;
-    TabCollide[1] = 163;
-    TabCollide[2] = 162;
-    TabCollide[3] = 140;
-    TabCollide[4] = NULL;
-    TabCollide[5] = 118;
-    TabCollide[6] = 97;
-    TabCollide[7] = 77;
-    TabCollide[8] = 57;
-    TabCollide[9] = 58;
-    TabCollide[10] = 37;
-    TabCollide[11] = 36;
-    TabCollide[12] = 35;
-    TabCollide[13] = 34;
-    TabCollide[14] = 33;
-    TabCollide[15] = 32;
-    TabCollide[16] = 31;
-    TabCollide[17] = 30;
-    TabCollide[18] = 50;
-    TabCollide[19] = 28;
-    TabCollide[20] = 27;
-    TabCollide[21] = 26;
-    TabCollide[22] = 47;
-    TabCollide[23] = 67;
-    TabCollide[24] = 89;
-    TabCollide[25] = 110;
-    TabCollide[26] = 131;
-    TabCollide[27] = 153;
-    TabCollide[28] = NULL;
-    TabCollide[29] = NULL;
-    TabCollide[30] = NULL;
-    TabCollide[31] = NULL;
-    TabCollide[32] = NULL;
-    TabCollide[33] = NULL;
-    TabCollide[34] = NULL;
-    TabCollide[35] = NULL;
-    TabCollide[36] = NULL;
-    TabCollide[37] = NULL;
-    TabCollide[38] = NULL;
-    TabCollide[39] = NULL;
-
-    TabDirection[0] = 3;
-    TabDirection[1] = 3;
-    TabDirection[2] = 3;
-    TabDirection[3] = 7;
-    TabDirection[4] = NULL;
-    TabDirection[5] = 2;
-    TabDirection[6] = 2;
-    TabDirection[7] = 8;
-    TabDirection[8] = 4;
-    TabDirection[9] = 8;
-    TabDirection[10] = 7;
-    TabDirection[11] = 3;
-    TabDirection[12] = 3;
-    TabDirection[13] = 3;
-    TabDirection[14] = 3;
-    TabDirection[15] = 3;
-    TabDirection[16] = 3;
-    TabDirection[17] = 5;
-    TabDirection[18] = 3;
-    TabDirection[19] = 7;
-    TabDirection[20] = 3;
-    TabDirection[21] = 5;
-    TabDirection[22] = 1;
-    TabDirection[23] = 9;
-    TabDirection[24] = 1;
-    TabDirection[25] = 1;
-    TabDirection[26] = 6;
-    TabDirection[27] = 1;
-    TabDirection[28] = NULL;
-    TabDirection[29] = NULL;
-    TabDirection[30] = NULL;
-    TabDirection[31] = NULL;
-    TabDirection[32] = NULL;
-    TabDirection[33] = NULL;
-    TabDirection[34] = NULL;
-    TabDirection[35] = NULL;
-    TabDirection[36] = NULL;
-    TabDirection[37] = NULL;
-    TabDirection[38] = NULL;
-    TabDirection[39] = NULL;
-
-
-}
-
-void Col2_Town1(){
-
-TabCollide[0] = 174;
-TabCollide[1] = 194;
-TabCollide[2] = 214;
-TabCollide[3] = 213;
-TabCollide[4] = 212;
-TabCollide[5] = 233;
-TabCollide[6] = 254;
-TabCollide[7] = 275;
-TabCollide[8] = 296;
-TabCollide[9] = 297;
-TabCollide[10] = 303;
-TabCollide[11] = 282;
-TabCollide[12] = 262;
-TabCollide[13] = 263;
-TabCollide[14] = 264;
-TabCollide[15] = 265;
-TabCollide[16] = 308;
-TabCollide[17] = 288;
-TabCollide[18] = 310;
-TabCollide[19] = 289;
-TabCollide[20] = 268;
-TabCollide[21] = 248;
-TabCollide[22] = NULL;
-TabCollide[23] = NULL;
-TabCollide[24] = NULL;
-TabCollide[25] = NULL;
-TabCollide[26] = NULL;
-TabCollide[27] = NULL;
-TabCollide[28] = NULL;
-TabCollide[29] = NULL;
-TabCollide[30] = NULL;
-TabCollide[31] = NULL;
-TabCollide[32] = NULL;
-TabCollide[33] = NULL;
-TabCollide[34] = NULL;
-TabCollide[35] = NULL;
-TabCollide[36] = NULL;
-TabCollide[37] = NULL;
-TabCollide[38] = NULL;
-TabCollide[39] = NULL;
-
-TabDirection[0] = 1;
-TabDirection[1] = 5;
-TabDirection[2] = 3;
-TabDirection[3] = 3;
-TabDirection[4] = 5;
-TabDirection[5] = 1;
-TabDirection[6] = 1;
-TabDirection[7] = 1;
-TabDirection[8] = 1;
-TabDirection[9] = 4;
-TabDirection[10] = 2;
-TabDirection[11] = 2;
-TabDirection[12] = 4;
-TabDirection[13] = 4;
-TabDirection[14] = 4;
-TabDirection[15] = 4;
-TabDirection[16] = 9;
-TabDirection[17] = 1;
-TabDirection[18] = 2;
-TabDirection[19] = 2;
-TabDirection[20] = 2;
-TabDirection[21] = 4;
-TabDirection[22] = NULL;
-TabDirection[23] = NULL;
-TabDirection[24] = NULL;
-TabDirection[25] = NULL;
-TabDirection[26] = NULL;
-TabDirection[27] = NULL;
-TabDirection[28] = NULL;
-TabDirection[29] = NULL;
-TabDirection[30] = NULL;
-TabDirection[31] = NULL;
-TabDirection[32] = NULL;
-TabDirection[33] = NULL;
-TabDirection[34] = NULL;
-TabDirection[35] = NULL;
-TabDirection[36] = NULL;
-TabDirection[37] = NULL;
-TabDirection[38] = NULL;
-TabDirection[39] = NULL;
-
-}
-
-
-void Out_Town1(){
-    if(WalkCounter == 67){
-        IDMap = 1;
-    }
-
-    if(xCounter <= 147){
-        Col1_Town1();
-    }
-}
-
-
-
-void Black_Clear(){
-
-    int x, y;
-
-    set_bkg_data(0, 1, BlackClear);
-    wait_vbl_done();
-    for(y=0; y<=17; y++){
-        if(y == 7){
-            HIDE_SPRITES;
-        }
-        for(x=0; x<=19; x++){
-            set_bkg_tiles(x, y, 1, 1, BlackClearMap);
-            delay(1);
-        }
-    }
-
-
-
-}
 
 void OutMatrix(){
 
     switch(OutCheck){
 
         case 1:
+		SWITCH_ROM_MBC1(4);
             Out_Home();
             break;
         case 2:
+		SWITCH_ROM_MBC1(4);
             Out_HomeRoom();
             break;
         case 3:
+		SWITCH_ROM_MBC1(4);
             Out_Town1();
             break;
         default:
@@ -1167,24 +383,35 @@ void MapChanger(){
             break;
         case 1:
             OffMove = 1;
+	    SWITCH_ROM_MBC1(4);
             Col_Home();
+	    SWITCH_ROM_MBC1(3);
             Black_Clear();
+	SWITCH_ROM_MBC1(4);
             Load_Home();
+	    SWITCH_ROM_MBC1(3);
             Spawn();
             OffMove = 0;
             break;
         case 2:
             OffMove = 1;
+	SWITCH_ROM_MBC1(4);
             Col_HomeRoom();
+	    SWITCH_ROM_MBC1(3);
             Black_Clear();
+	SWITCH_ROM_MBC1(4);
             Load_HomeRoom();
+	    SWITCH_ROM_MBC1(3);
             Spawn();
             OffMove = 0;
             break;
         case 3:
             OffMove = 1;
+	    SWITCH_ROM_MBC1(3);
             Black_Clear();
+	SWITCH_ROM_MBC1(4);
             Load_Town1();
+	    SWITCH_ROM_MBC1(3);
             Spawn();
             OffMove = 0;
             break;
@@ -1199,10 +426,20 @@ void MapChanger(){
 
 //PROTOTYPE//
 
-// MAIN //
-void main(){
 
-    Intro();
+
+
+// MAIN //
+
+
+
+void main(){
+	
+	SWITCH_ROM_MBC1(2);
+	Intro();
+	clearScreenLetter();
+	SWITCH_ROM_MBC1(2);
+	Intro2();
 
     //BOUCLE PRINCIPALE//
     while(1){
